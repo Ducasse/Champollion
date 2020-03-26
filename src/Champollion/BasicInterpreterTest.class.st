@@ -20,7 +20,7 @@ BasicInterpreterTest >> interpreterClass [
 BasicInterpreterTest >> testAccessXInInstance [
 
 	| ast result |
-	ast := (Interpretable >> #store100IntoX) ast.
+	ast := (Interpretable >> #returnX) ast.
 	result := self interpreter execute: ast with: (Interpretable new x: 100).
 	self assert: result equals: 100. 
 	
