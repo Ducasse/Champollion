@@ -21,6 +21,8 @@ BasicInterpreterTest >> testReturnConstant [
 
 	| ast result |
 	ast := (Interpretable >> #returnFive) ast.
+	self halt.
+	
 	result := self interpreter execute: ast. 
 	self assert: result equals: 5
 ]

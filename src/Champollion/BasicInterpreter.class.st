@@ -48,5 +48,6 @@ BasicInterpreter >> visitReturnNode: aReturnNode [
 { #category : #running }
 BasicInterpreter >> visitSequenceNode: aSequenceNode [
 	
-	aSequenceNode statements do: [ :each | self visitNode: each ]
+	aSequenceNode statements allButLast do: [ :each | self visitNode: each ].
+	^ self visitNode: aSequenceNode statements last.
 ]
