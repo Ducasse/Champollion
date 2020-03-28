@@ -19,6 +19,12 @@ Interpretable >> returnFive [
 	^ 5
 ]
 
+{ #category : #message }
+Interpretable >> returnSelf [
+
+	^ self
+]
+
 { #category : #'instance variable access' }
 Interpretable >> returnX [
 

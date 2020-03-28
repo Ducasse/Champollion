@@ -45,6 +45,21 @@ BasicInterpreterTest >> testReturnFalse [
 ]
 
 { #category : #'level3 - message' }
+BasicInterpreterTest >> testReturnSelf [
+	"
+	returnSelf
+
+		^ self
+	"
+	| ast result object |
+	ast := (Interpretable >> #returnSelf) ast.
+	object := (Interpretable new x: 100; yourself).
+	result := self interpreter execute: ast with: object.
+	self assert: result equals: object 
+	
+]
+
+{ #category : #'level3 - message' }
 BasicInterpreterTest >> testSendMessageReturnX [
 	"
 	sendMessageReturnX

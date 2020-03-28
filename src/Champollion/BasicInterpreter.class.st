@@ -90,7 +90,12 @@ BasicInterpreter >> visitMessageNode: aMessageNode [
 	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
 	
 	method := aMessageNode receiver lookup: aMessageNode selector fromClass: rec class. 
-	
+	" I have probably a bug because if I have (self +3 ) bar the lookup of bar should not be in the node message + "
+	"I wonder if I can dispatch because of course I could do 
+	aMessageNode receiver = self 
+		...
+								= super
+	"
 	^ self execute: method 
 ]
 
@@ -116,7 +121,7 @@ BasicInterpreter >> visitReturnNode: aReturnNode [
 	^ self visitNode: aReturnNode value
 ]
 
-{ #category : #'level 3 - message' }
+{ #category : #'level3 - visting - message' }
 BasicInterpreter >> visitSelfNode: aRBSelfNode [ 
 	^ receiver
 ]
