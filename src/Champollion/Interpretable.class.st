@@ -25,6 +25,12 @@ Interpretable >> returnX [
 	^ x 
 ]
 
+{ #category : #message }
+Interpretable >> sendMessageReturnX [
+
+	^ self returnX
+]
+
 { #category : #temporaries }
 Interpretable >> settingAValueToTemp [
 

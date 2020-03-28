@@ -44,6 +44,20 @@ BasicInterpreterTest >> testReturnFalse [
 	self deny: result 
 ]
 
+{ #category : #'level 3 - message' }
+BasicInterpreterTest >> testSendMessageReturnX [
+	"
+	sendMessageReturnX
+
+		^ self returnX
+	"
+	| ast result |
+	ast := (Interpretable >> #sendMessageReturnX) ast.
+	result := self interpreter execute: ast with: (Interpretable new x: 100).
+	self assert: result equals: 100. 
+	
+]
+
 { #category : #'level2 - tmps' }
 BasicInterpreterTest >> testSettingAValueToTemp [
 
