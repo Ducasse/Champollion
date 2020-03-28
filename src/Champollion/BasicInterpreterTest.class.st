@@ -16,7 +16,7 @@ BasicInterpreterTest >> interpreterClass [
 	^ BasicInterpreter
 ]
 
-{ #category : #assignment }
+{ #category : #'level1 - assignment' }
 BasicInterpreterTest >> testAccessXInInstance [
 
 	| ast result |
@@ -26,7 +26,7 @@ BasicInterpreterTest >> testAccessXInInstance [
 	
 ]
 
-{ #category : #'return constant' }
+{ #category : #'level1 - return constant' }
 BasicInterpreterTest >> testReturnConstant [
 
 	| ast result |
@@ -35,7 +35,7 @@ BasicInterpreterTest >> testReturnConstant [
 	self assert: result equals: 5
 ]
 
-{ #category : #'return constant' }
+{ #category : #'level1 - return constant' }
 BasicInterpreterTest >> testReturnFalse [
 
 	| ast result |
@@ -44,7 +44,7 @@ BasicInterpreterTest >> testReturnFalse [
 	self deny: result 
 ]
 
-{ #category : #assignment }
+{ #category : #'level1 - assignment' }
 BasicInterpreterTest >> testStore100IntoX [
 
 	| ast result |

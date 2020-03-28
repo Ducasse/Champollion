@@ -4,6 +4,9 @@ Only
 	constant
 	self send 
 	iv
+	
+	method temps 
+
 "
 Class {
 	#name : #BasicInterpreter,
