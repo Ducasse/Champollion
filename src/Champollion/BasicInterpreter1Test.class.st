@@ -43,12 +43,3 @@ BasicInterpreter1Test >> testReturnFalse [
 	result := self interpreter execute: ast. 
 	self deny: result 
 ]
-
-{ #category : #'level1 - assignment' }
-BasicInterpreter1Test >> testStore100IntoX [
-
-	| ast result |
-	ast := (Interpretable >> #store100IntoX) ast.
-	result := self interpreter execute: ast with: Interpretable new. 
-	
-]

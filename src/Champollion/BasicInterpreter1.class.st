@@ -21,17 +21,6 @@ BasicInterpreter1 >> execute: anAST with: anObject [
 ]
 
 { #category : #visiting }
-BasicInterpreter1 >> visitAssignmentNode: anAssignmentNode [
-	"| x y |
-	x := y := 10.
-	x
-	>>> 10"
-
-	self visitNode: anAssignmentNode variable.
-	^ self visitNode: anAssignmentNode value
-]
-
-{ #category : #visiting }
 BasicInterpreter1 >> visitInstanceVariableNode: aVariableNode [
 
 	^ receiver instVarNamed: aVariableNode name

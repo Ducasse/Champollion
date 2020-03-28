@@ -12,7 +12,8 @@ Class {
 	#name : #BasicInterpreter,
 	#superclass : #Object,
 	#instVars : [
-		'receiver'
+		'receiver',
+		'frame'
 	],
 	#category : #'Champollion-Core'
 }
@@ -30,54 +31,93 @@ BasicInterpreter >> execute: anAST with: anObject [
 	^ self visitNode: anAST
 ]
 
-{ #category : #visiting }
+{ #category : #'level2 - visiting' }
+BasicInterpreter >> newFrame [
+	"a new scope is an environment, i.e., a dictionary which supports lookup in its parent.
+	This is important to manage variable shadowing. A local temp can hide another temp of a parent
+	scope in a local scope."
+	
+	^ CTEnvironment new
+]
+
+{ #category : #'level1 - visiting' }
 BasicInterpreter >> visitAssignmentNode: anAssignmentNode [
 	"| x y |
 	x := y := 10.
 	x
 	>>> 10"
 
-	self visitNode: anAssignmentNode variable.
+	self visitAssignedVariableNode: anAssignmentNode variable.
 	^ self visitNode: anAssignmentNode value
 ]
 
-{ #category : #visiting }
+{ #category : #'level1 - visiting' }
 BasicInterpreter >> visitInstanceVariableNode: aVariableNode [
 
 	^ receiver instVarNamed: aVariableNode name
 ]
 
-{ #category : #visiting }
+{ #category : #'level1 - visiting' }
 BasicInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
 
 	^ aRBLiteralValueNode value
 ]
 
-{ #category : #visiting }
+{ #category : #'level1 - visiting' }
 BasicInterpreter >> visitMethodBodyNode: aMethodBodyNode [
 	^ self visitNode: aMethodBodyNode 
 ]
 
-{ #category : #visiting }
+{ #category : #'level1 - visiting' }
 BasicInterpreter >> visitMethodNode: aMethodNode [
 
 	^ self visitMethodBodyNode: aMethodNode body
 ]
 
-{ #category : #visiting }
+{ #category : #'level1 - visiting' }
 BasicInterpreter >> visitNode: aNode [
 	^ aNode acceptVisitor: self
 ]
 
-{ #category : #visiting }
+{ #category : #'level1 - visiting' }
 BasicInterpreter >> visitReturnNode: aReturnNode [
 
 	^ self visitNode: aReturnNode value
 ]
 
-{ #category : #visiting }
+{ #category : #'level2 - visiting' }
 BasicInterpreter >> visitSequenceNode: aSequenceNode [
-	
+	self visitTemporaryNodes: aSequenceNode temporaries.
 	aSequenceNode statements allButLast do: [ :each | self visitNode: each ].
 	^ self visitNode: aSequenceNode statements last.
+]
+
+{ #category : #'level2 - visiting' }
+BasicInterpreter >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
+	"| temp |
+	temp is a temporary node as we can find in the body of methods."
+
+	frame at: aTemporaryDeclarationNode name put: nil.
+]
+
+{ #category : #'level2 - visiting' }
+BasicInterpreter >> visitTemporaryNode: aTemporaryNode [
+
+	^ frame at: aTemporaryNode name
+]
+
+{ #category : #'level2 - visiting' }
+BasicInterpreter >> visitTemporaryNodeDeclaration: aNodeCollection [
+	"This is triggered when defining the temporaries between the pipes"
+
+	^ aNodeCollection
+		do: [ :each | self visitTemporaryDeclarationNode: each ]
+]
+
+{ #category : #'level2 - visiting' }
+BasicInterpreter >> visitTemporaryNodes: aNodeCollection [
+	"This is triggered when defining the temporaries between the pipes"
+
+	^ aNodeCollection
+		do: [ :each | self visitTemporaryDeclarationNode: each ]
 ]

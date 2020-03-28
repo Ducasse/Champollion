@@ -44,6 +44,15 @@ BasicInterpreterTest >> testReturnFalse [
 	self deny: result 
 ]
 
+{ #category : #'level2 - tmps' }
+BasicInterpreterTest >> testSettingAValueToTemp [
+
+	| ast result |
+	ast := (Interpretable >> #settingAValueToTemp) ast.
+	result := self interpreter execute: ast. 
+	self assert: result equals: 10 
+]
+
 { #category : #'level1 - assignment' }
 BasicInterpreterTest >> testStore100IntoX [
 

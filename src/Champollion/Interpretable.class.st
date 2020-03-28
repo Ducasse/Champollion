@@ -25,6 +25,14 @@ Interpretable >> returnX [
 	^ x 
 ]
 
+{ #category : #temporaries }
+Interpretable >> settingAValueToTemp [
+
+	| temp | 
+	temp := 10.
+	^ temp
+]
+
 { #category : #'instance variable access' }
 Interpretable >> store100IntoX [
 
