@@ -33,6 +33,23 @@ Interpretable >> settingAValueToTemp [
 	^ temp
 ]
 
+{ #category : #temporaries }
+Interpretable >> settingAValueToTempEmbedded [
+
+	| temp1 temp2 | 
+	temp2 := temp1 := 10.
+	^ temp2
+]
+
+{ #category : #temporaries }
+Interpretable >> settingAValueToTempInARow [
+
+	| temp1 temp2| 
+	temp1 := 10.
+	temp2 := temp1.
+	^ temp2
+]
+
 { #category : #'instance variable access' }
 Interpretable >> store100IntoX [
 

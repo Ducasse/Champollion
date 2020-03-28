@@ -54,6 +54,35 @@ BasicInterpreterTest >> testSettingAValueToTemp [
 ]
 
 { #category : #'level2 - tmps' }
+BasicInterpreterTest >> testSettingAValueToTempEmbedded [
+	"settingAValueToTempEmbedded
+
+		| temp1 temp2 | 
+		temp2 := temp1 := 10.
+		^ temp2
+	"
+	| ast result |
+	ast := (Interpretable >> #settingAValueToTempEmbedded) ast.
+	result := self interpreter execute: ast. 
+	self assert: result equals: 10 
+]
+
+{ #category : #'level2 - tmps' }
+BasicInterpreterTest >> testSettingAValueToTempInARow [
+	"settingAValueToTempInARow
+
+		| temp1 temp2| 
+		temp1 := 10.
+		temp2 := temp1.
+		^ temp2
+	"
+	| ast result |
+	ast := (Interpretable >> #settingAValueToTempInARow) ast.
+	result := self interpreter execute: ast. 
+	self assert: result equals: 10 
+]
+
+{ #category : #'level2 - tmps' }
 BasicInterpreterTest >> testStore100IntoX [
 
 	| ast result object  |
