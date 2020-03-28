@@ -6,5 +6,8 @@ RBSelfNode >> lookup: aSymbol fromClass: aClass [
 	
 	^ (aClass includesSelector: aSymbol)
 		ifTrue: [ (aClass compiledMethodAt: aSymbol) ast ]
-		ifFalse: [ "no lookup for now" nil ]
+		ifFalse: [
+				aClass = ProtoObject 
+					ifTrue: [ nil ]
+					ifFalse: [ self lookup: aSymbol fromClass: aClass superclass ]]
 ]

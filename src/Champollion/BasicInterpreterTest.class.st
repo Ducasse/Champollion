@@ -26,6 +26,16 @@ BasicInterpreterTest >> testAccessXInInstance [
 	
 ]
 
+{ #category : #'level3 - lookup' }
+BasicInterpreterTest >> testLookupMessageInSuperclass [
+
+	| ast result |
+	ast := (Interpretable >> #sendMessageReturnX) ast.
+	result := self interpreter execute: ast with: (InterpretableSubclass new x: 100).
+	self assert: result equals: 100. 
+	
+]
+
 { #category : #'level1 - return constant' }
 BasicInterpreterTest >> testReturnConstant [
 
