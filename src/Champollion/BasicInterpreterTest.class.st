@@ -82,10 +82,10 @@ BasicInterpreterTest >> testSettingAValueToTempInARow [
 	self assert: result equals: 10 
 ]
 
-{ #category : #'level2 - tmps' }
+{ #category : #'level2 - store instance variable' }
 BasicInterpreterTest >> testStore100IntoX [
 
-	| ast result object  |
+	| ast result object |
 	ast := (Interpretable >> #store100IntoX) ast.
 	object := Interpretable new. 
 	result := self interpreter execute: ast with: object. 
