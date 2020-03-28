@@ -31,7 +31,7 @@ BasicInterpreter >> execute: anAST with: anObject [
 	^ self visitNode: anAST
 ]
 
-{ #category : #'level2 - visiting' }
+{ #category : #temporaries }
 BasicInterpreter >> newFrame [
 	"a new scope is an environment, i.e., a dictionary which supports lookup in its parent.
 	This is important to manage variable shadowing. A local temp can hide another temp of a parent
@@ -43,6 +43,18 @@ BasicInterpreter >> newFrame [
 { #category : #accessing }
 BasicInterpreter >> receiver [
 	^ receiver
+]
+
+{ #category : #temporaries }
+BasicInterpreter >> tempAt: aSymbol [
+
+	^ frame at: aSymbol
+]
+
+{ #category : #temporaries }
+BasicInterpreter >> tempAt: aSymbol put: anInteger [ 
+
+	frame at: aSymbol put: anInteger
 ]
 
 { #category : #'level2 - visiting' }
@@ -94,6 +106,7 @@ BasicInterpreter >> visitReturnNode: aReturnNode [
 
 { #category : #'level2 - visiting' }
 BasicInterpreter >> visitSequenceNode: aSequenceNode [
+
 	self visitTemporaryNodes: aSequenceNode temporaries.
 	aSequenceNode statements allButLast do: [ :each | self visitNode: each ].
 	^ self visitNode: aSequenceNode statements last.
@@ -104,27 +117,20 @@ BasicInterpreter >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
 	"| temp |
 	temp is a temporary node as we can find in the body of methods."
 
-	frame at: aTemporaryDeclarationNode name put: nil.
+	self tempAt: aTemporaryDeclarationNode name put: nil.
 ]
 
 { #category : #'level2 - visiting' }
 BasicInterpreter >> visitTemporaryNode: aTemporaryNode [
 
-	^ frame at: aTemporaryNode name
-]
-
-{ #category : #'level2 - visiting' }
-BasicInterpreter >> visitTemporaryNodeDeclaration: aNodeCollection [
-	"This is triggered when defining the temporaries between the pipes"
-
-	^ aNodeCollection
-		do: [ :each | self visitTemporaryDeclarationNode: each ]
+	^ self tempAt: aTemporaryNode name
 ]
 
 { #category : #'level2 - visiting' }
 BasicInterpreter >> visitTemporaryNodes: aNodeCollection [
 	"This is triggered when defining the temporaries between the pipes"
-
+	
+	frame := self newFrame. 	
 	^ aNodeCollection
 		do: [ :each | self visitTemporaryDeclarationNode: each ]
 ]
