@@ -14,7 +14,7 @@ Class {
 	#instVars : [
 		'receiver'
 	],
-	#category : #Champollion
+	#category : #'Champollion-Core'
 }
 
 { #category : #running }

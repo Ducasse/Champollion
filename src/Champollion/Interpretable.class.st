@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'x'
 	],
-	#category : #Champollion
+	#category : #'Champollion-Core'
 }
 
 { #category : #'simple constant' }
