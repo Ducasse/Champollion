@@ -1,7 +1,7 @@
 Class {
 	#name : #BasicInterpreter1Test,
 	#superclass : #TestCase,
-	#category : #Champollion
+	#category : #'Champollion-Level1'
 }
 
 { #category : #hooks }

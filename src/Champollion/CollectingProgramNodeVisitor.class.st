@@ -1,7 +1,7 @@
 Class {
 	#name : #CollectingProgramNodeVisitor,
 	#superclass : #RBProgramNodeVisitor,
-	#category : #Champollion
+	#category : #'Champollion-Unused'
 }
 
 { #category : #visiting }
