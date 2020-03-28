@@ -44,7 +44,7 @@ BasicInterpreterTest >> testReturnFalse [
 	self deny: result 
 ]
 
-{ #category : #'level 3 - message' }
+{ #category : #'level3 - message' }
 BasicInterpreterTest >> testSendMessageReturnX [
 	"
 	sendMessageReturnX

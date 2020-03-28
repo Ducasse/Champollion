@@ -85,13 +85,13 @@ BasicInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
 { #category : #'level3 - visting - message' }
 BasicInterpreter >> visitMessageNode: aMessageNode [
 
-	| rec args | 
+	| rec args method | 
 	rec := self visitNode: aMessageNode receiver.
 	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
 	
-	"
-	rec lookup: aMessageNode selector from: 
-	"
+	method := aMessageNode receiver lookup: aMessageNode selector fromClass: rec class. 
+	
+	^ self execute: method 
 ]
 
 { #category : #'level1 - visiting - constant access' }
@@ -114,6 +114,11 @@ BasicInterpreter >> visitNode: aNode [
 BasicInterpreter >> visitReturnNode: aReturnNode [
 
 	^ self visitNode: aReturnNode value
+]
+
+{ #category : #'level 3 - message' }
+BasicInterpreter >> visitSelfNode: aRBSelfNode [ 
+	^ receiver
 ]
 
 { #category : #'level2 - visiting - temps' }
