@@ -16,7 +16,7 @@ BasicInterpreterTest >> interpreterClass [
 	^ BasicInterpreter
 ]
 
-{ #category : #'level1 - assignment' }
+{ #category : #'level1 - state access' }
 BasicInterpreterTest >> testAccessXInInstance [
 
 	| ast result |
@@ -53,11 +53,13 @@ BasicInterpreterTest >> testSettingAValueToTemp [
 	self assert: result equals: 10 
 ]
 
-{ #category : #'level1 - assignment' }
+{ #category : #'level2 - tmps' }
 BasicInterpreterTest >> testStore100IntoX [
 
-	| ast result |
+	| ast result object  |
 	ast := (Interpretable >> #store100IntoX) ast.
-	result := self interpreter execute: ast with: Interpretable new. 
+	object := Interpretable new. 
+	result := self interpreter execute: ast with: object. 
+	self assert: object x equals: 100
 	
 ]

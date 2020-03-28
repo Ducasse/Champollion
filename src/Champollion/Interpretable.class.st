@@ -47,6 +47,12 @@ Interpretable >> store100IntoXAndReturnX [
 ]
 
 { #category : #helpers }
+Interpretable >> x [
+
+	^ x
+]
+
+{ #category : #helpers }
 Interpretable >> x: anInteger [
 
 	x := anInteger

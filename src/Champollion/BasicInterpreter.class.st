@@ -40,15 +40,22 @@ BasicInterpreter >> newFrame [
 	^ CTEnvironment new
 ]
 
-{ #category : #'level1 - visiting' }
+{ #category : #accessing }
+BasicInterpreter >> receiver [
+	^ receiver
+]
+
+{ #category : #'level2 - visiting' }
 BasicInterpreter >> visitAssignmentNode: anAssignmentNode [
 	"| x y |
 	x := y := 10.
 	x
 	>>> 10"
-
-	self visitAssignedVariableNode: anAssignmentNode variable.
-	^ self visitNode: anAssignmentNode value
+	
+	| value | 
+	value := (self visitNode: anAssignmentNode value).
+	anAssignmentNode variable store: value with: self.
+	^ value
 ]
 
 { #category : #'level1 - visiting' }
