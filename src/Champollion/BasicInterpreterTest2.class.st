@@ -1,23 +1,23 @@
 Class {
-	#name : #BasicInterpreterTest,
+	#name : #BasicInterpreterTest2,
 	#superclass : #TestCase,
-	#category : #'Champollion-Core'
+	#category : #'Champollion-Level2'
 }
 
 { #category : #hooks }
-BasicInterpreterTest >> interpreter [
+BasicInterpreterTest2 >> interpreter [
 
 	^ self interpreterClass new
 ]
 
 { #category : #hooks }
-BasicInterpreterTest >> interpreterClass [ 
+BasicInterpreterTest2 >> interpreterClass [ 
 
-	^ BasicInterpreter
+	^ BasicInterpreter2
 ]
 
 { #category : #'level1 - state access' }
-BasicInterpreterTest >> testAccessXInInstance [
+BasicInterpreterTest2 >> testAccessXInInstance [
 
 	| ast result |
 	ast := (Interpretable >> #returnX) ast.
@@ -26,23 +26,8 @@ BasicInterpreterTest >> testAccessXInInstance [
 	
 ]
 
-{ #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testAddition [
-	"
-	addition
-
-		^ 3 + 2
-	"
-	| ast result |
-	self skip.
-	ast := (Interpretable >> #addition) ast.
-	result := self interpreter execute: ast.
-	self assert: result  equals: 5. 
-
-]
-
 { #category : #'level3 - lookup' }
-BasicInterpreterTest >> testLookupMessageInSuperclass [
+BasicInterpreterTest2 >> testLookupMessageInSuperclass [
 
 	| ast result |
 	ast := (Interpretable >> #sendMessageReturnX) ast.
@@ -51,39 +36,8 @@ BasicInterpreterTest >> testLookupMessageInSuperclass [
 	
 ]
 
-{ #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testNot [
-	"
-	not
-
-		^ false not
-	"
-	| ast result |
-	ast := (Interpretable >> #not) ast.
-	result := self interpreter execute: ast.
-	self assert: result
-
-]
-
-{ #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testPointCreation [
-	"
-	pointCreation
-
-		^ 10 @ 20
-	"
-	| ast result |
-		self skip.
-	ast := (Interpretable >> #pointCreation) ast.
-	result := self interpreter execute: ast.
-	self assert: result class equals: Point. 
-	self assert: result x equals: 10. 
-	self assert: result y equals: 20. 
-	
-]
-
 { #category : #'level1 - return constant' }
-BasicInterpreterTest >> testReturnConstant [
+BasicInterpreterTest2 >> testReturnConstant [
 
 	| ast result |
 	ast := (Interpretable >> #returnFive) ast.
@@ -92,7 +46,7 @@ BasicInterpreterTest >> testReturnConstant [
 ]
 
 { #category : #'level1 - return constant' }
-BasicInterpreterTest >> testReturnFalse [
+BasicInterpreterTest2 >> testReturnFalse [
 
 	| ast result |
 	ast := (Interpretable >> #returnFalse) ast.
@@ -101,7 +55,7 @@ BasicInterpreterTest >> testReturnFalse [
 ]
 
 { #category : #'level3 - dead simple message' }
-BasicInterpreterTest >> testReturnSelf [
+BasicInterpreterTest2 >> testReturnSelf [
 	"
 	returnSelf
 
@@ -116,7 +70,7 @@ BasicInterpreterTest >> testReturnSelf [
 ]
 
 { #category : #'level3 - dead simple message' }
-BasicInterpreterTest >> testSendMessageReturnX [
+BasicInterpreterTest2 >> testSendMessageReturnX [
 	"
 	sendMessageReturnX
 
@@ -129,23 +83,8 @@ BasicInterpreterTest >> testSendMessageReturnX [
 	
 ]
 
-{ #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testSendMessageToClass [
-	"
-	sendMessageToClass
-
-		^ Interpretable new
-	"
-	| ast result |
-		self skip.
-	ast := (Interpretable >> #sendMessageToClass) ast.
-	result := self interpreter execute: ast.
-	self assert: result class equals: Interpretable. 
-	
-]
-
 { #category : #'level2 - tmps' }
-BasicInterpreterTest >> testSettingAValueToTemp [
+BasicInterpreterTest2 >> testSettingAValueToTemp [
 
 	| ast result |
 	ast := (Interpretable >> #settingAValueToTemp) ast.
@@ -154,7 +93,7 @@ BasicInterpreterTest >> testSettingAValueToTemp [
 ]
 
 { #category : #'level2 - tmps' }
-BasicInterpreterTest >> testSettingAValueToTempEmbedded [
+BasicInterpreterTest2 >> testSettingAValueToTempEmbedded [
 	"settingAValueToTempEmbedded
 
 		| temp1 temp2 | 
@@ -168,7 +107,7 @@ BasicInterpreterTest >> testSettingAValueToTempEmbedded [
 ]
 
 { #category : #'level2 - tmps' }
-BasicInterpreterTest >> testSettingAValueToTempInARow [
+BasicInterpreterTest2 >> testSettingAValueToTempInARow [
 	"settingAValueToTempInARow
 
 		| temp1 temp2| 
@@ -183,7 +122,7 @@ BasicInterpreterTest >> testSettingAValueToTempInARow [
 ]
 
 { #category : #'level2 - store instance variable' }
-BasicInterpreterTest >> testStore100IntoX [
+BasicInterpreterTest2 >> testStore100IntoX [
 
 	| ast result object |
 	ast := (Interpretable >> #store100IntoX) ast.

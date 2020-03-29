@@ -7,6 +7,24 @@ Class {
 	#category : #'Champollion-Core'
 }
 
+{ #category : #message }
+Interpretable >> addition [
+
+	^ 3 + 2
+]
+
+{ #category : #message }
+Interpretable >> not [
+
+	^ false not
+]
+
+{ #category : #message }
+Interpretable >> pointCreation [
+
+	^ 10 @ 20
+]
+
 { #category : #'simple constant' }
 Interpretable >> returnFalse [
 
@@ -35,6 +53,12 @@ Interpretable >> returnX [
 Interpretable >> sendMessageReturnX [
 
 	^ self returnX
+]
+
+{ #category : #message }
+Interpretable >> sendMessageToClass [
+
+	^ Interpretable new
 ]
 
 { #category : #temporaries }

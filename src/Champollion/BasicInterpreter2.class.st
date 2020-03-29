@@ -1,50 +1,29 @@
-"
-Only 
-	
-	constant
-	self send 
-	iv
-	
-	method temps 
-
-"
 Class {
-	#name : #BasicInterpreter,
+	#name : #BasicInterpreter2,
 	#superclass : #Object,
 	#instVars : [
+		'receiver',
+		'frame',
 		'stack'
 	],
-	#category : #'Champollion-Core'
+	#category : #'Champollion-Level2'
 }
 
-{ #category : #temporaries }
-BasicInterpreter >> currentFrame [
-
-	^ stack top 
-]
-
 { #category : #running }
-BasicInterpreter >> execute: anAST [
+BasicInterpreter2 >> execute: anAST [
 
 	^ self visitNode: anAST
 ]
 
 { #category : #running }
-BasicInterpreter >> execute: anAST with: anObject [
+BasicInterpreter2 >> execute: anAST with: anObject [
 
-	self tempAt: #self put: anObject.
+	receiver := anObject.
 	^ self visitNode: anAST
-]
-
-{ #category : #'level4 - real messages' }
-BasicInterpreter >> initialize [ 
-	super initialize. 
-	stack := Stack new.
-	stack push: self newFrame.
 ]
 
 { #category : #'level3 - visting - dead simple message' }
-BasicInterpreter >> lookup: aSymbol fromClass: aClass [ 
+BasicInterpreter2 >> lookup: aSymbol fromClass: aClass [ 
 	"return the method ast or nil."
 	
 	^ (aClass includesSelector: aSymbol)
@@ -56,7 +35,7 @@ BasicInterpreter >> lookup: aSymbol fromClass: aClass [
 ]
 
 { #category : #temporaries }
-BasicInterpreter >> newFrame [
+BasicInterpreter2 >> newFrame [
 	"a new scope is an environment, i.e., a dictionary which supports lookup in its parent.
 	This is important to manage variable shadowing. A local temp can hide another temp of a parent
 	scope in a local scope."
@@ -64,37 +43,25 @@ BasicInterpreter >> newFrame [
 	^ CTEnvironment new
 ]
 
-{ #category : #'level4 - real messages' }
-BasicInterpreter >> pushNewFrame [
-	"Pushing a new scope consists in creating a new dictionary whose parent is the top of the stack
-	and pushing it as a new top. This way a variable not found in current scope will be looked up in previous scope."
-
-	| newTop |
-	newTop := self newFrame.
-	newTop parent: stack top.
-	stack push: newTop 
-	
-]
-
 { #category : #accessing }
-BasicInterpreter >> receiver [
-	^ stack top at: #self
+BasicInterpreter2 >> receiver [
+	^ receiver
 ]
 
 { #category : #temporaries }
-BasicInterpreter >> tempAt: aSymbol [
+BasicInterpreter2 >> tempAt: aSymbol [
 
-	^ self currentFrame at: aSymbol
+	^ frame at: aSymbol
 ]
 
 { #category : #temporaries }
-BasicInterpreter >> tempAt: aSymbol put: anInteger [ 
+BasicInterpreter2 >> tempAt: aSymbol put: anInteger [ 
 
-	self currentFrame at: aSymbol put: anInteger
+	frame at: aSymbol put: anInteger
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitAssignmentNode: anAssignmentNode [
+BasicInterpreter2 >> visitAssignmentNode: anAssignmentNode [
 	"| x y |
 	x := y := 10.
 	x
@@ -107,68 +74,64 @@ BasicInterpreter >> visitAssignmentNode: anAssignmentNode [
 ]
 
 { #category : #'level3 - class message' }
-BasicInterpreter >> visitGlobalNode: aRBGlobalNode [ 
+BasicInterpreter2 >> visitGlobalNode: aRBGlobalNode [ 
 
 	^ self class environment at: aRBGlobalNode name ifAbsent: [ self error: aRBGlobalNode name, ' not found' ]
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitInstanceVariableNode: aVariableNode [
+BasicInterpreter2 >> visitInstanceVariableNode: aVariableNode [
 
-	^ self receiver instVarNamed: aVariableNode name
+	^ receiver instVarNamed: aVariableNode name
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
+BasicInterpreter2 >> visitLiteralValueNode: aRBLiteralValueNode [
 
 	^ aRBLiteralValueNode value
 ]
 
 { #category : #'level3 - visting - dead simple message' }
-BasicInterpreter >> visitMessageNode: aMessageNode [
+BasicInterpreter2 >> visitMessageNode: aMessageNode [
 
 	| rec method | 
-	self pushNewFrame.
 	rec := self visitNode: aMessageNode receiver.
-	self tempAt: #self put: rec. 
 	method := self lookup: aMessageNode selector fromClass: rec class. 
-	"could pop simply here?"
 	^ self execute: method
 	 
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitMethodBodyNode: aMethodBodyNode [
+BasicInterpreter2 >> visitMethodBodyNode: aMethodBodyNode [
 	^ self visitNode: aMethodBodyNode 
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitMethodNode: aMethodNode [
+BasicInterpreter2 >> visitMethodNode: aMethodNode [
 
 	^ self visitMethodBodyNode: aMethodNode body
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitNode: aNode [
+BasicInterpreter2 >> visitNode: aNode [
 	^ aNode acceptVisitor: self
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitReturnNode: aReturnNode [
+BasicInterpreter2 >> visitReturnNode: aReturnNode [
 
 	| val |
 	val := self visitNode: aReturnNode value.
-	stack pop.
 	^ val
 ]
 
 { #category : #'level3 - visting - dead simple message' }
-BasicInterpreter >> visitSelfNode: aRBSelfNode [ 
-	^ self receiver
+BasicInterpreter2 >> visitSelfNode: aRBSelfNode [ 
+	^ receiver
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitSequenceNode: aSequenceNode [
+BasicInterpreter2 >> visitSequenceNode: aSequenceNode [
 
 	self visitTemporaryNodes: aSequenceNode temporaries.
 	aSequenceNode statements allButLast do: [ :each | self visitNode: each ].
@@ -176,7 +139,7 @@ BasicInterpreter >> visitSequenceNode: aSequenceNode [
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
+BasicInterpreter2 >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
 	"| temp |
 	temp is a temporary node as we can find in the body of methods."
 
@@ -184,16 +147,16 @@ BasicInterpreter >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitTemporaryNode: aTemporaryNode [
+BasicInterpreter2 >> visitTemporaryNode: aTemporaryNode [
 
 	^ self tempAt: aTemporaryNode name
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitTemporaryNodes: aNodeCollection [
+BasicInterpreter2 >> visitTemporaryNodes: aNodeCollection [
 	"This is triggered when defining the temporaries between the pipes"
 	
-	self pushNewFrame. 	
+	frame := self newFrame. 	
 	^ aNodeCollection
 		do: [ :each | self visitTemporaryDeclarationNode: each ]
 ]
