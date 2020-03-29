@@ -45,6 +45,24 @@ Interpretable >> returnFive [
 ]
 
 { #category : #message }
+Interpretable >> returnLast [
+
+	^ self returnLastOf: 10 and: 20
+]
+
+{ #category : #message }
+Interpretable >> returnLastOf2: b and: a [
+
+	^ self returnLastOf: b and: a
+]
+
+{ #category : #message }
+Interpretable >> returnLastOf: a and: b [
+
+	^ b
+]
+
+{ #category : #message }
 Interpretable >> returnSelf [
 
 	^ self

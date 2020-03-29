@@ -30,16 +30,24 @@ BasicInterpreter >> execute: anAST [
 ]
 
 { #category : #running }
-BasicInterpreter >> execute: anAST with: anObject [
+BasicInterpreter >> execute: anAST withReceiver: anObject [
 
 	self tempAt: #self put: anObject.
 	^ self visitNode: anAST
 ]
 
+{ #category : #running }
+BasicInterpreter >> execute: aMethodAST withReceiver: anObject andArguments: args [
+
+	self tempAt: #self put: anObject.
+	aMethodAST arguments with: args do: [ :arg :value | self tempAt: arg name put: value ]. 
+	^ self visitNode: aMethodAST
+]
+
 { #category : #'level4 - real messages' }
 BasicInterpreter >> initialize [ 
 	super initialize. 
-	stack := Stack new.
+	stack := CTStack new.
 	stack push: self newFrame.
 ]
 
@@ -65,6 +73,13 @@ BasicInterpreter >> newFrame [
 ]
 
 { #category : #'level4 - real messages' }
+BasicInterpreter >> popFrame [
+
+	stack pop 
+	
+]
+
+{ #category : #'level4 - real messages' }
 BasicInterpreter >> pushNewFrame [
 	"Pushing a new scope consists in creating a new dictionary whose parent is the top of the stack
 	and pushing it as a new top. This way a variable not found in current scope will be looked up in previous scope."
@@ -72,13 +87,19 @@ BasicInterpreter >> pushNewFrame [
 	| newTop |
 	newTop := self newFrame.
 	newTop parent: stack top.
-	stack push: newTop 
+	stack push: newTop.
+	^ newTop
 	
 ]
 
 { #category : #accessing }
 BasicInterpreter >> receiver [
 	^ stack top at: #self
+]
+
+{ #category : #accessing }
+BasicInterpreter >> stack [
+	^ stack
 ]
 
 { #category : #temporaries }
@@ -91,6 +112,22 @@ BasicInterpreter >> tempAt: aSymbol [
 BasicInterpreter >> tempAt: aSymbol put: anInteger [ 
 
 	self currentFrame at: aSymbol put: anInteger
+]
+
+{ #category : #'level4 - real messages' }
+BasicInterpreter >> try [
+
+	| tmp |
+	tmp := 3.
+	[:x | 
+		| tmp1 | 
+		tmp := 2].
+	^ tmp
+]
+
+{ #category : #'level4 - real messages' }
+BasicInterpreter >> visitArgumentNode: aRBArgumentNode [ 
+	^ self tempAt: aRBArgumentNode name
 ]
 
 { #category : #'level2 - visiting - temps' }
@@ -124,17 +161,17 @@ BasicInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
 	^ aRBLiteralValueNode value
 ]
 
-{ #category : #'level3 - visting - dead simple message' }
+{ #category : #'level4 - real messages' }
 BasicInterpreter >> visitMessageNode: aMessageNode [
 
-	| rec method | 
+	| rec args method res | 
 	self pushNewFrame.
 	rec := self visitNode: aMessageNode receiver.
-	self tempAt: #self put: rec. 
+	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
 	method := self lookup: aMessageNode selector fromClass: rec class. 
-	"could pop simply here?"
-	^ self execute: method
-	 
+	res := self execute: method withReceiver: rec andArguments: args.
+	self popFrame.
+	^ res 
 ]
 
 { #category : #'level1 - visiting - constant access' }
@@ -144,7 +181,7 @@ BasicInterpreter >> visitMethodBodyNode: aMethodBodyNode [
 
 { #category : #'level1 - visiting - constant access' }
 BasicInterpreter >> visitMethodNode: aMethodNode [
-
+	
 	^ self visitMethodBodyNode: aMethodNode body
 ]
 
@@ -169,10 +206,16 @@ BasicInterpreter >> visitSelfNode: aRBSelfNode [
 
 { #category : #'level2 - visiting - temps' }
 BasicInterpreter >> visitSequenceNode: aSequenceNode [
-
+	| res |
 	self visitTemporaryNodes: aSequenceNode temporaries.
+	"this will create a new frame to hold temporaries and arguments for example of blocks. "
 	aSequenceNode statements allButLast do: [ :each | self visitNode: each ].
-	^ self visitNode: aSequenceNode statements last.
+	res := self visitNode: aSequenceNode statements last.
+	self popFrame.
+	"even if block tmps shared the names with the methods temps, and arguments 
+	this frame will have to be popped.
+	two block side by side should not share their temp values"
+	^ res
 ]
 
 { #category : #'level2 - visiting - temps' }

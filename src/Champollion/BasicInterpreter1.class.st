@@ -14,7 +14,7 @@ BasicInterpreter1 >> execute: anAST [
 ]
 
 { #category : #running }
-BasicInterpreter1 >> execute: anAST with: anObject [
+BasicInterpreter1 >> execute: anAST withReceiver: anObject [
 
 	receiver := anObject.
 	^ self visitNode: anAST

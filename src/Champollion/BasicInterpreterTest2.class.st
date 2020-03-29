@@ -21,7 +21,7 @@ BasicInterpreterTest2 >> testAccessXInInstance [
 
 	| ast result |
 	ast := (Interpretable >> #returnX) ast.
-	result := self interpreter execute: ast with: (Interpretable new x: 100).
+	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]
@@ -31,7 +31,7 @@ BasicInterpreterTest2 >> testLookupMessageInSuperclass [
 
 	| ast result |
 	ast := (Interpretable >> #sendMessageReturnX) ast.
-	result := self interpreter execute: ast with: (InterpretableSubclass new x: 100).
+	result := self interpreter execute: ast withReceiver: (InterpretableSubclass new x: 100).
 	self assert: result equals: 100. 
 	
 ]
@@ -64,7 +64,7 @@ BasicInterpreterTest2 >> testReturnSelf [
 	| ast result object |
 	ast := (Interpretable >> #returnSelf) ast.
 	object := (Interpretable new x: 100; yourself).
-	result := self interpreter execute: ast with: object.
+	result := self interpreter execute: ast withReceiver: object.
 	self assert: result equals: object 
 	
 ]
@@ -78,7 +78,7 @@ BasicInterpreterTest2 >> testSendMessageReturnX [
 	"
 	| ast result |
 	ast := (Interpretable >> #sendMessageReturnX) ast.
-	result := self interpreter execute: ast with: (Interpretable new x: 100).
+	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]
@@ -127,7 +127,7 @@ BasicInterpreterTest2 >> testStore100IntoX [
 	| ast result object |
 	ast := (Interpretable >> #store100IntoX) ast.
 	object := Interpretable new. 
-	result := self interpreter execute: ast with: object. 
+	result := self interpreter execute: ast withReceiver: object. 
 	self assert: object x equals: 100
 	
 ]

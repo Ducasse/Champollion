@@ -21,7 +21,7 @@ BasicInterpreter1Test >> testAccessXInInstance [
 
 	| ast result |
 	ast := (Interpretable >> #returnX) ast.
-	result := self interpreter execute: ast with: (Interpretable new x: 100).
+	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]

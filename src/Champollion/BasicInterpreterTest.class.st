@@ -21,7 +21,7 @@ BasicInterpreterTest >> testAccessXInInstance [
 
 	| ast result |
 	ast := (Interpretable >> #returnX) ast.
-	result := self interpreter execute: ast with: (Interpretable new x: 100).
+	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]
@@ -60,9 +60,24 @@ BasicInterpreterTest >> testLookupMessageInSuperclass [
 
 	| ast result |
 	ast := (Interpretable >> #sendMessageReturnX) ast.
-	result := self interpreter execute: ast with: (InterpretableSubclass new x: 100).
+	result := self interpreter execute: ast withReceiver: (InterpretableSubclass new x: 100).
 	self assert: result equals: 100. 
 	
+]
+
+{ #category : #'level4 - stack - envs' }
+BasicInterpreterTest >> testNewFrameIsCorrectlyCreated [
+
+	| prevEnv newEnv |
+	prevEnv := self interpreter stack top.
+	prevEnv at: #top put: 1. 
+	self deny: prevEnv hasParent. 
+	self halt.
+	newEnv := self interpreter pushNewFrame.
+	newEnv at: #newTop put: 2.  
+	self assert: newEnv parent equals: prevEnv.
+	self assert: self interpreter stack top equals: newEnv.
+
 ]
 
 { #category : #'level4 - messages to other' }
@@ -114,6 +129,49 @@ BasicInterpreterTest >> testReturnFalse [
 	self deny: result 
 ]
 
+{ #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testReturnLast [
+	"
+	returnLast
+		^ self returnLastOf: 10 and: 20
+	returnLastOf: a and: b
+		^ b
+	"
+	| ast result |
+	ast := (Interpretable >> #returnLast) ast.
+	result := self interpreter execute: ast withReceiver: Interpretable new.
+	self assert: result  equals: 20. 
+
+]
+
+{ #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testReturnLastOfAnd [
+	"
+	returnLastOf: a and: b
+		^ b
+	"
+	| ast result |
+	ast := (Interpretable >> #returnLastOf:and:) ast.
+	result := self interpreter execute: ast withReceiver: Interpretable new andArguments: { 10 . 20}.
+	self assert: result  equals: 20. 
+
+]
+
+{ #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testReturnLastOfAnd2 [
+	"
+	returnLastOf2: b and: a
+		^ self returnLastOf: b and: a
+	returnLastOf: a and: b
+		^ b
+	"
+	| ast result |
+	ast := (Interpretable >> #returnLastOf2:and:) ast.
+	result := self interpreter execute: ast withReceiver: Interpretable new andArguments: { 10 . 20}.
+	self assert: result  equals: 20. 
+
+]
+
 { #category : #'level3 - dead simple message' }
 BasicInterpreterTest >> testReturnSelf [
 	"
@@ -124,7 +182,7 @@ BasicInterpreterTest >> testReturnSelf [
 	| ast result object |
 	ast := (Interpretable >> #returnSelf) ast.
 	object := (Interpretable new x: 100; yourself).
-	result := self interpreter execute: ast with: object.
+	result := self interpreter execute: ast withReceiver: object.
 	self assert: result equals: object 
 	
 ]
@@ -138,7 +196,7 @@ BasicInterpreterTest >> testSendMessageReturnX [
 	"
 	| ast result |
 	ast := (Interpretable >> #sendMessageReturnX) ast.
-	result := self interpreter execute: ast with: (Interpretable new x: 100).
+	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]
@@ -151,7 +209,6 @@ BasicInterpreterTest >> testSendMessageToClass [
 		^ Interpretable new
 	"
 	| ast result |
-		self skip.
 	ast := (Interpretable >> #sendMessageToClass) ast.
 	result := self interpreter execute: ast.
 	self assert: result class equals: Interpretable. 
@@ -196,13 +253,21 @@ BasicInterpreterTest >> testSettingAValueToTempInARow [
 	self assert: result equals: 10 
 ]
 
+{ #category : #'level4 - stack - envs' }
+BasicInterpreterTest >> testStackIsCorrectlyCreated [
+
+	self deny: self interpreter stack top hasParent. 
+	self assert: self interpreter stack size equals: 1. 
+	self assert: self interpreter stack top properties isEmpty
+]
+
 { #category : #'level2 - store instance variable' }
 BasicInterpreterTest >> testStore100IntoX [
 
 	| ast result object |
 	ast := (Interpretable >> #store100IntoX) ast.
 	object := Interpretable new. 
-	result := self interpreter execute: ast with: object. 
+	result := self interpreter execute: ast withReceiver: object. 
 	self assert: object x equals: 100
 	
 ]
