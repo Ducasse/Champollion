@@ -41,6 +41,20 @@ BasicInterpreterTest >> testAddition [
 
 ]
 
+{ #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testIsLiteral [
+	"
+	not
+
+		^ false not
+	"
+	| ast result |
+	ast := (Interpretable >> #isLiteral) ast.
+	result := self interpreter execute: ast.
+	self assert: result
+
+]
+
 { #category : #'level3 - lookup' }
 BasicInterpreterTest >> testLookupMessageInSuperclass [
 

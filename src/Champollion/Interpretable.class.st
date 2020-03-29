@@ -14,6 +14,13 @@ Interpretable >> addition [
 ]
 
 { #category : #message }
+Interpretable >> isLiteral [ 
+	"isLiteral is defined on the superclass"
+	
+	^ false isLiteral 
+]
+
+{ #category : #message }
 Interpretable >> not [
 
 	^ false not
