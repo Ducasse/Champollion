@@ -1,12 +1,20 @@
 "
-Only 
+- constant
+	- self send 
+	- iv access
 	
-	constant
-	self send 
-	iv
+	- method temps 
+	- args 
 	
-	method temps 
+Next feature
+	- super send
+	- global access	
 
+What happens with return 
+	we push on message send and return of message send. 
+	but what about return 
+	
+How to execute primitive. 
 "
 Class {
 	#name : #BasicInterpreter,
@@ -193,10 +201,8 @@ BasicInterpreter >> visitNode: aNode [
 { #category : #'level1 - visiting - constant access' }
 BasicInterpreter >> visitReturnNode: aReturnNode [
 
-	| val |
-	val := self visitNode: aReturnNode value.
-	"stack pop."
-	^ val
+	^ self visitNode: aReturnNode value.
+
 ]
 
 { #category : #'level3 - visting - dead simple message' }
