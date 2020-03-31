@@ -207,11 +207,13 @@ BasicInterpreter >> visitSelfNode: aRBSelfNode [
 { #category : #'level2 - visiting - temps' }
 BasicInterpreter >> visitSequenceNode: aSequenceNode [
 	| res |
+	aSequenceNode hasTemporaries
+		ifTrue: [ self pushNewFrame ]. 	
 	self visitTemporaryNodes: aSequenceNode temporaries.
-	"this will create a new frame to hold temporaries and arguments for example of blocks. "
 	aSequenceNode statements allButLast do: [ :each | self visitNode: each ].
 	res := self visitNode: aSequenceNode statements last.
-	self popFrame.
+	aSequenceNode hasTemporaries
+		ifTrue: [ self popFrame ].
 	"even if block tmps shared the names with the methods temps, and arguments 
 	this frame will have to be popped.
 	two block side by side should not share their temp values"
@@ -236,7 +238,6 @@ BasicInterpreter >> visitTemporaryNode: aTemporaryNode [
 BasicInterpreter >> visitTemporaryNodes: aNodeCollection [
 	"This is triggered when defining the temporaries between the pipes"
 	
-	self pushNewFrame. 	
 	^ aNodeCollection
 		do: [ :each | self visitTemporaryDeclarationNode: each ]
 ]
