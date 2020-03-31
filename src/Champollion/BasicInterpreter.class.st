@@ -195,7 +195,7 @@ BasicInterpreter >> visitReturnNode: aReturnNode [
 
 	| val |
 	val := self visitNode: aReturnNode value.
-	stack pop.
+	"stack pop."
 	^ val
 ]
 
