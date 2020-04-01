@@ -176,7 +176,9 @@ BasicInterpreter >> visitMessageNode: aMessageNode [
 	self pushNewFrame.
 	rec := self visitNode: aMessageNode receiver.
 	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
-	method := self lookup: aMessageNode selector fromClass: rec class. 
+	method :=  aMessageNode receiver isSuper
+		ifTrue: [ self lookup: aMessageNode selector fromClass: rec class superclass ]
+		ifFalse: [ self lookup: aMessageNode selector fromClass: rec class ].
 	res := self execute: method withReceiver: rec andArguments: args.
 	self popFrame.
 	^ res 
@@ -214,8 +216,8 @@ BasicInterpreter >> visitSelfNode: aRBSelfNode [
 BasicInterpreter >> visitSequenceNode: aSequenceNode [
 	| res |
 	aSequenceNode hasTemporaries
-		ifTrue: [ self pushNewFrame ]. 	
-	self visitTemporaryNodes: aSequenceNode temporaries.
+		ifTrue: [ self pushNewFrame. 	
+				self visitTemporaryNodes: aSequenceNode temporaries].
 	aSequenceNode statements allButLast do: [ :each | self visitNode: each ].
 	res := self visitNode: aSequenceNode statements last.
 	aSequenceNode hasTemporaries

@@ -145,6 +145,7 @@ BasicInterpreterTest >> testReturnFive10 [
 		^ super returnFive + super returnFive 
 	"
 	| ast result |
+	self skip.
 	ast := (InterpretableSubclass >> #returnFive) ast.
 	self halt.
 	result := self interpreter execute: ast withReceiver: InterpretableSubclass new andArguments: #().
@@ -294,4 +295,17 @@ BasicInterpreterTest >> testStore100IntoX [
 	result := self interpreter execute: ast withReceiver: object. 
 	self assert: object x equals: 100
 	
+]
+
+{ #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testSuperNot [
+	"
+	not
+		^ super not & false not
+	"
+	| ast result |
+	ast := (InterpretableSubclass >> #not) ast.
+	result := self interpreter execute: ast withReceiver: InterpretableSubclass new andArguments: #().
+	self assert: result
+
 ]
