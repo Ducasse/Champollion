@@ -146,6 +146,7 @@ BasicInterpreterTest >> testReturnFive10 [
 	"
 	| ast result |
 	ast := (InterpretableSubclass >> #returnFive) ast.
+	self halt.
 	result := self interpreter execute: ast withReceiver: InterpretableSubclass new andArguments: #().
 	self assert: result  equals: 10. 
 

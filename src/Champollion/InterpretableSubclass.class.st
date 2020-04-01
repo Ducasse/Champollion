@@ -9,9 +9,3 @@ InterpretableSubclass >> returnFive [
 
 	^ super returnFive + super returnFive 
 ]
-
-{ #category : #'instance variable access' }
-InterpretableSubclass >> returnX [
-
-	^ 10000 
-]
