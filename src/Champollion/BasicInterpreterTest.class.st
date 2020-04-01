@@ -138,6 +138,20 @@ BasicInterpreterTest >> testReturnFalse [
 ]
 
 { #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testReturnFive10 [
+	"
+	returnFive
+
+		^ super returnFive + super returnFive 
+	"
+	| ast result |
+	ast := (InterpretableSubclass >> #returnFive) ast.
+	result := self interpreter execute: ast withReceiver: InterpretableSubclass new andArguments: #().
+	self assert: result  equals: 10. 
+
+]
+
+{ #category : #'level4 - messages to other' }
 BasicInterpreterTest >> testReturnLast [
 	"
 	returnLast

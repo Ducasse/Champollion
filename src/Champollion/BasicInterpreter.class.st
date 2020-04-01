@@ -226,6 +226,11 @@ BasicInterpreter >> visitSequenceNode: aSequenceNode [
 	^ res
 ]
 
+{ #category : #'as yet unclassified' }
+BasicInterpreter >> visitSuperNode: aRBSuperNode [ 
+	^ self receiver
+]
+
 { #category : #'level2 - visiting - temps' }
 BasicInterpreter >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
 	"| temp |
