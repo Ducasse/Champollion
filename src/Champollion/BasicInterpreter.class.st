@@ -176,10 +176,14 @@ BasicInterpreter >> visitMessageNode: aMessageNode [
 	self pushNewFrame.
 	rec := self visitNode: aMessageNode receiver.
 	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
-	method :=  aMessageNode receiver isSuper
-		ifTrue: [ self lookup: aMessageNode selector fromClass: rec class superclass ]
-		ifFalse: [ self lookup: aMessageNode selector fromClass: rec class ].
-	res := self execute: method withReceiver: rec andArguments: args.
+	aMessageNode methodNode isPrimitive
+		ifTrue: [
+			res := rec tryPrimitive: (aMessageNode methodNode pragmas first argumentAt: 'primitive:') value withArgs: args ]
+		ifFalse: [ 	
+			method :=  aMessageNode receiver isSuper
+				ifTrue: [ self lookup: aMessageNode selector fromClass: rec class superclass ]
+				ifFalse: [ self lookup: aMessageNode selector fromClass: rec class ].
+			res := self execute: method withReceiver: rec andArguments: args] .
 	self popFrame.
 	^ res 
 ]

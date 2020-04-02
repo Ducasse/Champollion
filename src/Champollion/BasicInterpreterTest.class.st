@@ -36,21 +36,6 @@ BasicInterpreterTest >> testAccessXInInstance [
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testAddition [
-	"
-	addition
-
-		^ 3 + 2
-	"
-	| ast result |
-	self skip.
-	ast := (Interpretable >> #addition) ast.
-	result := self interpreter execute: ast.
-	self assert: result  equals: 5. 
-
-]
-
-{ #category : #'level4 - messages to other' }
 BasicInterpreterTest >> testIsLiteral [
 	"
 	not
@@ -110,13 +95,27 @@ BasicInterpreterTest >> testPointCreation [
 		^ 10 @ 20
 	"
 	| ast result |
-		self skip.
+	self skip.
 	ast := (Interpretable >> #pointCreation) ast.
-	result := self interpreter execute: ast.
+	result := self interpreter execute: ast withReceiver: Interpretable new andArguments:{}.
 	self assert: result class equals: Point. 
 	self assert: result x equals: 10. 
 	self assert: result y equals: 20. 
 	
+]
+
+{ #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testPrimitiveAddition [
+	"
+	addition
+
+		^ 3 + 2
+	"
+	| ast result |
+	ast := (Interpretable >> #addition) ast.
+	result := self interpreter execute: ast.
+	self assert: result  equals: 5. 
+
 ]
 
 { #category : #'level1 - return constant' }
