@@ -7,6 +7,12 @@ Class {
 	#category : #'Champollion-Core'
 }
 
+{ #category : #'as yet unclassified' }
+Interpretable class >> return42 [
+
+	^ 42
+]
+
 { #category : #message }
 Interpretable >> addition [
 
@@ -30,6 +36,24 @@ Interpretable >> not [
 Interpretable >> pointCreation [
 
 	^ 10 @ 20
+]
+
+{ #category : #'class messages' }
+Interpretable >> pointCreationViaClass [
+
+	^ Point new
+]
+
+{ #category : #'class messages' }
+Interpretable >> return42 [
+
+	^ self class return42
+]
+
+{ #category : #'class messages' }
+Interpretable >> returnExplicitClass42 [
+
+	^ Interpretable return42
 ]
 
 { #category : #'simple constant' }
@@ -122,6 +146,12 @@ Interpretable >> store100IntoXAndReturnX [
 
 	x := 100.
 	
+]
+
+{ #category : #'super basic block' }
+Interpretable >> withCleanBlock [
+
+	^ [  2 + 5 ]
 ]
 
 { #category : #helpers }

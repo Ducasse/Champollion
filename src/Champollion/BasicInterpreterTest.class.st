@@ -35,6 +35,36 @@ BasicInterpreterTest >> testAccessXInInstance [
 	
 ]
 
+{ #category : #skipped }
+BasicInterpreterTest >> testClassPointCreation [
+	"
+	pointCreation
+
+		^ 10 @ 20
+	"
+	| ast result | 
+	self skip.
+	ast := (Interpretable >> #pointCreation) ast.
+	result := self interpreter execute: ast withReceiver: Interpretable new andArguments:{}.
+	self assert: result class equals: Point. 
+	self assert: result x equals: 10. 
+	self assert: result y equals: 20. 
+	
+]
+
+{ #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testIndirectMessageToClass [
+	"
+	return42
+		^ self class return42
+	"
+	| ast result |
+	ast := (Interpretable >> #return42) ast.
+	result := self interpreter execute: ast withReceiver: Interpretable new andArguments: {  }.
+	self assert: result equals: 42 
+	
+]
+
 { #category : #'level4 - messages to other' }
 BasicInterpreterTest >> testIsLiteral [
 	"
@@ -56,6 +86,20 @@ BasicInterpreterTest >> testLookupMessageInSuperclass [
 	ast := (Interpretable >> #sendMessageReturnX) ast.
 	result := self interpreter execute: ast withReceiver: (InterpretableSubclass new x: 100).
 	self assert: result equals: 100. 
+	
+]
+
+{ #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testMessageToClass [
+	"
+	return42
+
+		^ 42
+	"
+	| ast result |
+	ast := (Interpretable class >> #return42) ast.
+	result := self interpreter execute: ast withReceiver: Interpretable andArguments: {  }.
+	self assert: result equals: 42 
 	
 ]
 
@@ -87,14 +131,14 @@ BasicInterpreterTest >> testNot [
 
 ]
 
-{ #category : #'level4 - messages to other' }
+{ #category : #skipped }
 BasicInterpreterTest >> testPointCreation [
 	"
 	pointCreation
 
 		^ 10 @ 20
 	"
-	| ast result |
+	| ast result | 
 	self skip.
 	ast := (Interpretable >> #pointCreation) ast.
 	result := self interpreter execute: ast withReceiver: Interpretable new andArguments:{}.
@@ -127,6 +171,19 @@ BasicInterpreterTest >> testReturnConstant [
 	self assert: result equals: 5
 ]
 
+{ #category : #'level4 - messages to other' }
+BasicInterpreterTest >> testReturnExplicitClass42 [
+	"
+	return42
+		^ self class return42
+	"
+	| ast result |
+	ast := (Interpretable >> #returnExplicit42) ast.
+	result := self interpreter execute: ast withReceiver: Interpretable new andArguments: {  }.
+	self assert: result equals: 42 
+	
+]
+
 { #category : #'level1 - return constant' }
 BasicInterpreterTest >> testReturnFalse [
 
@@ -144,9 +201,7 @@ BasicInterpreterTest >> testReturnFive10 [
 		^ super returnFive + super returnFive 
 	"
 	| ast result |
-	self skip.
 	ast := (InterpretableSubclass >> #returnFive) ast.
-	self halt.
 	result := self interpreter execute: ast withReceiver: InterpretableSubclass new andArguments: #().
 	self assert: result  equals: 10. 
 
@@ -224,8 +279,8 @@ BasicInterpreterTest >> testSendMessageReturnX [
 	
 ]
 
-{ #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testSendMessageToClass [
+{ #category : #skipped }
+BasicInterpreterTest >> testSendNewClass [
 	"
 	sendMessageToClass
 

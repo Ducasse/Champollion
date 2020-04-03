@@ -232,7 +232,7 @@ BasicInterpreter >> visitSequenceNode: aSequenceNode [
 	^ res
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'level4 - real messages' }
 BasicInterpreter >> visitSuperNode: aRBSuperNode [ 
 	^ self receiver
 ]
