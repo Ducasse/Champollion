@@ -20,6 +20,6 @@ CBlock >> interpreter: aCBasicInterpreter [
 
 { #category : #evaluating }
 CBlock >> value [
-	
-	^ interpreter execute: body withReceiver: interpreter receiver andArguments: #()
+
+	^ interpreter visitNode: body 
 ]
