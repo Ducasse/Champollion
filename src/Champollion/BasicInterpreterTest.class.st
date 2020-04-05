@@ -178,7 +178,7 @@ BasicInterpreterTest >> testReturnExplicitClass42 [
 		^ self class return42
 	"
 	| ast result |
-	ast := (Interpretable >> #returnExplicit42) ast.
+	ast := (Interpretable >> #returnExplicitClass42) ast.
 	result := self interpreter execute: ast withReceiver: Interpretable new andArguments: {  }.
 	self assert: result equals: 42 
 	
