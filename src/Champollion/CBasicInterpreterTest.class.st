@@ -1,5 +1,5 @@
 Class {
-	#name : #BasicInterpreterTest,
+	#name : #CBasicInterpreterTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'interpreter'
@@ -8,35 +8,35 @@ Class {
 }
 
 { #category : #hooks }
-BasicInterpreterTest >> interpreter [
+CBasicInterpreterTest >> interpreter [
 
 	^ interpreter
 ]
 
 { #category : #hooks }
-BasicInterpreterTest >> interpreterClass [ 
+CBasicInterpreterTest >> interpreterClass [ 
 
-	^ BasicInterpreter
+	^ CBasicInterpreter
 ]
 
 { #category : #hooks }
-BasicInterpreterTest >> setUp [
+CBasicInterpreterTest >> setUp [
 
 	interpreter := self interpreterClass new
 ]
 
 { #category : #'level1 - state access' }
-BasicInterpreterTest >> testAccessXInInstance [
+CBasicInterpreterTest >> testAccessXInInstance [
 
 	| ast result |
-	ast := (Interpretable >> #returnX) ast.
-	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
+	ast := (CInterpretable >> #returnX) ast.
+	result := self interpreter execute: ast withReceiver: (CInterpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]
 
 { #category : #skipped }
-BasicInterpreterTest >> testClassPointCreation [
+CBasicInterpreterTest >> testClassPointCreation [
 	"
 	pointCreation
 
@@ -44,67 +44,81 @@ BasicInterpreterTest >> testClassPointCreation [
 	"
 	| ast result | 
 	self skip.
-	ast := (Interpretable >> #pointCreation) ast.
-	result := self interpreter execute: ast withReceiver: Interpretable new andArguments:{}.
+	ast := (CInterpretable >> #pointCreation) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretable new andArguments:{}.
 	self assert: result class equals: Point. 
 	self assert: result x equals: 10. 
 	self assert: result y equals: 20. 
 	
 ]
 
+{ #category : #'level5 - simple blocks' }
+CBasicInterpreterTest >> testExecutingSimpleBlock [
+	"
+	executingSimpleBlock
+
+		^ [  5 ] value
+	"
+	| ast result |
+	ast := (CInterpretable >> #executingSimpleBlock) ast.
+	result := self interpreter execute: ast.
+	self assert: result equals: 5
+
+]
+
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testIndirectMessageToClass [
+CBasicInterpreterTest >> testIndirectMessageToClass [
 	"
 	return42
 		^ self class return42
 	"
 	| ast result |
-	ast := (Interpretable >> #return42) ast.
-	result := self interpreter execute: ast withReceiver: Interpretable new andArguments: {  }.
+	ast := (CInterpretable >> #return42) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretable new andArguments: {  }.
 	self assert: result equals: 42 
 	
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testIsLiteral [
+CBasicInterpreterTest >> testIsLiteral [
 	"
 	not
 
 		^ false not
 	"
 	| ast result |
-	ast := (Interpretable >> #isLiteral) ast.
+	ast := (CInterpretable >> #isLiteral) ast.
 	result := self interpreter execute: ast.
 	self assert: result
 
 ]
 
 { #category : #'level3 - lookup' }
-BasicInterpreterTest >> testLookupMessageInSuperclass [
+CBasicInterpreterTest >> testLookupMessageInSuperclass [
 
 	| ast result |
-	ast := (Interpretable >> #sendMessageReturnX) ast.
-	result := self interpreter execute: ast withReceiver: (InterpretableSubclass new x: 100).
+	ast := (CInterpretable >> #sendMessageReturnX) ast.
+	result := self interpreter execute: ast withReceiver: (CInterpretableSubclass new x: 100).
 	self assert: result equals: 100. 
 	
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testMessageToClass [
+CBasicInterpreterTest >> testMessageToClass [
 	"
 	return42
 
 		^ 42
 	"
 	| ast result |
-	ast := (Interpretable class >> #return42) ast.
-	result := self interpreter execute: ast withReceiver: Interpretable andArguments: {  }.
+	ast := (CInterpretable class >> #return42) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretable andArguments: {  }.
 	self assert: result equals: 42 
 	
 ]
 
 { #category : #'level4 - stack - envs' }
-BasicInterpreterTest >> testNewFrameIsCorrectlyCreated [
+CBasicInterpreterTest >> testNewFrameIsCorrectlyCreated [
 
 	| prevEnv newEnv |
 	prevEnv := self interpreter stack top.
@@ -118,21 +132,21 @@ BasicInterpreterTest >> testNewFrameIsCorrectlyCreated [
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testNot [
+CBasicInterpreterTest >> testNot [
 	"
 	not
 
 		^ false not
 	"
 	| ast result |
-	ast := (Interpretable >> #not) ast.
+	ast := (CInterpretable >> #not) ast.
 	result := self interpreter execute: ast.
 	self assert: result
 
 ]
 
 { #category : #skipped }
-BasicInterpreterTest >> testPointCreation [
+CBasicInterpreterTest >> testPointCreation [
 	"
 	pointCreation
 
@@ -140,8 +154,8 @@ BasicInterpreterTest >> testPointCreation [
 	"
 	| ast result | 
 	self skip.
-	ast := (Interpretable >> #pointCreation) ast.
-	result := self interpreter execute: ast withReceiver: Interpretable new andArguments:{}.
+	ast := (CInterpretable >> #pointCreation) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretable new andArguments:{}.
 	self assert: result class equals: Point. 
 	self assert: result x equals: 10. 
 	self assert: result y equals: 20. 
@@ -149,66 +163,66 @@ BasicInterpreterTest >> testPointCreation [
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testPrimitiveAddition [
+CBasicInterpreterTest >> testPrimitiveAddition [
 	"
 	addition
 
 		^ 3 + 2
 	"
 	| ast result |
-	ast := (Interpretable >> #addition) ast.
+	ast := (CInterpretable >> #addition) ast.
 	result := self interpreter execute: ast.
 	self assert: result  equals: 5. 
 
 ]
 
 { #category : #'level1 - return constant' }
-BasicInterpreterTest >> testReturnConstant [
+CBasicInterpreterTest >> testReturnConstant [
 
 	| ast result |
-	ast := (Interpretable >> #returnFive) ast.
+	ast := (CInterpretable >> #returnFive) ast.
 	result := self interpreter execute: ast. 
 	self assert: result equals: 5
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testReturnExplicitClass42 [
+CBasicInterpreterTest >> testReturnExplicitClass42 [
 	"
 	return42
 		^ self class return42
 	"
 	| ast result |
-	ast := (Interpretable >> #returnExplicitClass42) ast.
-	result := self interpreter execute: ast withReceiver: Interpretable new andArguments: {  }.
+	ast := (CInterpretable >> #returnExplicitClass42) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretable new andArguments: {  }.
 	self assert: result equals: 42 
 	
 ]
 
 { #category : #'level1 - return constant' }
-BasicInterpreterTest >> testReturnFalse [
+CBasicInterpreterTest >> testReturnFalse [
 
 	| ast result |
-	ast := (Interpretable >> #returnFalse) ast.
+	ast := (CInterpretable >> #returnFalse) ast.
 	result := self interpreter execute: ast. 
 	self deny: result 
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testReturnFive10 [
+CBasicInterpreterTest >> testReturnFive10 [
 	"
 	returnFive
 
 		^ super returnFive + super returnFive 
 	"
 	| ast result |
-	ast := (InterpretableSubclass >> #returnFive) ast.
-	result := self interpreter execute: ast withReceiver: InterpretableSubclass new andArguments: #().
+	ast := (CInterpretableSubclass >> #returnFive) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretableSubclass new andArguments: #().
 	self assert: result  equals: 10. 
 
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testReturnLast [
+CBasicInterpreterTest >> testReturnLast [
 	"
 	returnLast
 		^ self returnLastOf: 10 and: 20
@@ -216,27 +230,27 @@ BasicInterpreterTest >> testReturnLast [
 		^ b
 	"
 	| ast result |
-	ast := (Interpretable >> #returnLast) ast.
-	result := self interpreter execute: ast withReceiver: Interpretable new.
+	ast := (CInterpretable >> #returnLast) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretable new.
 	self assert: result  equals: 20. 
 
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testReturnLastOfAnd [
+CBasicInterpreterTest >> testReturnLastOfAnd [
 	"
 	returnLastOf: a and: b
 		^ b
 	"
 	| ast result |
-	ast := (Interpretable >> #returnLastOf:and:) ast.
-	result := self interpreter execute: ast withReceiver: Interpretable new andArguments: { 10 . 20}.
+	ast := (CInterpretable >> #returnLastOf:and:) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretable new andArguments: { 10 . 20}.
 	self assert: result  equals: 20. 
 
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testReturnLastOfAnd2 [
+CBasicInterpreterTest >> testReturnLastOfAnd2 [
 	"
 	returnLastOf2: b and: a
 		^ self returnLastOf: b and: a
@@ -244,43 +258,43 @@ BasicInterpreterTest >> testReturnLastOfAnd2 [
 		^ b
 	"
 	| ast result |
-	ast := (Interpretable >> #returnLastOf2:and:) ast.
-	result := self interpreter execute: ast withReceiver: Interpretable new andArguments: { 10 . 20}.
+	ast := (CInterpretable >> #returnLastOf2:and:) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretable new andArguments: { 10 . 20}.
 	self assert: result  equals: 20. 
 
 ]
 
 { #category : #'level3 - dead simple message' }
-BasicInterpreterTest >> testReturnSelf [
+CBasicInterpreterTest >> testReturnSelf [
 	"
 	returnSelf
 
 		^ self
 	"
 	| ast result object |
-	ast := (Interpretable >> #returnSelf) ast.
-	object := (Interpretable new x: 100; yourself).
+	ast := (CInterpretable >> #returnSelf) ast.
+	object := (CInterpretable new x: 100; yourself).
 	result := self interpreter execute: ast withReceiver: object.
 	self assert: result equals: object 
 	
 ]
 
 { #category : #'level3 - dead simple message' }
-BasicInterpreterTest >> testSendMessageReturnX [
+CBasicInterpreterTest >> testSendMessageReturnX [
 	"
 	sendMessageReturnX
 
 		^ self returnX
 	"
 	| ast result |
-	ast := (Interpretable >> #sendMessageReturnX) ast.
-	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
+	ast := (CInterpretable >> #sendMessageReturnX) ast.
+	result := self interpreter execute: ast withReceiver: (CInterpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]
 
 { #category : #skipped }
-BasicInterpreterTest >> testSendNewClass [
+CBasicInterpreterTest >> testSendNewClass [
 	"
 	sendMessageToClass
 
@@ -288,23 +302,23 @@ BasicInterpreterTest >> testSendNewClass [
 	"
 	| ast result |
 	self skip.
-	ast := (Interpretable >> #sendMessageToClass) ast.
+	ast := (CInterpretable >> #sendMessageToClass) ast.
 	result := self interpreter execute: ast.
-	self assert: result class equals: Interpretable. 
+	self assert: result class equals: CInterpretable. 
 	
 ]
 
 { #category : #'level2 - tmps' }
-BasicInterpreterTest >> testSettingAValueToTemp [
+CBasicInterpreterTest >> testSettingAValueToTemp [
 
 	| ast result |
-	ast := (Interpretable >> #settingAValueToTemp) ast.
+	ast := (CInterpretable >> #settingAValueToTemp) ast.
 	result := self interpreter execute: ast. 
 	self assert: result equals: 10 
 ]
 
 { #category : #'level2 - tmps' }
-BasicInterpreterTest >> testSettingAValueToTempEmbedded [
+CBasicInterpreterTest >> testSettingAValueToTempEmbedded [
 	"settingAValueToTempEmbedded
 
 		| temp1 temp2 | 
@@ -312,13 +326,13 @@ BasicInterpreterTest >> testSettingAValueToTempEmbedded [
 		^ temp2
 	"
 	| ast result |
-	ast := (Interpretable >> #settingAValueToTempEmbedded) ast.
+	ast := (CInterpretable >> #settingAValueToTempEmbedded) ast.
 	result := self interpreter execute: ast. 
 	self assert: result equals: 10 
 ]
 
 { #category : #'level2 - tmps' }
-BasicInterpreterTest >> testSettingAValueToTempInARow [
+CBasicInterpreterTest >> testSettingAValueToTempInARow [
 	"settingAValueToTempInARow
 
 		| temp1 temp2| 
@@ -327,13 +341,27 @@ BasicInterpreterTest >> testSettingAValueToTempInARow [
 		^ temp2
 	"
 	| ast result |
-	ast := (Interpretable >> #settingAValueToTempInARow) ast.
+	ast := (CInterpretable >> #settingAValueToTempInARow) ast.
 	result := self interpreter execute: ast. 
 	self assert: result equals: 10 
 ]
 
+{ #category : #'level5 - simple blocks' }
+CBasicInterpreterTest >> testSimpleBlock [
+	"
+	simpleBlock
+
+		^ [  5 ]
+	"
+	| ast result |
+	ast := (CInterpretable >> #simpleBlock) ast.
+	result := self interpreter execute: ast.
+	self assert: result class equals: CBlock
+
+]
+
 { #category : #'level4 - stack - envs' }
-BasicInterpreterTest >> testStackIsCorrectlyCreated [
+CBasicInterpreterTest >> testStackIsCorrectlyCreated [
 
 	self deny: self interpreter stack top hasParent. 
 	self assert: self interpreter stack size equals: 1. 
@@ -341,25 +369,25 @@ BasicInterpreterTest >> testStackIsCorrectlyCreated [
 ]
 
 { #category : #'level2 - store instance variable' }
-BasicInterpreterTest >> testStore100IntoX [
+CBasicInterpreterTest >> testStore100IntoX [
 
 	| ast result object |
-	ast := (Interpretable >> #store100IntoX) ast.
-	object := Interpretable new. 
+	ast := (CInterpretable >> #store100IntoX) ast.
+	object := CInterpretable new. 
 	result := self interpreter execute: ast withReceiver: object. 
 	self assert: object x equals: 100
 	
 ]
 
 { #category : #'level4 - messages to other' }
-BasicInterpreterTest >> testSuperNot [
+CBasicInterpreterTest >> testSuperNot [
 	"
 	not
 		^ super not & false not
 	"
 	| ast result |
-	ast := (InterpretableSubclass >> #not) ast.
-	result := self interpreter execute: ast withReceiver: InterpretableSubclass new andArguments: #().
+	ast := (CInterpretableSubclass >> #not) ast.
+	result := self interpreter execute: ast withReceiver: CInterpretableSubclass new andArguments: #().
 	self assert: result
 
 ]

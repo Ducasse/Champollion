@@ -1,17 +1,17 @@
 Class {
-	#name : #InterpretableSubclass,
-	#superclass : #Interpretable,
+	#name : #CInterpretableSubclass,
+	#superclass : #CInterpretable,
 	#category : #'Champollion-Core'
 }
 
 { #category : #'instance variable access' }
-InterpretableSubclass >> not [
+CInterpretableSubclass >> not [
 
 	^ super not & false not
 ]
 
 { #category : #'instance variable access' }
-InterpretableSubclass >> returnFive [
+CInterpretableSubclass >> returnFive [
 
 	^ super returnFive + super returnFive 
 ]

@@ -20,8 +20,8 @@ BasicInterpreter1Test >> interpreterClass [
 BasicInterpreter1Test >> testAccessXInInstance [
 
 	| ast result |
-	ast := (Interpretable >> #returnX) ast.
-	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
+	ast := (CInterpretable >> #returnX) ast.
+	result := self interpreter execute: ast withReceiver: (CInterpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]
@@ -30,7 +30,7 @@ BasicInterpreter1Test >> testAccessXInInstance [
 BasicInterpreter1Test >> testReturnConstant [
 
 	| ast result |
-	ast := (Interpretable >> #returnFive) ast.
+	ast := (CInterpretable >> #returnFive) ast.
 	result := self interpreter execute: ast. 
 	self assert: result equals: 5
 ]
@@ -39,7 +39,7 @@ BasicInterpreter1Test >> testReturnConstant [
 BasicInterpreter1Test >> testReturnFalse [
 
 	| ast result |
-	ast := (Interpretable >> #returnFalse) ast.
+	ast := (CInterpretable >> #returnFalse) ast.
 	result := self interpreter execute: ast. 
 	self deny: result 
 ]

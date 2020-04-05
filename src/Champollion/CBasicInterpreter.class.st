@@ -17,7 +17,7 @@ What happens with return
 How to execute primitive. 
 "
 Class {
-	#name : #BasicInterpreter,
+	#name : #CBasicInterpreter,
 	#superclass : #Object,
 	#instVars : [
 		'stack'
@@ -26,26 +26,26 @@ Class {
 }
 
 { #category : #temporaries }
-BasicInterpreter >> currentFrame [
+CBasicInterpreter >> currentFrame [
 
 	^ stack top 
 ]
 
 { #category : #running }
-BasicInterpreter >> execute: anAST [
+CBasicInterpreter >> execute: anAST [
 
 	^ self visitNode: anAST
 ]
 
 { #category : #running }
-BasicInterpreter >> execute: anAST withReceiver: anObject [
+CBasicInterpreter >> execute: anAST withReceiver: anObject [
 
 	self tempAt: #self put: anObject.
 	^ self visitNode: anAST
 ]
 
 { #category : #running }
-BasicInterpreter >> execute: aMethodAST withReceiver: anObject andArguments: args [
+CBasicInterpreter >> execute: aMethodAST withReceiver: anObject andArguments: args [
 
 	self tempAt: #self put: anObject.
 	aMethodAST arguments with: args do: [ :arg :value | self tempAt: arg name put: value ]. 
@@ -53,14 +53,14 @@ BasicInterpreter >> execute: aMethodAST withReceiver: anObject andArguments: arg
 ]
 
 { #category : #'level4 - real messages' }
-BasicInterpreter >> initialize [ 
+CBasicInterpreter >> initialize [ 
 	super initialize. 
 	stack := CTStack new.
 	stack push: self newFrame.
 ]
 
 { #category : #'level3 - visting - dead simple message' }
-BasicInterpreter >> lookup: aSymbol fromClass: aClass [ 
+CBasicInterpreter >> lookup: aSymbol fromClass: aClass [ 
 	"return the method ast or nil."
 	
 	^ (aClass includesSelector: aSymbol)
@@ -72,7 +72,7 @@ BasicInterpreter >> lookup: aSymbol fromClass: aClass [
 ]
 
 { #category : #temporaries }
-BasicInterpreter >> newFrame [
+CBasicInterpreter >> newFrame [
 	"a new scope is an environment, i.e., a dictionary which supports lookup in its parent.
 	This is important to manage variable shadowing. A local temp can hide another temp of a parent
 	scope in a local scope."
@@ -81,14 +81,14 @@ BasicInterpreter >> newFrame [
 ]
 
 { #category : #'level4 - real messages' }
-BasicInterpreter >> popFrame [
+CBasicInterpreter >> popFrame [
 
 	stack pop 
 	
 ]
 
 { #category : #'level4 - real messages' }
-BasicInterpreter >> pushNewFrame [
+CBasicInterpreter >> pushNewFrame [
 	"Pushing a new scope consists in creating a new dictionary whose parent is the top of the stack
 	and pushing it as a new top. This way a variable not found in current scope will be looked up in previous scope."
 
@@ -101,29 +101,29 @@ BasicInterpreter >> pushNewFrame [
 ]
 
 { #category : #accessing }
-BasicInterpreter >> receiver [
+CBasicInterpreter >> receiver [
 	^ stack top at: #self
 ]
 
 { #category : #accessing }
-BasicInterpreter >> stack [
+CBasicInterpreter >> stack [
 	^ stack
 ]
 
 { #category : #temporaries }
-BasicInterpreter >> tempAt: aSymbol [
+CBasicInterpreter >> tempAt: aSymbol [
 
 	^ self currentFrame at: aSymbol
 ]
 
 { #category : #temporaries }
-BasicInterpreter >> tempAt: aSymbol put: anInteger [ 
+CBasicInterpreter >> tempAt: aSymbol put: anInteger [ 
 
 	self currentFrame at: aSymbol put: anInteger
 ]
 
 { #category : #'level4 - real messages' }
-BasicInterpreter >> try [
+CBasicInterpreter >> try [
 
 	| tmp |
 	tmp := 3.
@@ -134,12 +134,12 @@ BasicInterpreter >> try [
 ]
 
 { #category : #'level4 - real messages' }
-BasicInterpreter >> visitArgumentNode: aRBArgumentNode [ 
+CBasicInterpreter >> visitArgumentNode: aRBArgumentNode [ 
 	^ self tempAt: aRBArgumentNode name
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitAssignmentNode: anAssignmentNode [
+CBasicInterpreter >> visitAssignmentNode: anAssignmentNode [
 	"| x y |
 	x := y := 10.
 	x
@@ -151,33 +151,56 @@ BasicInterpreter >> visitAssignmentNode: anAssignmentNode [
 	^ value
 ]
 
+{ #category : #'level5 - simple block' }
+CBasicInterpreter >> visitBlockNode: aBlockNode [ 
+	^ CBlock new 	
+		body: aBlockNode; 
+		interpreter: self; 
+		yourself
+				
+		
+			 
+]
+
 { #category : #'level3 - class message' }
-BasicInterpreter >> visitGlobalNode: aRBGlobalNode [ 
+CBasicInterpreter >> visitGlobalNode: aRBGlobalNode [ 
 
 	^ self class environment at: aRBGlobalNode name ifAbsent: [ self error: aRBGlobalNode name, ' not found' ]
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitInstanceVariableNode: aVariableNode [
+CBasicInterpreter >> visitInstanceVariableNode: aVariableNode [
 
 	^ self receiver instVarNamed: aVariableNode name
 ]
 
+{ #category : #'level5 - simple block' }
+CBasicInterpreter >> visitLiteralArrayNode: aRBLiteralArrayNode [ 
+	
+	^ aRBLiteralArrayNode contents collect: [ :each | self visitNode: each ] 
+]
+
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
+CBasicInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
 
 	^ aRBLiteralValueNode value
 ]
 
 { #category : #'level4 - real messages' }
-BasicInterpreter >> visitMessageNode: aMessageNode [
+CBasicInterpreter >> visitMessageNode: aMessageNode [
 
 	| rec args method res | 
 	self pushNewFrame.
 	rec := self visitNode: aMessageNode receiver.
 	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
-	aMessageNode methodNode isPrimitive
-		ifTrue: [
+	
+	"Checking that a value is sent to avoid shortcutting the primitive execution means also that 
+	we will interpret its implementation too. 
+	Treating it like a primitive means that the CBlock should be compatible with what is expected
+	by the VM. 
+	"
+	(aMessageNode methodNode isPrimitive and: [ aMessageNode methodNode isValueMessage not ])
+			ifTrue: [
 			res := rec tryPrimitive: (aMessageNode methodNode pragmas first argumentAt: 'primitive:') value withArgs: args ]
 		ifFalse: [ 	
 			method :=  aMessageNode receiver isSuper
@@ -189,35 +212,35 @@ BasicInterpreter >> visitMessageNode: aMessageNode [
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitMethodBodyNode: aMethodBodyNode [
+CBasicInterpreter >> visitMethodBodyNode: aMethodBodyNode [
 	^ self visitNode: aMethodBodyNode 
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitMethodNode: aMethodNode [
+CBasicInterpreter >> visitMethodNode: aMethodNode [
 	
 	^ self visitMethodBodyNode: aMethodNode body
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitNode: aNode [
+CBasicInterpreter >> visitNode: aNode [
 	^ aNode acceptVisitor: self
 ]
 
 { #category : #'level1 - visiting - constant access' }
-BasicInterpreter >> visitReturnNode: aReturnNode [
+CBasicInterpreter >> visitReturnNode: aReturnNode [
 
 	^ self visitNode: aReturnNode value.
 
 ]
 
 { #category : #'level3 - visting - dead simple message' }
-BasicInterpreter >> visitSelfNode: aRBSelfNode [ 
+CBasicInterpreter >> visitSelfNode: aRBSelfNode [ 
 	^ self receiver
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitSequenceNode: aSequenceNode [
+CBasicInterpreter >> visitSequenceNode: aSequenceNode [
 	| res |
 	aSequenceNode hasTemporaries
 		ifTrue: [ self pushNewFrame. 	
@@ -233,12 +256,12 @@ BasicInterpreter >> visitSequenceNode: aSequenceNode [
 ]
 
 { #category : #'level4 - real messages' }
-BasicInterpreter >> visitSuperNode: aRBSuperNode [ 
+CBasicInterpreter >> visitSuperNode: aRBSuperNode [ 
 	^ self receiver
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
+CBasicInterpreter >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
 	"| temp |
 	temp is a temporary node as we can find in the body of methods."
 
@@ -246,13 +269,13 @@ BasicInterpreter >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitTemporaryNode: aTemporaryNode [
+CBasicInterpreter >> visitTemporaryNode: aTemporaryNode [
 
 	^ self tempAt: aTemporaryNode name
 ]
 
 { #category : #'level2 - visiting - temps' }
-BasicInterpreter >> visitTemporaryNodes: aNodeCollection [
+CBasicInterpreter >> visitTemporaryNodes: aNodeCollection [
 	"This is triggered when defining the temporaries between the pipes"
 	
 	^ aNodeCollection

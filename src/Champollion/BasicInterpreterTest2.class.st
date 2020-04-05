@@ -20,8 +20,8 @@ BasicInterpreterTest2 >> interpreterClass [
 BasicInterpreterTest2 >> testAccessXInInstance [
 
 	| ast result |
-	ast := (Interpretable >> #returnX) ast.
-	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
+	ast := (CInterpretable >> #returnX) ast.
+	result := self interpreter execute: ast withReceiver: (CInterpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]
@@ -30,8 +30,8 @@ BasicInterpreterTest2 >> testAccessXInInstance [
 BasicInterpreterTest2 >> testLookupMessageInSuperclass [
 
 	| ast result |
-	ast := (Interpretable >> #sendMessageReturnX) ast.
-	result := self interpreter execute: ast withReceiver: (InterpretableSubclass new x: 100).
+	ast := (CInterpretable >> #sendMessageReturnX) ast.
+	result := self interpreter execute: ast withReceiver: (CInterpretableSubclass new x: 100).
 	self assert: result equals: 100. 
 	
 ]
@@ -40,7 +40,7 @@ BasicInterpreterTest2 >> testLookupMessageInSuperclass [
 BasicInterpreterTest2 >> testReturnConstant [
 
 	| ast result |
-	ast := (Interpretable >> #returnFive) ast.
+	ast := (CInterpretable >> #returnFive) ast.
 	result := self interpreter execute: ast. 
 	self assert: result equals: 5
 ]
@@ -49,7 +49,7 @@ BasicInterpreterTest2 >> testReturnConstant [
 BasicInterpreterTest2 >> testReturnFalse [
 
 	| ast result |
-	ast := (Interpretable >> #returnFalse) ast.
+	ast := (CInterpretable >> #returnFalse) ast.
 	result := self interpreter execute: ast. 
 	self deny: result 
 ]
@@ -62,8 +62,8 @@ BasicInterpreterTest2 >> testReturnSelf [
 		^ self
 	"
 	| ast result object |
-	ast := (Interpretable >> #returnSelf) ast.
-	object := (Interpretable new x: 100; yourself).
+	ast := (CInterpretable >> #returnSelf) ast.
+	object := (CInterpretable new x: 100; yourself).
 	result := self interpreter execute: ast withReceiver: object.
 	self assert: result equals: object 
 	
@@ -77,8 +77,8 @@ BasicInterpreterTest2 >> testSendMessageReturnX [
 		^ self returnX
 	"
 	| ast result |
-	ast := (Interpretable >> #sendMessageReturnX) ast.
-	result := self interpreter execute: ast withReceiver: (Interpretable new x: 100).
+	ast := (CInterpretable >> #sendMessageReturnX) ast.
+	result := self interpreter execute: ast withReceiver: (CInterpretable new x: 100).
 	self assert: result equals: 100. 
 	
 ]
@@ -87,7 +87,7 @@ BasicInterpreterTest2 >> testSendMessageReturnX [
 BasicInterpreterTest2 >> testSettingAValueToTemp [
 
 	| ast result |
-	ast := (Interpretable >> #settingAValueToTemp) ast.
+	ast := (CInterpretable >> #settingAValueToTemp) ast.
 	result := self interpreter execute: ast. 
 	self assert: result equals: 10 
 ]
@@ -101,7 +101,7 @@ BasicInterpreterTest2 >> testSettingAValueToTempEmbedded [
 		^ temp2
 	"
 	| ast result |
-	ast := (Interpretable >> #settingAValueToTempEmbedded) ast.
+	ast := (CInterpretable >> #settingAValueToTempEmbedded) ast.
 	result := self interpreter execute: ast. 
 	self assert: result equals: 10 
 ]
@@ -116,7 +116,7 @@ BasicInterpreterTest2 >> testSettingAValueToTempInARow [
 		^ temp2
 	"
 	| ast result |
-	ast := (Interpretable >> #settingAValueToTempInARow) ast.
+	ast := (CInterpretable >> #settingAValueToTempInARow) ast.
 	result := self interpreter execute: ast. 
 	self assert: result equals: 10 
 ]
@@ -125,8 +125,8 @@ BasicInterpreterTest2 >> testSettingAValueToTempInARow [
 BasicInterpreterTest2 >> testStore100IntoX [
 
 	| ast result object |
-	ast := (Interpretable >> #store100IntoX) ast.
-	object := Interpretable new. 
+	ast := (CInterpretable >> #store100IntoX) ast.
+	object := CInterpretable new. 
 	result := self interpreter execute: ast withReceiver: object. 
 	self assert: object x equals: 100
 	
