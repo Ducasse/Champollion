@@ -199,14 +199,19 @@ CBasicInterpreter >> visitMessageNode: aMessageNode [
 	Treating it like a primitive means that the CBlock should be compatible with what is expected
 	by the VM. 
 	"
-	(aMessageNode methodNode isPrimitive and: [ aMessageNode methodNode isValueMessage not ])
+	(aMessageNode selector = #value) 
+		ifTrue: [ res := rec value ]
+		ifFalse: [  
+		(aMessageNode methodNode isPrimitive "and: [ aMessageNode methodNode isValueMessage not ]")
 			ifTrue: [
-			res := rec tryPrimitive: (aMessageNode methodNode pragmas first argumentAt: 'primitive:') value withArgs: args ]
-		ifFalse: [ 	
-			method :=  aMessageNode receiver isSuper
-				ifTrue: [ self lookup: aMessageNode selector fromClass: rec class superclass ]
-				ifFalse: [ self lookup: aMessageNode selector fromClass: rec class ].
-			res := self execute: method withReceiver: rec andArguments: args] .
+			res := rec 
+						tryPrimitive: (aMessageNode methodNode pragmas first argumentAt: 'primitive:') value 						withArgs: args ]
+			ifFalse: [ 	
+				method :=  aMessageNode receiver isSuper
+					ifTrue: [ self lookup: aMessageNode selector fromClass: rec class superclass ]
+					ifFalse: [ self lookup: aMessageNode selector fromClass: rec class ].
+				res := self execute: method withReceiver: rec andArguments: args]
+		].
 	self popFrame.
 	^ res 
 ]

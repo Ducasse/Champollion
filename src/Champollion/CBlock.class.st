@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : #body }
+CBlock >> body [
+	^ body
+]
+
+{ #category : #body }
 CBlock >> body: aRBBlockNode [ 
 	body := aRBBlockNode
 ]
@@ -21,5 +26,5 @@ CBlock >> interpreter: aCBasicInterpreter [
 { #category : #evaluating }
 CBlock >> value [
 
-	^ interpreter visitNode: body 
+	^ interpreter visitNode: body body 
 ]
