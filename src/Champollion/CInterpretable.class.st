@@ -56,6 +56,12 @@ CInterpretable >> return42 [
 	^ self class return42
 ]
 
+{ #category : #'level2 - simple constant' }
+CInterpretable >> returnEmptyArray [
+
+	^ #()
+]
+
 { #category : #'level5 - class messages' }
 CInterpretable >> returnExplicitClass42 [
 
@@ -90,6 +96,12 @@ CInterpretable >> returnLastOf2: b and: a [
 CInterpretable >> returnLastOf: a and: b [
 
 	^ b
+]
+
+{ #category : #'level2 - simple constant' }
+CInterpretable >> returnLiteralArray [
+
+	^ #(true 1 'ahah')
 ]
 
 { #category : #'level4 - message' }

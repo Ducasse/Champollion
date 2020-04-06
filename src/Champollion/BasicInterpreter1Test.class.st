@@ -36,6 +36,15 @@ BasicInterpreter1Test >> testReturnConstant [
 ]
 
 { #category : #'level1 - return constant' }
+BasicInterpreter1Test >> testReturnEmptyArry [
+
+	| ast result |
+	ast := (CInterpretable >> #returnEmptyArray) ast.
+	result := self interpreter execute: ast. 
+	self assert: result equals: #() 
+]
+
+{ #category : #'level1 - return constant' }
 BasicInterpreter1Test >> testReturnFalse [
 
 	| ast result |

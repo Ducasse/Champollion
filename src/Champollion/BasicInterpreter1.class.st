@@ -27,6 +27,12 @@ BasicInterpreter1 >> visitInstanceVariableNode: aVariableNode [
 ]
 
 { #category : #visiting }
+BasicInterpreter1 >> visitLiteralArrayNode: aRBLiteralArrayNode [ 
+	
+	^ aRBLiteralArrayNode contents collect: [ :each | self visitNode: each ] 
+]
+
+{ #category : #visiting }
 BasicInterpreter1 >> visitLiteralValueNode: aRBLiteralValueNode [
 
 	^ aRBLiteralValueNode value

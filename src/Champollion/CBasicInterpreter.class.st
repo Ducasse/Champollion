@@ -154,12 +154,9 @@ CBasicInterpreter >> visitAssignmentNode: anAssignmentNode [
 { #category : #'level5 - simple block' }
 CBasicInterpreter >> visitBlockNode: aBlockNode [ 
 	^ CBlock new 	
-		body: aBlockNode; 
+		blockDefinition: aBlockNode; 
 		interpreter: self; 
 		yourself
-				
-		
-			 
 ]
 
 { #category : #'level3 - class message' }
@@ -174,7 +171,7 @@ CBasicInterpreter >> visitInstanceVariableNode: aVariableNode [
 	^ self receiver instVarNamed: aVariableNode name
 ]
 
-{ #category : #'level5 - simple block' }
+{ #category : #'level1 - visiting - constant access' }
 CBasicInterpreter >> visitLiteralArrayNode: aRBLiteralArrayNode [ 
 	
 	^ aRBLiteralArrayNode contents collect: [ :each | self visitNode: each ] 
@@ -186,7 +183,7 @@ CBasicInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
 	^ aRBLiteralValueNode value
 ]
 
-{ #category : #'level4 - real messages' }
+{ #category : #'level5 - simple block' }
 CBasicInterpreter >> visitMessageNode: aMessageNode [
 
 	| rec args method res | 

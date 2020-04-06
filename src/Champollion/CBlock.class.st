@@ -2,20 +2,20 @@ Class {
 	#name : #CBlock,
 	#superclass : #Object,
 	#instVars : [
-		'body',
-		'interpreter'
+		'interpreter',
+		'blockDefinition'
 	],
 	#category : #'Champollion-Core'
 }
 
-{ #category : #body }
-CBlock >> body [
-	^ body
+{ #category : #accessing }
+CBlock >> blockDefinition [
+	^ blockDefinition
 ]
 
-{ #category : #body }
-CBlock >> body: aRBBlockNode [ 
-	body := aRBBlockNode
+{ #category : #accessing }
+CBlock >> blockDefinition: aRBBlockNode [ 
+	blockDefinition := aRBBlockNode
 ]
 
 { #category : #accessing }
@@ -26,5 +26,5 @@ CBlock >> interpreter: aCBasicInterpreter [
 { #category : #evaluating }
 CBlock >> value [
 
-	^ interpreter visitNode: body body 
+	^ interpreter visitNode: blockDefinition body 
 ]

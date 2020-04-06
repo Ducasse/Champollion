@@ -185,6 +185,15 @@ CBasicInterpreterTest >> testReturnConstant [
 	self assert: result equals: 5
 ]
 
+{ #category : #'level1 - return constant' }
+CBasicInterpreterTest >> testReturnEmptyArray [
+
+	| ast result |
+	ast := (CInterpretable >> #returnEmptyArray) ast.
+	result := self interpreter execute: ast. 
+	self assert: result equals: #() 
+]
+
 { #category : #'level4 - messages to other' }
 CBasicInterpreterTest >> testReturnExplicitClass42 [
 	"
@@ -262,6 +271,15 @@ CBasicInterpreterTest >> testReturnLastOfAnd2 [
 	result := self interpreter execute: ast withReceiver: CInterpretable new andArguments: { 10 . 20}.
 	self assert: result  equals: 20. 
 
+]
+
+{ #category : #'level1 - return constant' }
+CBasicInterpreterTest >> testReturnLiteralArray [
+
+	| ast result |
+	ast := (CInterpretable >> #returnLiteralArray) ast.
+	result := self interpreter execute: ast. 
+	self assert: result equals:  #(true 1 'ahah')
 ]
 
 { #category : #'level3 - dead simple message' }
