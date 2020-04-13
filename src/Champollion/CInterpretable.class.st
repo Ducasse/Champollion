@@ -32,6 +32,21 @@ CInterpretable >> isLiteral [
 	^ false isLiteral 
 ]
 
+{ #category : #'level3 - temporaries' }
+CInterpretable >> methodAccessingTemp [
+
+ 	| temp |
+ 	^ temp
+]
+
+{ #category : #'level3 - temporaries' }
+CInterpretable >> methodWithTemp [
+
+ 	| temp |
+ 	temp := 7.
+ 	^ self methodAccessingTemp
+]
+
 { #category : #'level4 - message' }
 CInterpretable >> not [
 

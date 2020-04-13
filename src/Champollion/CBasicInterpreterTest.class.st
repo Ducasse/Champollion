@@ -409,3 +409,12 @@ CBasicInterpreterTest >> testSuperNot [
 	self assert: result
 
 ]
+
+{ #category : #'level2 - tmps' }
+CBasicInterpreterTest >> testTempsShouldNotEscapeMethods [
+
+	| ast result |
+	ast := (CInterpretable >> #methodWithTemp) ast.
+	result := self interpreter execute: ast. 
+	self assert: result equals: nil 
+]
