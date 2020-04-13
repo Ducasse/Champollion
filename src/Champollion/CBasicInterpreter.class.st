@@ -220,8 +220,7 @@ CBasicInterpreter >> visitMessageNode: aMessageNode [
 				method :=  aMessageNode receiver isSuper
 					ifTrue: [ self lookup: aMessageNode selector fromClass: rec class superclass ]
 					ifFalse: [ self lookup: aMessageNode selector fromClass: rec class ].
-				self pushNewFrame.
-				self setSelfTo: rec. 
+				self pushNewFrame. "execute will set the receiver and the arguments"
 				res := self execute: method withReceiver: rec andArguments: args ]
 		].
 	self popFrame.
