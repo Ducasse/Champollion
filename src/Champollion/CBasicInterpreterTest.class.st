@@ -126,7 +126,7 @@ CBasicInterpreterTest >> testNewFrameIsCorrectlyCreated [
 	self deny: prevEnv hasParent. 
 	newEnv := self interpreter pushNewFrame.
 	newEnv at: #newTop put: 2.  
-	self assert: newEnv parent equals: prevEnv.
+	self deny: newEnv parent equals: prevEnv.
 	self assert: self interpreter stack top equals: newEnv.
 
 ]
@@ -415,6 +415,6 @@ CBasicInterpreterTest >> testTempsShouldNotEscapeMethods [
 
 	| ast result |
 	ast := (CInterpretable >> #methodWithTemp) ast.
-	result := self interpreter execute: ast. 
+	result := self interpreter execute: ast withReceiver: CInterpretable new. 
 	self assert: result equals: nil 
 ]

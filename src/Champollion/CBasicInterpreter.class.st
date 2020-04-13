@@ -33,21 +33,22 @@ CBasicInterpreter >> currentFrame [
 
 { #category : #running }
 CBasicInterpreter >> execute: anAST [
-
+	"just to get started"
 	^ self visitNode: anAST
 ]
 
 { #category : #running }
 CBasicInterpreter >> execute: anAST withReceiver: anObject [
 
-	self tempAt: #self put: anObject.
+	self setSelfTo: anObject.
 	^ self visitNode: anAST
 ]
 
 { #category : #running }
 CBasicInterpreter >> execute: aMethodAST withReceiver: anObject andArguments: args [
-
-	self tempAt: #self put: anObject.
+	"precondition: a frame has been created."
+	
+	self setSelfTo: anObject.
 	aMethodAST arguments with: args do: [ :arg :value | self tempAt: arg name put: value ]. 
 	^ self visitNode: aMethodAST
 ]
@@ -87,8 +88,20 @@ CBasicInterpreter >> popFrame [
 	
 ]
 
-{ #category : #'level4 - real messages' }
+{ #category : #temporaries }
 CBasicInterpreter >> pushNewFrame [
+	"Pushing a new scope consists in creating a new dictionary whose parent is the top of the stack
+	and pushing it as a new top. This way a variable not found in current scope will be looked up in previous scope."
+
+	| newTop |
+	newTop := self newFrame.
+	stack push: newTop.
+	^ newTop
+	
+]
+
+{ #category : #temporaries }
+CBasicInterpreter >> pushNewFrameLinkedToParent [
 	"Pushing a new scope consists in creating a new dictionary whose parent is the top of the stack
 	and pushing it as a new top. This way a variable not found in current scope will be looked up in previous scope."
 
@@ -103,6 +116,12 @@ CBasicInterpreter >> pushNewFrame [
 { #category : #accessing }
 CBasicInterpreter >> receiver [
 	^ stack top at: #self
+]
+
+{ #category : #temporaries }
+CBasicInterpreter >> setSelfTo: anObject [ 
+
+	self currentFrame at: #self  put: anObject
 ]
 
 { #category : #accessing }
@@ -187,15 +206,9 @@ CBasicInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
 CBasicInterpreter >> visitMessageNode: aMessageNode [
 
 	| rec args method res | 
-	self pushNewFrame.
 	rec := self visitNode: aMessageNode receiver.
 	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
 	
-	"Checking that a value is sent to avoid shortcutting the primitive execution means also that 
-	we will interpret its implementation too. 
-	Treating it like a primitive means that the CBlock should be compatible with what is expected
-	by the VM. 
-	"
 	(aMessageNode selector = #value) 
 		ifTrue: [ res := rec value ]
 		ifFalse: [  
@@ -207,7 +220,9 @@ CBasicInterpreter >> visitMessageNode: aMessageNode [
 				method :=  aMessageNode receiver isSuper
 					ifTrue: [ self lookup: aMessageNode selector fromClass: rec class superclass ]
 					ifFalse: [ self lookup: aMessageNode selector fromClass: rec class ].
-				res := self execute: method withReceiver: rec andArguments: args]
+				self pushNewFrame.
+				self setSelfTo: rec. 
+				res := self execute: method withReceiver: rec andArguments: args ]
 		].
 	self popFrame.
 	^ res 
@@ -232,7 +247,7 @@ CBasicInterpreter >> visitNode: aNode [
 { #category : #'level1 - visiting - constant access' }
 CBasicInterpreter >> visitReturnNode: aReturnNode [
 
-	^ self visitNode: aReturnNode value.
+	^ self visitNode: aReturnNode value
 
 ]
 
@@ -243,14 +258,13 @@ CBasicInterpreter >> visitSelfNode: aRBSelfNode [
 
 { #category : #'level2 - visiting - temps' }
 CBasicInterpreter >> visitSequenceNode: aSequenceNode [
-	| res |
-	aSequenceNode hasTemporaries
-		ifTrue: [ self pushNewFrame. 	
+	| res hasTemps|
+	hasTemps := aSequenceNode hasTemporaries.
+	hasTemps ifTrue: [ self pushNewFrameLinkedToParent. 	
 				self visitTemporaryNodes: aSequenceNode temporaries].
 	aSequenceNode statements allButLast do: [ :each | self visitNode: each ].
 	res := self visitNode: aSequenceNode statements last.
-	aSequenceNode hasTemporaries
-		ifTrue: [ self popFrame ].
+	hasTemps ifTrue: [ self popFrame ].
 	"even if block tmps shared the names with the methods temps, and arguments 
 	this frame will have to be popped.
 	two block side by side should not share their temp values"
@@ -265,7 +279,10 @@ CBasicInterpreter >> visitSuperNode: aRBSuperNode [
 { #category : #'level2 - visiting - temps' }
 CBasicInterpreter >> visitTemporaryDeclarationNode: aTemporaryDeclarationNode [
 	"| temp |
-	temp is a temporary node as we can find in the body of methods."
+	temp is a temporary node as we can find in the body of methods.
+	declaring temp to nil is nice because from an interpreter point of view
+	we can make sure that there is a difference between looking in outer context and failing 
+	and looking locally"
 
 	self tempAt: aTemporaryDeclarationNode name put: nil.
 ]
