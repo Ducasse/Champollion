@@ -246,8 +246,9 @@ CBasicInterpreter >> visitNode: aNode [
 { #category : #'level1 - visiting - constant access' }
 CBasicInterpreter >> visitReturnNode: aReturnNode [
 
-	^ self visitNode: aReturnNode value
-
+	| res |
+	res := self visitNode: aReturnNode value.
+	^ res
 ]
 
 { #category : #'level3 - visting - dead simple message' }
@@ -259,11 +260,11 @@ CBasicInterpreter >> visitSelfNode: aRBSelfNode [
 CBasicInterpreter >> visitSequenceNode: aSequenceNode [
 	| res hasTemps|
 	hasTemps := aSequenceNode hasTemporaries.
-	hasTemps ifTrue: [ self pushNewFrameLinkedToParent. 	
+	hasTemps ifTrue: [ "self pushNewFrameLinkedToParent. "
 				self visitTemporaryNodes: aSequenceNode temporaries].
 	aSequenceNode statements allButLast do: [ :each | self visitNode: each ].
 	res := self visitNode: aSequenceNode statements last.
-	hasTemps ifTrue: [ self popFrame ].
+	"hasTemps ifTrue: [ self popFrame ]."
 	"even if block tmps shared the names with the methods temps, and arguments 
 	this frame will have to be popped.
 	two block side by side should not share their temp values"
