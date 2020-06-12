@@ -21,14 +21,22 @@ CHInterpreter >> executeMethod: anAST withReceiver: anObject [
 
 { #category : #execute }
 CHInterpreter >> executeMethod: anAST withReceiver: anObject andArguments: aCollection [
+	
+	^ self executeMethod: anAST withReceiver: anObject andArguments: aCollection closureOrNil: nil
+]
+
+{ #category : #execute }
+CHInterpreter >> executeMethod: anAST withReceiver: anObject andArguments: aCollection closureOrNil: closureOrNil [
 	| result |
 	self pushNewFrame.
+	
+	closureOrNil ifNotNil: [ self tempAt: #___closureOrNil put: closureOrNil ].
 	self tempAt: #___method put: anAST.
 	self tempAt: #self put: anObject.
 	anAST arguments with: aCollection do: [ :arg :value | self tempAt: arg name put: value ]. 
 	anAST temporaryNames do: [ :tempName | self tempAt: tempName put: nil ]. 
 	
-	result := self visitNode: anAST.
+	result := self visitNode: anAST body.
 	
 	self popFrame.
 	^ result
@@ -89,7 +97,16 @@ CHInterpreter >> receiver [
 { #category : #'stack management' }
 CHInterpreter >> tempAt: aSymbol [
 
-	^ self topFrame at: aSymbol
+	| currentSearchFrame |
+	currentSearchFrame := self topFrame.
+	[ currentSearchFrame isNil ] whileFalse: [
+		currentSearchFrame at: aSymbol ifPresent: [ :found | ^ found ].
+		currentSearchFrame := currentSearchFrame
+			at: #___closureOrNil
+			ifPresent: [ :block | block outerContext ]
+			ifAbsent: [ nil ].
+	].
+	self error: 'Variable ', aSymbol, ' not found'
 ]
 
 { #category : #'stack management' }
@@ -124,6 +141,15 @@ CHInterpreter >> visitAssignmentNode: anAssignmentNode [
 ]
 
 { #category : #visiting }
+CHInterpreter >> visitBlockNode: aRBBlockNode [ 
+	
+	^ CHBlock new
+		code: aRBBlockNode;
+		outerContext: self topFrame;
+		yourself
+]
+
+{ #category : #visiting }
 CHInterpreter >> visitGlobalNode: aRBGlobalNode [ 
 
 	^ globalEnvironment at: aRBGlobalNode name ifAbsent: [ self error: aRBGlobalNode name, ' not found' ]
@@ -150,23 +176,25 @@ CHInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
 { #category : #visiting }
 CHInterpreter >> visitMessageNode: aMessageNode [
 
-	| rec method args lookupClass | 
+	| rec method args lookupClass pragma | 
 	rec := self visitNode: aMessageNode receiver.
 	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
+	
 	lookupClass := aMessageNode receiver isSuper ifTrue: [ self currentMethod methodClass superclass ] ifFalse: [ rec class ].
 	method :=  self lookup: aMessageNode selector fromClass: lookupClass.
-	^ self executeMethod: method withReceiver: rec andArguments: args
-]
 
-{ #category : #visiting }
-CHInterpreter >> visitMethodBodyNode: aMethodBodyNode [
-	^ self visitNode: aMethodBodyNode 
-]
-
-{ #category : #visiting }
-CHInterpreter >> visitMethodNode: aMethodNode [
+	pragma := method pragmaNamed: #astInterpreterPrimitive: ifAbsent: [ nil ].
+	pragma ifNotNil: [
+		"If the method is marked with the astInterpreterPrimitive: pragma, this is a block evaluation method.
+		The receiver is the block closure and the arguments are the arguments of the evaluation"
+		^ self
+			executeMethod: rec code
+			withReceiver: (rec outerContext at: #self)
+			andArguments: args
+			closureOrNil: rec
+	].
 	
-	^ self visitMethodBodyNode: aMethodNode body
+	^ self executeMethod: method withReceiver: rec andArguments: args
 ]
 
 { #category : #visiting }

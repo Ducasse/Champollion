@@ -74,6 +74,16 @@ CHInterpreterTest >> testArgumentAccessDoesNotEscapeItsDefinition [
 	self assert: collaborator x equals: 100
 ]
 
+{ #category : #'chapter three' }
+CHInterpreterTest >> testBlockValueIsLastStatementValue [
+	"
+	returnBlockValue
+		^ [ 1 . 5 ] value
+	"
+
+	self assert: (self executeSelector: #returnBlockValue) equals: 5
+]
+
 { #category : #'chapter two' }
 CHInterpreterTest >> testInstanceVariableAccessInMethodActivationDoesNotEscape [
 	"
@@ -178,6 +188,72 @@ CHInterpreterTest >> testReadArgumentVariableAfterMessageSend [
 	self assert: (self executeSelector: #readArgumentVariableAfterMessageSend) equals: 17
 ]
 
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadBlockTemporaryVariable [
+	"
+	readBlockTemporaryVariable
+		^ [ | temp | temp := 100. temp ] value
+	"
+
+	self assert: (self executeSelector: #readBlockTemporaryVariable) equals: 100
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadHomeOuterArgumentVariableInBlock [
+	"
+	readHomeOuterArgumentVariableInBlock
+
+		^ self readHomeOuterArgumentVariableInBlock: 89
+	
+	readHomeOuterArgumentVariableInBlock: argument
+
+		^ [ [ argument ] value ] value
+	"
+
+	self assert: (self executeSelector: #readHomeOuterArgumentVariableInBlock) equals: 89
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadHomeOuterArgumentVariableInBlockFromDistantCall [
+	"
+	readHomeOuterArgumentVariableInBlockFromDistantCall
+
+		^ self readHomeOuterArgumentVariableInBlockFromDistantCall: 89
+	
+	readHomeOuterArgumentVariableInBlockFromDistantCall: argument
+
+		^ self evaluateBlock: [ [ argument ] value ]
+	"
+
+	self assert: (self executeSelector: #readHomeOuterArgumentVariableInBlock) equals: 89
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadHomeOuterTemporaryVariableInBlockFromDistantCall [
+	"
+	readHomeOuterTemporaryVariableInBlockFromDistantCall
+		| temp block |
+		temp := 1.
+		block := [ [ temp ] value ].
+		temp := 77.
+		^ self evaluateBlock: block
+	"
+
+	self assert: (self executeSelector: #readHomeOuterTemporaryVariableInBlockFromDistantCall) equals: 77
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadHomeTemporaryVariableInBlock [
+	"
+	readHomeTemporaryVariableInBlock
+		| temp |
+		temp := 17.
+		^ [ [ temp ] value ] value
+	"
+
+	self assert: (self executeSelector: #readHomeTemporaryVariableInBlock) equals: 17
+]
+
 { #category : #'chapter two' }
 CHInterpreterTest >> testReadInstanceVariableAfterMessageSend [
 	"
@@ -192,6 +268,61 @@ CHInterpreterTest >> testReadInstanceVariableAfterMessageSend [
 	receiver x: 1.
 	collaborator x: 2.
 	self assert: (self executeSelector: #readInstanceVariableAfterMessageSend) equals: 1
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadInstanceVariableInBlock [
+	"
+	readInstanceVariableInBlock
+		^ [ x ] value
+	"
+
+	self assert: (self executeSelector: #readInstanceVariableInBlock) equals: receiver x
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadOuterArgumentVariableInBlock [
+	"
+	readOuterArgumentVariableInBlock
+		^ self readOuterArgumentVariableInBlock: 25
+
+	readOuterArgumentVariableInBlock: argument
+		^ [ argument ] value
+	"
+
+	self assert: (self executeSelector: #readOuterArgumentVariableInBlock) equals: 25
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadOuterTemporaryVariableInBlock [
+	"
+	readTemporaryVariableInBlock
+		| temp |
+		temp := 17.
+		^ [ temp ] value
+	"
+
+	self assert: (self executeSelector: #readTemporaryVariableInBlock) equals: 17
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadSelfInBlock [
+	"
+	readSelfInBlock
+		^ [ self ] value
+	"
+
+	self assert: (self executeSelector: #readSelfInBlock) equals: receiver
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadSuperInBlock [
+	"
+	readSuperInBlock
+		^ [ super ] value
+	"
+
+	self assert: (self executeSelector: #readSuperInBlock) equals: receiver
 ]
 
 { #category : #'chapter two' }
@@ -223,6 +354,26 @@ CHInterpreterTest >> testReadTemporaryVariableDoesNotEscapeItsDefinition [
 		^ temp
 	"
 	self assert: (self executeSelector: #readCollaboratorTemporaryVariable) equals: nil
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadTwoLevelOuterArgumentVariableInBlock [
+	"
+	readTwoLevelOuterArgumentVariableInBlock
+		^ [ :argument | [ argument ] value ] value: 99
+	"
+
+	self assert: (self executeSelector: #readTwoLevelOuterArgumentVariableInBlock) equals: 99
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testReadTwoLevelOuterTemporaryVariableInBlock [
+	"
+	readTwoLevelOuterTemporaryVariableInBlock
+		^ [ | temp | temp := 88888. [ temp ] value ] value
+	"
+
+	self assert: (self executeSelector: #readTwoLevelOuterTemporaryVariableInBlock) equals: 88888
 ]
 
 { #category : #'chapter one' }
@@ -312,6 +463,17 @@ CHInterpreterTest >> testUnassignedTempHasNilValue [
 	"
 
 	self assert: (self executeSelector: #returnUnassignedTemp) equals: nil
+]
+
+{ #category : #'chapter three' }
+CHInterpreterTest >> testWriteInstanceVariableInBlock [
+	"
+	writeInstanceVariableInBlock
+		^ [ x := 17 ] value
+	"
+
+	self executeSelector: #writeInstanceVariableInBlock.
+	self assert: receiver x equals: 17
 ]
 
 { #category : #'chapter two' }

@@ -20,25 +20,25 @@ CInterpretable >> addition [
 	^ 3 + 2
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> changeCollaboratorWithArgument [
 
 	collaborator x: 500
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> changeCollaboratorX [
 
 	collaborator store100IntoX
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> changeCollaboratorXWithConflictingArgumentNAmes [
 
 	self collaboratorXIgnoringArgumentWithSameName: 1987
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> cocollaboratorX: anInteger [
 
 	self collaboratorX: anInteger
@@ -52,22 +52,28 @@ CInterpretable >> collaborator: anObject [
 	collaborator := anObject
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> collaboratorX [
 
 	^ collaborator x
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> collaboratorX: anInteger [
 
 	collaborator x: anInteger
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> collaboratorXIgnoringArgumentWithSameName: anInteger [
 	"precondition: The argument of method x: has name anInteger too, and they should not collide"
 	collaborator x: 100
+]
+
+{ #category : #'as yet unclassified' }
+CInterpretable >> evaluateBlock: aBlock [
+
+	^ aBlock value
 ]
 
 { #category : #'level6 - super basic block' }
@@ -132,20 +138,26 @@ CInterpretable >> pointCreationViaClass [
 	^ Point new
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> readArgumentVariableAfterMessageSend [
 	
 	^ self readArgumentVariableAfterMessageSend: 17
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> readArgumentVariableAfterMessageSend: arg [
 
 	collaborator returnUnassignedTemp.
 	^ arg
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readBlockTemporaryVariable [
+
+	^ [ | temp | temp := 100. temp ] value
+]
+
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> readCollaboratorTemporaryVariable [
 
 	| temp |
@@ -153,21 +165,93 @@ CInterpretable >> readCollaboratorTemporaryVariable [
 	^ collaborator returnUnassignedTemp
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readHomeOuterArgumentVariableInBlock [
+
+	^ self readHomeOuterArgumentVariableInBlock: 89
+]
+
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readHomeOuterArgumentVariableInBlock: argument [
+
+	^ [ [ argument ] value ] value
+]
+
+{ #category : #'as yet unclassified' }
+CInterpretable >> readHomeOuterArgumentVariableInBlockFromDistantCall [
+
+	^ self readHomeOuterArgumentVariableInBlockFromDistantCall: 89
+]
+
+{ #category : #'as yet unclassified' }
+CInterpretable >> readHomeOuterArgumentVariableInBlockFromDistantCall: argument [
+
+	^ self evaluateBlock: [ [ argument ] value ]
+]
+
+{ #category : #'as yet unclassified' }
+CInterpretable >> readHomeOuterTemporaryVariableInBlockFromDistantCall [
+
+	| temp block |
+	temp := 1.
+	block := [ [ temp ] value ].
+	temp := 77.
+	^ true ifTrue: block
+]
+
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readHomeTemporaryVariableInBlock [
+	
+	| temp |
+	temp := 17.
+	^ [ [ temp ] value ] value
+]
+
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> readInstanceVariableAfterMessageSend [
 
 	collaborator returnUnassignedTemp.
 	^ x
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readInstanceVariableInBlock [
+
+	^ [ x ] value
+]
+
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readOuterArgumentVariableInBlock [
+
+	^ self readOuterArgumentVariableInBlock: 25
+]
+
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readOuterArgumentVariableInBlock: argument [
+
+	^ [ argument ] value
+]
+
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readSelfInBlock [
+
+	^ [ self ] value
+]
+
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readSuperInBlock [
+
+	^ [ super ] value
+]
+
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> readTemporaryVariable [
 
 	| temp |
 	^ temp
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> readTemporaryVariableAfterMessageSend [
 
 	| temp |
@@ -176,7 +260,27 @@ CInterpretable >> readTemporaryVariableAfterMessageSend [
 	^ temp
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readTemporaryVariableInBlock [
+	
+	| temp |
+	temp := 17.
+	^ [ temp ] value
+]
+
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readTwoLevelOuterArgumentVariableInBlock [
+	
+	^ [ :argument | [ argument ] value ] value: 99
+]
+
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> readTwoLevelOuterTemporaryVariableInBlock [
+	
+	^ [ | temp | temp := 88888. [ temp ] value ] value
+]
+
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> redefinedMethod [
 
 	^ super redefinedMethod
@@ -188,13 +292,19 @@ CInterpretable >> return42 [
 	^ self class return42
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> returnBlockValue [
+	
+	^ [ 1 . 5 ] value
+]
+
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> returnBoolean [
 
 	^ false
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> returnEmptyArray [
 
 	^ #()
@@ -206,19 +316,19 @@ CInterpretable >> returnExplicitClass42 [
 	^ CInterpretable return42
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> returnFloat [
 
 	^ 3.14
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> returnGlobal [
 
 	^ Global
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> returnInteger [
 
 	^ 5
@@ -242,44 +352,44 @@ CInterpretable >> returnLastOf: a and: b [
 	^ b
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> returnLiteralArray [
 
 	^ #(true 1 'ahah')
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> returnSelf [
 
 	^ self
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> returnSuper [
 
 	^ super
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> returnUnassignedTemp [
 
 	| temp |
 	^ temp
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> returnX [
 
 	^ x 
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> sendMessageInSuperclass [
 
 	^ self methodNotInSubclass
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> sendMessageReturnX [
 
 	^ self returnX
@@ -322,19 +432,19 @@ CInterpretable >> simpleBlock [
 	^ [  5 ]
 ]
 
-{ #category : #'chapitre1 - simple constant' }
+{ #category : #'chapter 1 - Structural' }
 CInterpretable >> store100IntoX [
 
 	x := 100.
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> superMessageSend [
 
 	^ super methodNotInSubclass
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> writeCollaboratorTemporaryVariable [
 
 	| temp |
@@ -343,7 +453,13 @@ CInterpretable >> writeCollaboratorTemporaryVariable [
 	^ temp
 ]
 
-{ #category : #'chapitre2 - message / activations' }
+{ #category : #'chapter 3 - Blocks' }
+CInterpretable >> writeInstanceVariableInBlock [
+
+	^ [ x := 17 ] value
+]
+
+{ #category : #'chapter 2 - message / activations' }
 CInterpretable >> writeTemporaryVariable [
 
 	| temp |
