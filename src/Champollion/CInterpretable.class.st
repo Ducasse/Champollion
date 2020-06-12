@@ -1,8 +1,9 @@
 Class {
 	#name : #CInterpretable,
-	#superclass : #Object,
+	#superclass : #CInterpretableSuperclass,
 	#instVars : [
-		'x'
+		'x',
+		'collaborator'
 	],
 	#category : #'Champollion-Core'
 }
@@ -17,6 +18,56 @@ CInterpretable class >> return42 [
 CInterpretable >> addition [
 
 	^ 3 + 2
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> changeCollaboratorWithArgument [
+
+	collaborator x: 500
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> changeCollaboratorX [
+
+	collaborator store100IntoX
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> changeCollaboratorXWithConflictingArgumentNAmes [
+
+	self collaboratorXIgnoringArgumentWithSameName: 1987
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> cocollaboratorX: anInteger [
+
+	self collaboratorX: anInteger
+
+	
+]
+
+{ #category : #accessing }
+CInterpretable >> collaborator: anObject [
+
+	collaborator := anObject
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> collaboratorX [
+
+	^ collaborator x
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> collaboratorX: anInteger [
+
+	collaborator x: anInteger
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> collaboratorXIgnoringArgumentWithSameName: anInteger [
+	"precondition: The argument of method x: has name anInteger too, and they should not collide"
+	collaborator x: 100
 ]
 
 { #category : #'level6 - super basic block' }
@@ -81,6 +132,56 @@ CInterpretable >> pointCreationViaClass [
 	^ Point new
 ]
 
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> readArgumentVariableAfterMessageSend [
+	
+	^ self readArgumentVariableAfterMessageSend: 17
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> readArgumentVariableAfterMessageSend: arg [
+
+	collaborator returnUnassignedTemp.
+	^ arg
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> readCollaboratorTemporaryVariable [
+
+	| temp |
+	temp := 17.
+	^ collaborator returnUnassignedTemp
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> readInstanceVariableAfterMessageSend [
+
+	collaborator returnUnassignedTemp.
+	^ x
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> readTemporaryVariable [
+
+	| temp |
+	^ temp
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> readTemporaryVariableAfterMessageSend [
+
+	| temp |
+	temp := 17.
+	collaborator returnUnassignedTemp.
+	^ temp
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> redefinedMethod [
+
+	^ super redefinedMethod
+]
+
 { #category : #'level5 - class messages' }
 CInterpretable >> return42 [
 
@@ -103,18 +204,6 @@ CInterpretable >> returnEmptyArray [
 CInterpretable >> returnExplicitClass42 [
 
 	^ CInterpretable return42
-]
-
-{ #category : #helpers }
-CInterpretable >> returnFalse [
-
-	^ false
-]
-
-{ #category : #helpers }
-CInterpretable >> returnFive [
-
-	^ 5
 ]
 
 { #category : #'chapitre1 - simple constant' }
@@ -171,13 +260,26 @@ CInterpretable >> returnSuper [
 	^ super
 ]
 
-{ #category : #'level2 - instance variable access' }
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> returnUnassignedTemp [
+
+	| temp |
+	^ temp
+]
+
+{ #category : #'chapitre1 - simple constant' }
 CInterpretable >> returnX [
 
 	^ x 
 ]
 
-{ #category : #'level4 - message' }
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> sendMessageInSuperclass [
+
+	^ self methodNotInSubclass
+]
+
+{ #category : #'chapitre2 - message / activations' }
 CInterpretable >> sendMessageReturnX [
 
 	^ self returnX
@@ -220,26 +322,42 @@ CInterpretable >> simpleBlock [
 	^ [  5 ]
 ]
 
-{ #category : #'level2 - instance variable access' }
+{ #category : #'chapitre1 - simple constant' }
 CInterpretable >> store100IntoX [
 
 	x := 100.
 ]
 
-{ #category : #'level2 - instance variable access' }
-CInterpretable >> store100IntoXAndReturnX [
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> superMessageSend [
 
-	x := 100.
-	
+	^ super methodNotInSubclass
 ]
 
-{ #category : #helpers }
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> writeCollaboratorTemporaryVariable [
+
+	| temp |
+	temp := 17.
+	collaborator writeTemporaryVariable.
+	^ temp
+]
+
+{ #category : #'chapitre2 - message / activations' }
+CInterpretable >> writeTemporaryVariable [
+
+	| temp |
+	temp := 100.
+	^ temp
+]
+
+{ #category : #accessing }
 CInterpretable >> x [
 
 	^ x
 ]
 
-{ #category : #helpers }
+{ #category : #accessing }
 CInterpretable >> x: anInteger [
 
 	x := anInteger

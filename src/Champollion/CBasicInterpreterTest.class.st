@@ -282,7 +282,7 @@ CBasicInterpreterTest >> testReturnLiteralArray [
 	self assert: result equals:  #(true 1 'ahah')
 ]
 
-{ #category : #'level3 - dead simple message' }
+{ #category : #'level1 - return constant' }
 CBasicInterpreterTest >> testReturnSelf [
 	"
 	returnSelf

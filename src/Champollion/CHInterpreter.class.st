@@ -8,18 +8,30 @@ Class {
 	#category : #'Champollion-Core'
 }
 
-{ #category : #execute }
-CHInterpreter >> execute: anAST withReceiver: anObject [
-
-	self newFrame.
-	^ self visitNode: anAST
+{ #category : #'stack management' }
+CHInterpreter >> currentMethod [
+	
+	^ self tempAt: #___method
 ]
 
 { #category : #execute }
 CHInterpreter >> executeMethod: anAST withReceiver: anObject [
+	^ self executeMethod: anAST withReceiver: anObject andArguments: #()
+]
+
+{ #category : #execute }
+CHInterpreter >> executeMethod: anAST withReceiver: anObject andArguments: aCollection [
+	| result |
 	self pushNewFrame.
-	self topFrame at: #self  put: anObject.
-	^ self visitNode: anAST
+	self tempAt: #___method put: anAST.
+	self tempAt: #self put: anObject.
+	anAST arguments with: aCollection do: [ :arg :value | self tempAt: arg name put: value ]. 
+	anAST temporaryNames do: [ :tempName | self tempAt: tempName put: nil ]. 
+	
+	result := self visitNode: anAST.
+	
+	self popFrame.
+	^ result
 ]
 
 { #category : #accessing }
@@ -33,6 +45,27 @@ CHInterpreter >> initialize [
 	stack := CTStack new.
 	globalEnvironment := Dictionary new.
 
+]
+
+{ #category : #'message sends' }
+CHInterpreter >> lookup: aSymbol fromClass: aClass [ 
+	"Return the AST of a method or nil if none is found"
+
+	"If the class defines a method for the selector, return the AST corresponding to the method"
+	(aClass includesSelector: aSymbol)
+		ifTrue: [ ^ (aClass compiledMethodAt: aSymbol) ast ].
+
+	"Otherwise lookup recursively in the superclass.
+	If we reach the end of the hierarchy return nil"
+	^ aClass = ProtoObject 
+		ifTrue: [ nil ]
+		ifFalse: [ self lookup: aSymbol fromClass: aClass superclass ]
+]
+
+{ #category : #'stack management' }
+CHInterpreter >> popFrame [
+	
+	^ stack pop
 ]
 
 { #category : #'stack management' }
@@ -54,9 +87,27 @@ CHInterpreter >> receiver [
 ]
 
 { #category : #'stack management' }
+CHInterpreter >> tempAt: aSymbol [
+
+	^ self topFrame at: aSymbol
+]
+
+{ #category : #'stack management' }
+CHInterpreter >> tempAt: aSymbol put: anInteger [ 
+
+	self topFrame at: aSymbol put: anInteger
+]
+
+{ #category : #'stack management' }
 CHInterpreter >> topFrame [
 
 	^ stack top 
+]
+
+{ #category : #visiting }
+CHInterpreter >> visitArgumentNode: aRBArgumentNode [
+
+	^ self tempAt: aRBArgumentNode name
 ]
 
 { #category : #visiting }
@@ -94,6 +145,17 @@ CHInterpreter >> visitLiteralArrayNode: aRBLiteralArrayNode [
 CHInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [
 
 	^ aRBLiteralValueNode value
+]
+
+{ #category : #visiting }
+CHInterpreter >> visitMessageNode: aMessageNode [
+
+	| rec method args lookupClass | 
+	rec := self visitNode: aMessageNode receiver.
+	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
+	lookupClass := aMessageNode receiver isSuper ifTrue: [ self currentMethod methodClass superclass ] ifFalse: [ rec class ].
+	method :=  self lookup: aMessageNode selector fromClass: lookupClass.
+	^ self executeMethod: method withReceiver: rec andArguments: args
 ]
 
 { #category : #visiting }
@@ -136,4 +198,10 @@ CHInterpreter >> visitSequenceNode: aSequenceNode [
 { #category : #visiting }
 CHInterpreter >> visitSuperNode: aRBSuperNode [ 
 	^ self receiver
+]
+
+{ #category : #visiting }
+CHInterpreter >> visitTemporaryNode: aRBTemporaryNode [ 
+	
+	^ self tempAt: aRBTemporaryNode name
 ]
