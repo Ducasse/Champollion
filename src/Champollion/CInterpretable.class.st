@@ -40,6 +40,22 @@ CInterpretable >> methodAccessingTemp [
 ]
 
 { #category : #'level3 - temporaries' }
+CInterpretable >> methodCallingModifyingTemp [
+
+ 	| temp |
+ 	temp := 7.
+ 	self methodModifyingTemp.
+	^ temp
+]
+
+{ #category : #'level3 - temporaries' }
+CInterpretable >> methodModifyingTemp [
+
+ 	| temp |
+ 	temp := 42
+]
+
+{ #category : #'level3 - temporaries' }
 CInterpretable >> methodWithTemp [
 
  	| temp |
@@ -71,7 +87,13 @@ CInterpretable >> return42 [
 	^ self class return42
 ]
 
-{ #category : #'level2 - simple constant' }
+{ #category : #'chapitre1 - simple constant' }
+CInterpretable >> returnBoolean [
+
+	^ false
+]
+
+{ #category : #'chapitre1 - simple constant' }
 CInterpretable >> returnEmptyArray [
 
 	^ #()
@@ -83,14 +105,32 @@ CInterpretable >> returnExplicitClass42 [
 	^ CInterpretable return42
 ]
 
-{ #category : #'level2 - simple constant' }
+{ #category : #helpers }
 CInterpretable >> returnFalse [
 
 	^ false
 ]
 
-{ #category : #'level2 - simple constant' }
+{ #category : #helpers }
 CInterpretable >> returnFive [
+
+	^ 5
+]
+
+{ #category : #'chapitre1 - simple constant' }
+CInterpretable >> returnFloat [
+
+	^ 3.14
+]
+
+{ #category : #'chapitre1 - simple constant' }
+CInterpretable >> returnGlobal [
+
+	^ Global
+]
+
+{ #category : #'chapitre1 - simple constant' }
+CInterpretable >> returnInteger [
 
 	^ 5
 ]
@@ -113,16 +153,22 @@ CInterpretable >> returnLastOf: a and: b [
 	^ b
 ]
 
-{ #category : #'level2 - simple constant' }
+{ #category : #'chapitre1 - simple constant' }
 CInterpretable >> returnLiteralArray [
 
 	^ #(true 1 'ahah')
 ]
 
-{ #category : #'level4 - message' }
+{ #category : #'chapitre1 - simple constant' }
 CInterpretable >> returnSelf [
 
 	^ self
+]
+
+{ #category : #'chapitre1 - simple constant' }
+CInterpretable >> returnSuper [
+
+	^ super
 ]
 
 { #category : #'level2 - instance variable access' }
