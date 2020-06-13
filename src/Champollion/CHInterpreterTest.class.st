@@ -31,7 +31,7 @@ CHInterpreterTest >> interpreterClass [
 
 { #category : #hooks }
 CHInterpreterTest >> setUp [
-
+	super setUp.
 	interpreter := self interpreterClass new.
 	receiver := CInterpretable new.
 	collaborator := CInterpretable new.
