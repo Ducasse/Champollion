@@ -74,6 +74,19 @@ CHInterpreterTest >> testArgumentAccessDoesNotEscapeItsDefinition [
 	self assert: collaborator x equals: 100
 ]
 
+{ #category : #'chapter two' }
+CHInterpreterTest >> testBalancingStack [
+	"
+	setXAndMessage
+
+		x := 1000.
+		collaborator returnX.
+		^ x
+	"
+
+	self assert: (self executeSelector: #setXAndMessage) equals: 1000
+]
+
 { #category : #'chapter three' }
 CHInterpreterTest >> testBlockValueIsLastStatementValue [
 	"
@@ -474,6 +487,16 @@ CHInterpreterTest >> testWriteInstanceVariableInBlock [
 
 	self executeSelector: #writeInstanceVariableInBlock.
 	self assert: receiver x equals: 17
+]
+
+{ #category : #'chapter two' }
+CHInterpreterTest >> testWriteTemporaryVariable [
+	"writeTemporaryVariable
+		| temp |
+		temp := 100.
+		^ temp
+	"
+	self assert: (self executeSelector: #writeTemporaryVariable) equals: 100
 ]
 
 { #category : #'chapter two' }

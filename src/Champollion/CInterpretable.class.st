@@ -402,6 +402,14 @@ CInterpretable >> sendMessageToClass [
 ]
 
 { #category : #'level3 - temporaries' }
+CInterpretable >> setXAndMessage [
+
+	x := 1000.
+	collaborator returnX.
+	^ x
+]
+
+{ #category : #'level3 - temporaries' }
 CInterpretable >> settingAValueToTemp [
 
 	| temp | 
