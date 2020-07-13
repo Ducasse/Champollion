@@ -293,6 +293,11 @@ CInterpretable >> return42 [
 ]
 
 { #category : #'chapter 3 - Blocks' }
+CInterpretable >> returnBlock [
+		^ [ 1 . 5 ] 
+]
+
+{ #category : #'chapter 3 - Blocks' }
 CInterpretable >> returnBlockValue [
 	
 	^ [ 1 . 5 ] value

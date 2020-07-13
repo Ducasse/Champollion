@@ -88,6 +88,19 @@ CHInterpreterTest >> testBalancingStack [
 ]
 
 { #category : #'chapter three' }
+CHInterpreterTest >> testBlock [
+	"
+	returnBlock
+		^ [ 1 . 5 ] 
+	"
+	| bk1 |
+	bk1 := (self executeSelector: #returnBlock).
+	self assert: bk1 code isBlock.
+	self assert: bk1 code body isSequence
+	
+]
+
+{ #category : #'chapter three' }
 CHInterpreterTest >> testBlockValueIsLastStatementValue [
 	"
 	returnBlockValue
