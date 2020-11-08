@@ -2,52 +2,58 @@ Class {
 	#name : #CHInterpreterTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'interpreter',
 		'receiver',
 		'collaborator'
 	],
-	#category : #'Champollion-Core'
+	#category : #'Champollion-Tests'
 }
 
-{ #category : #helpers }
-CHInterpreterTest >> executeSelector: aSymbol [
+{ #category : #tests }
+CHInterpreterTest >> executeSelector: selector [
 
-	| ast |
-	ast := (CInterpretable lookupSelector: aSymbol) ast.
-	^ self interpreter executeMethod: ast withReceiver: receiver
+	^ self executeSelector: selector withReceiver: receiver
 ]
 
-{ #category : #hooks }
+{ #category : #tests }
+CHInterpreterTest >> executeSelector: selector withReceiver: aReceiver [
+
+	| ast result |
+	ast := (CHInterpretable >> selector) ast.
+	result := self interpreter execute: ast withReceiver: aReceiver.
+	^ result
+]
+
+{ #category : #'as yet unclassified' }
 CHInterpreterTest >> interpreter [
 
-	^ interpreter
+	^ CHInterpreter new
 ]
 
-{ #category : #hooks }
-CHInterpreterTest >> interpreterClass [ 
+{ #category : #tests }
+CHInterpreterTest >> peanoToInt: aPeanoNumber [
 
-	^ CHInterpreter
+  ^ aPeanoNumber
+   	 ifEmpty: [ 0 ]
+    ifNotEmpty: [ 1 + (self peanoToInt: aPeanoNumber first) ]
 ]
 
-{ #category : #hooks }
+{ #category : #tests }
 CHInterpreterTest >> setUp [
+
 	super setUp.
-	interpreter := self interpreterClass new.
-	receiver := CInterpretable new.
-	collaborator := CInterpretable new.
-	receiver collaborator: collaborator 
+	receiver := CHInterpretable new.
+	collaborator := CHInterpretable new.
+	receiver collaborator: collaborator
 ]
 
-{ #category : #'chapter two' }
+{ #category : #tests }
 CHInterpreterTest >> testArgumentAccess [
-	"
-	changeCollaboratorWithArgument
-		collaborator x: 500
-	"
 
 	receiver x: 200.
 	collaborator x: 300.
+
 	self executeSelector: #changeCollaboratorWithArgument.
+
 	self assert: receiver x equals: 200.
 	self assert: collaborator x equals: 500
 ]
@@ -72,6 +78,14 @@ CHInterpreterTest >> testArgumentAccessDoesNotEscapeItsDefinition [
 
 	self assert: receiver x equals: 200.
 	self assert: collaborator x equals: 100
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testAssignmentReturnsAssignedValue [
+
+	self
+    assert: (self executeSelector: #store100IntoX)
+    equals: 100
 ]
 
 { #category : #'chapter two' }
@@ -100,14 +114,56 @@ CHInterpreterTest >> testBlock [
 	
 ]
 
-{ #category : #'chapter three' }
-CHInterpreterTest >> testBlockValueIsLastStatementValue [
-	"
-	returnBlockValue
-		^ [ 1 . 5 ] value
-	"
+{ #category : #tests }
+CHInterpreterTest >> testBlockTemporaryRead [
+	self
+    assert: (self executeSelector: #blockTemporary)
+    equals: nil
+]
 
+{ #category : #tests }
+CHInterpreterTest >> testBlockValueIsLastStatementValue [
 	self assert: (self executeSelector: #returnBlockValue) equals: 5
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testDoesNotUnderstandReifiesMessageWithArguments [
+	self
+    assert: (self executeSelector: #sendMessageNotUnderstood) arguments
+    equals: #( 17 27 )
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testDoesNotUnderstandReifiesMessageWithSelector [
+
+	self
+    assert: (self executeSelector: #sendMessageNotUnderstood) selector
+    equals: #messageIDoNotUnderstandWithArg1:withArg2:
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testEvaluationOrder [
+  
+  | argumentEvaluationOrder |
+argumentEvaluationOrder := self executeSelector: #returnEvaluationOrder.
+
+  self assert: (self peanoToInt: receiver evaluationOrder) equals: 0.
+  self
+    assert: (argumentEvaluationOrder collect: [ :peano | self peanoToInt: peano])
+    equals: #(1 2 3)
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testFailingPrimitive [
+
+	self
+      assert: (self executeSelector: #callingFailingPrimitive)
+      equals: 'failure'
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testIncreaseEnclosingTemporary [
+	self assert: (self executeSelector: #increaseEnclosingTemporary) equals: 1
 ]
 
 { #category : #'chapter two' }
@@ -137,46 +193,20 @@ CHInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSen
 	self assert: collaborator x equals: 100
 ]
 
-{ #category : #'chapter two' }
+{ #category : #tests }
 CHInterpreterTest >> testLookupMessageInSuperclass [
-	"
-	Subclass>>sendMessageInSuperclass
-
-	^ self methodNotInSubclass
-	
-	Superclass>>methodNotInSubclass
-		^ 5
-	"
 
 	self assert: (self executeSelector: #sendMessageInSuperclass) equals: 5
 ]
 
-{ #category : #'chapter two' }
+{ #category : #tests }
 CHInterpreterTest >> testLookupRedefinedMethod [
-	"
-	Subclass>>redefinedMethod
-
-	^ super redefinedMethod
-	
-	Superclass>>redefinedMethod
-		^ 5
-	"
-
-	self assert: (self executeSelector: #redefinedMethod) equals: 5
+	self assert: (self executeSelector: #overriddenMethod) equals: 5
 ]
 
-{ #category : #'chapter two' }
+{ #category : #tests }
 CHInterpreterTest >> testLookupSuperMessage [
-	"
-	Subclass>>superMessageSend
-
-	^ super methodNotInSubclass
-	
-	Superclass>>methodNotInSubclass
-		^ 5
-	"
-
-	self assert: (self executeSelector: #superMessageSend) equals: 5
+	self assert: (self executeSelector: #doesSuperLookupFromSuperclass)
 ]
 
 { #category : #'chapter two' }
@@ -193,6 +223,12 @@ CHInterpreterTest >> testLookupSuperMessageNotInReceiverSuperclass [
 	"
 
 	self assert: (self executeSelector: #redefinedMethodAtThreeLevels) equals: 5
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testNonLocalReturn [
+
+	self assert: (self executeSelector: #methodWithGuard) equals: nil
 ]
 
 { #category : #'chapter two' }
@@ -409,10 +445,13 @@ CHInterpreterTest >> testReturnAccessInstanceVariable [
 	self assert: (self executeSelector: #returnX) equals: 100
 ]
 
-{ #category : #'chapter one' }
+{ #category : #tests }
 CHInterpreterTest >> testReturnBoolean [
 
-	self assert: (self executeSelector: #returnBoolean) equals: false
+	"Do not use deny: to make explicit that we expect the value false"
+	self
+    assert: (self executeSelector: #returnBoolean)
+    equals: false
 ]
 
 { #category : #'chapter one' }
@@ -421,10 +460,20 @@ CHInterpreterTest >> testReturnEmptyArray [
 	self assert: (self executeSelector: #returnEmptyArray) equals: #() 
 ]
 
-{ #category : #'chapter one' }
+{ #category : #tests }
+CHInterpreterTest >> testReturnEmptyLiteralArray [
+
+	self 
+		assert: (self executeSelector: #returnEmptyLiteralArray) 
+		equals: #()
+]
+
+{ #category : #tests }
 CHInterpreterTest >> testReturnFloat [
 
-	self assert: (self executeSelector: #returnFloat) equals: 3.14 
+	| result |
+	result := self executeSelector: #returnFloat.
+	self assert: result equals: 3.14
 ]
 
 { #category : #'chapter one' }
@@ -436,22 +485,48 @@ CHInterpreterTest >> testReturnGlobal [
 	self assert: (self executeSelector: #returnGlobal) equals: globalObject  
 ]
 
-{ #category : #'chapter one' }
-CHInterpreterTest >> testReturnInteger [
+{ #category : #tests }
+CHInterpreterTest >> testReturnInstanceVariableRead [
 
-	self assert: (self executeSelector: #returnInteger) equals: 5
+	| receiver |
+	receiver := CHInterpretable new.
+	receiver x: 100.
+	self
+		assert: (self executeSelector: #returnX withReceiver: receiver)
+		equals: 100
 ]
 
-{ #category : #'chapter one' }
+{ #category : #tests }
+CHInterpreterTest >> testReturnInteger [
+	| result |
+	result := self executeSelector: #returnInteger. 
+	self assert: result equals: 5
+]
+
+{ #category : #tests }
 CHInterpreterTest >> testReturnLiteralArray [
 
-	self assert: (self executeSelector: #returnLiteralArray) equals: #(true 1 'ahah')
+	self 
+		assert: (self executeSelector: #returnLiteralArray) 
+		equals: #(true 1 'ahah')
 ]
 
-{ #category : #'chapter one' }
+{ #category : #tests }
+CHInterpreterTest >> testReturnRecursiveLiteralArray [
+
+	self 
+		assert: (self executeSelector: #returnRecursiveLiteralArray) 
+		equals: #(true 1 #('ahah'))
+]
+
+{ #category : #tests }
 CHInterpreterTest >> testReturnSelf [
 
-	self assert: (self executeSelector: #returnSelf) equals: receiver
+	| receiver |
+	receiver := Object new.
+	self 
+		assert: (self executeSelector: #returnSelf withReceiver: receiver) 
+		equals: receiver
 ]
 
 { #category : #'chapter one' }
@@ -460,16 +535,29 @@ CHInterpreterTest >> testReturnSuper [
 	self assert: (self executeSelector: #returnSuper) equals: receiver
 ]
 
-{ #category : #'chapter two' }
+{ #category : #tests }
 CHInterpreterTest >> testSelfSend [
-	"
-	sendMessageReturnX
-
-		^ self returnX
-	"
 
 	receiver x: 100.
-	self assert: (self executeSelector: #sendMessageReturnX) equals: 100
+	self 
+		assert: (self executeSelector: #sendMessageReturnX) 
+		equals: 100
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testSmallIntAddPrimitive [
+
+	self
+    assert: (self executeSelector: #smallintAdd)
+    equals: 6
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testStore100IntoX [
+
+	receiver x: 17.
+	self executeSelector: #store100IntoX.
+	self assert: receiver x equals: 100
 ]
 
 { #category : #'chapter one' }

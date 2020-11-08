@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'code',
-		'outerContext'
+		'definingContext'
 	],
 	#category : #'Champollion-Core'
 }
@@ -14,38 +14,25 @@ CHBlock >> code [
 ]
 
 { #category : #accessing }
-CHBlock >> code: aRBBlockNode [ 
+CHBlock >> code: aRBBlockNode [
 	code := aRBBlockNode
 ]
 
 { #category : #accessing }
-CHBlock >> outerContext [
-	^ outerContext
+CHBlock >> definingContext [
+	^ definingContext
 ]
 
 { #category : #accessing }
-CHBlock >> outerContext: anObject [
-	outerContext := anObject
+CHBlock >> definingContext: aContext [
+	
+	definingContext := aContext
 ]
 
 { #category : #accessing }
 CHBlock >> value [
-
-	"AST interpreter primitive.
-	This will call"
-	<astInterpreterPrimitive: #value>
-	
-	"If there "
-	self halt.
-]
-
-{ #category : #accessing }
-CHBlock >> value: argument [
-
-	"AST interpreter primitive.
-	This will call"
-	<astInterpreterPrimitive: #value>
-	
-	"If there "
-	self halt.
+	<primitive: 201>
+  "If the fallback code executes it means that block evaluation failed.
+  Return nil for now in such case."
+  ^ nil
 ]
