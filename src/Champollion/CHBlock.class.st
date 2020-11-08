@@ -36,3 +36,13 @@ CHBlock >> value [
   Return nil for now in such case."
   ^ nil
 ]
+
+{ #category : #accessing }
+CHBlock >> value: anArg [
+	"Activate the receiver, creating a closure activation (MethodContext)
+	 whose closure is the receiver and whose caller is the sender of this message.
+	 Supply the argument and copied values to the activation as its arguments and copied temps.
+	 Primitive. Optional (but you're going to want this for performance)."	 
+	<primitive: 202>
+	^ nil
+]

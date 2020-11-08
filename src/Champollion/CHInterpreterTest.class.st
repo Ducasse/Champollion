@@ -3,7 +3,8 @@ Class {
 	#superclass : #TestCase,
 	#instVars : [
 		'receiver',
-		'collaborator'
+		'collaborator',
+		'interpreter'
 	],
 	#category : #'Champollion-Tests'
 }
@@ -18,7 +19,7 @@ CHInterpreterTest >> executeSelector: selector [
 CHInterpreterTest >> executeSelector: selector withReceiver: aReceiver [
 
 	| ast result |
-	ast := (CHInterpretable >> selector) ast.
+	ast := (CHInterpretable lookupSelector: selector) ast.
 	result := self interpreter execute: ast withReceiver: aReceiver.
 	^ result
 ]
@@ -26,7 +27,7 @@ CHInterpreterTest >> executeSelector: selector withReceiver: aReceiver [
 { #category : #'as yet unclassified' }
 CHInterpreterTest >> interpreter [
 
-	^ CHInterpreter new
+	^ interpreter
 ]
 
 { #category : #tests }
@@ -41,6 +42,8 @@ CHInterpreterTest >> peanoToInt: aPeanoNumber [
 CHInterpreterTest >> setUp [
 
 	super setUp.
+	interpreter := CHInterpreter new.
+	
 	receiver := CHInterpretable new.
 	collaborator := CHInterpretable new.
 	receiver collaborator: collaborator
@@ -71,8 +74,8 @@ CHInterpreterTest >> testArgumentAccessDoesNotEscapeItsDefinition [
 	"Test precondition. Both methods have arguments with the same name.
 	Otherwise this test could be green but false."
 	self
-		assert: (CInterpretable >> #collaboratorXIgnoringArgumentWithSameName:) argumentNames
-		equals: (CInterpretable >> #x:) argumentNames.
+		assert: (CHInterpretable >> #collaboratorXIgnoringArgumentWithSameName:) argumentNames
+		equals: (CHInterpretable >> #x:) argumentNames.
 	
 	self executeSelector: #changeCollaboratorXWithConflictingArgumentNAmes.
 

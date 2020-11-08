@@ -19,3 +19,9 @@ CHInterpretableSuperclass >> methodInSuperclass [
 CHInterpretableSuperclass >> overriddenMethod [
 	^ 5
 ]
+
+{ #category : #testing }
+CHInterpretableSuperclass >> redefinedMethodAtThreeLevels [
+
+	^ super redefinedMethodAtThreeLevels
+]

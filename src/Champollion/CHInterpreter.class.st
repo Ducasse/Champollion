@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'stack',
-		'primitives'
+		'primitives',
+		'globalEnvironment'
 	],
 	#category : #'Champollion-Core'
 }
@@ -68,6 +69,11 @@ CHInterpreter >> executePrimitiveMethod: anAST [
 	^ self perform: (primitives at: primitiveNumber)
 ]
 
+{ #category : #primitives }
+CHInterpreter >> globalEnvironmentAt: aSymbol put: anObject [ 
+	globalEnvironment at: aSymbol put: anObject
+]
+
 { #category : #visiting }
 CHInterpreter >> homeFrame [
 
@@ -82,6 +88,7 @@ CHInterpreter >> homeFrame [
 CHInterpreter >> initialize [
 	super initialize. 
 	stack := Stack new.
+	globalEnvironment := Dictionary new.
 	primitives := Dictionary new.
 	self initializePrimitiveTable.
 ]
@@ -114,6 +121,7 @@ CHInterpreter >> initializePrimitiveTable [
 	primitives at: 71 	put: #primitiveBasicNewVariable.
 		
 	primitives at: 201 put: #primitiveBlockValue.
+	primitives at: 202 put: #primitiveBlockValueWith.
 ]
 
 { #category : #'as yet unclassified' }
@@ -192,6 +200,19 @@ CHInterpreter >> primitiveBlockValue [
 	theBlock := self receiver.
 	self receiver: (theBlock definingContext at: #self).
 	self tempAt: #__definingContext put: theBlock definingContext.
+	^ self visitNode: theBlock code body
+]
+
+{ #category : #primitives }
+CHInterpreter >> primitiveBlockValueWith [
+		
+	| theBlock |
+	theBlock := self receiver.
+	self receiver: (theBlock definingContext at: #self).
+	self tempAt: #__definingContext put: theBlock definingContext.
+	theBlock code arguments do: [ :e | | argument |
+		argument := self tempAt: self currentMethod arguments first name.
+		self tempAt: e name put: argument ].
 	^ self visitNode: theBlock code body
 ]
 
@@ -377,7 +398,7 @@ CHInterpreter >> visitAssignmentNode: aRBAssignmentNode [
 	
 	| rightSide |
 	rightSide := self visitNode: aRBAssignmentNode value.
-	aRBAssignmentNode variable variable isTempVariable
+	aRBAssignmentNode variable variable isLocalVariable
 		ifTrue: [ | definingFrame |
 			definingFrame := self
 				lookupContextDefiningTemporary: aRBAssignmentNode variable name.
@@ -394,10 +415,17 @@ CHInterpreter >> visitBlockNode: aRBBlockNode [
 		yourself
 ]
 
+{ #category : #visiting }
+CHInterpreter >> visitCascadeNode: aRBCascadeNode [ 
+	self shouldBeImplemented.
+]
+
 { #category : #accessing }
-CHInterpreter >> visitGlobalNode: aRBVariableNode [ 
-	
-	^ Smalltalk at: aRBVariableNode name
+CHInterpreter >> visitGlobalNode: aRBGlobalNode [ 
+
+	^ globalEnvironment
+		at: aRBGlobalNode name
+		ifAbsent: [ self error: aRBGlobalNode name, ' not found' ]
 ]
 
 { #category : #visiting }

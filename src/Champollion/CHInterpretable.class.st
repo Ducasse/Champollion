@@ -44,6 +44,16 @@ CHInterpretable >> changeCollaboratorWithArgument [
 	collaborator x: 500
 ]
 
+{ #category : #'as yet unclassified' }
+CHInterpretable >> changeCollaboratorX [
+ 		collaborator store100IntoX
+]
+
+{ #category : #accessing }
+CHInterpretable >> changeCollaboratorXWithConflictingArgumentNAmes [
+	self collaboratorXIgnoringArgumentWithSameName: 1987
+]
+
 { #category : #accessing }
 CHInterpretable >> collaborator [
 	^ collaborator
@@ -55,6 +65,18 @@ CHInterpretable >> collaborator: anObject [
 ]
 
 { #category : #accessing }
+CHInterpretable >> collaboratorX [
+
+		^ collaborator x
+]
+
+{ #category : #accessing }
+CHInterpretable >> collaboratorXIgnoringArgumentWithSameName: anInteger [
+	"precondition: The argument of method x: has name anInteger too, and they should not collide"
+	collaborator x: 100
+]
+
+{ #category : #accessing }
 CHInterpretable >> doesNotUnderstand: aMessage [
 	^ aMessage
 ]
@@ -62,6 +84,12 @@ CHInterpretable >> doesNotUnderstand: aMessage [
 { #category : #'as yet unclassified' }
 CHInterpretable >> doesSuperLookupFromSuperclass [
 	^ super isInSuperclass
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> evaluateBlock: aBlock [
+
+	^ aBlock value
 ]
 
 { #category : #'as yet unclassified' }
@@ -129,8 +157,133 @@ CHInterpretable >> overriddenMethod [
 ]
 
 { #category : #'as yet unclassified' }
+CHInterpretable >> readArgumentVariableAfterMessageSend [
+		^ self readArgumentVariableAfterMessageSend: 17
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readArgumentVariableAfterMessageSend: arg [
+		collaborator returnUnassignedTemp.
+		^ arg
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readBlockTemporaryVariable [
+		^ [ | temp | temp := 100. temp ] value
+]
+
+{ #category : #accessing }
+CHInterpretable >> readCollaboratorTemporaryVariable [
+		| temp |
+		temp := 17.
+		^ collaborator returnUnassignedTemp
+	
+	
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readHomeOuterArgumentVariableInBlock [
+
+		^ self readHomeOuterArgumentVariableInBlock: 89
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readHomeOuterArgumentVariableInBlock: argument [
+
+		^ [ [ argument ] value ] value
+]
+
+{ #category : #accessing }
+CHInterpretable >> readHomeOuterArgumentVariableInBlockFromDistantCall [
+
+		^ self readHomeOuterArgumentVariableInBlockFromDistantCall: 89
+]
+
+{ #category : #accessing }
+CHInterpretable >> readHomeOuterArgumentVariableInBlockFromDistantCall: argument [
+
+		^ self evaluateBlock: [ [ argument ] value ]
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readHomeOuterTemporaryVariableInBlockFromDistantCall [
+		| temp block |
+		temp := 1.
+		block := [ [ temp ] value ].
+		temp := 77.
+		^ self evaluateBlock: block
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readHomeTemporaryVariableInBlock [
+		| temp |
+		temp := 17.
+		^ [ [ temp ] value ] value
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readInstanceVariableAfterMessageSend [
+		collaborator returnUnassignedTemp.
+		^ x
+	
+	
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readInstanceVariableInBlock [
+		^ [ x ] value
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readOuterArgumentVariableInBlock [
+		^ self readOuterArgumentVariableInBlock: 25
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readOuterArgumentVariableInBlock: argument [
+		^ [ argument ] value
+]
+
+{ #category : #'as yet unclassified' }
 CHInterpretable >> readSelfInBlock [
 	^ [ self ] value
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readSuperInBlock [
+		^ [ super ] value
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readTemporaryVariableAfterMessageSend [
+		| temp |
+		temp := 17.
+		collaborator returnUnassignedTemp.
+		^ temp
+	
+	
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readTemporaryVariableInBlock [
+		| temp |
+		temp := 17.
+		^ [ temp ] value
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readTwoLevelOuterArgumentVariableInBlock [
+		^ [ :argument | [ argument ] value ] value: 99
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> readTwoLevelOuterTemporaryVariableInBlock [
+		^ [ | temp | temp := 88888. [ temp ] value ] value
+]
+
+{ #category : #accessing }
+CHInterpretable >> returnBlock [
+		^ [ 1 . 5 ] 
 ]
 
 { #category : #tests }
@@ -141,6 +294,12 @@ CHInterpretable >> returnBlockValue [
 { #category : #'as yet unclassified' }
 CHInterpretable >> returnBoolean [
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> returnEmptyArray [
+
+	^ #()
 ]
 
 { #category : #'as yet unclassified' }
@@ -160,6 +319,11 @@ CHInterpretable >> returnEvaluationOrder [
 CHInterpretable >> returnFloat [
 
 	^ 3.14
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> returnGlobal [
+	^ Global
 ]
 
 { #category : #'as yet unclassified' }
@@ -183,10 +347,22 @@ CHInterpretable >> returnSelf [
 ]
 
 { #category : #'as yet unclassified' }
+CHInterpretable >> returnSuper [
+
+	 ^ super
+]
+
+{ #category : #'as yet unclassified' }
 CHInterpretable >> returnToDeadFrame [
 	| aBlock |
 	aBlock := self buildBlock.
 	aBlock value
+]
+
+{ #category : #accessing }
+CHInterpretable >> returnUnassignedTemp [
+		| temp |
+		^ temp
 ]
 
 { #category : #accessing }
@@ -212,6 +388,14 @@ CHInterpretable >> sendMessageReturnX [
 ]
 
 { #category : #'as yet unclassified' }
+CHInterpretable >> setXAndMessage [
+
+		x := 1000.
+		collaborator returnX.
+		^ x
+]
+
+{ #category : #'as yet unclassified' }
 CHInterpretable >> smallintAdd [
 
 	^ 1 + 5
@@ -232,6 +416,30 @@ CHInterpretable >> testLookupSuperMessage [
 CHInterpretable >> toto [
   
 self == nil
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> writeCollaboratorTemporaryVariable [
+
+		| temp |
+		temp := 17.
+		collaborator writeTemporaryVariable.
+		^ temp
+	
+	
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> writeInstanceVariableInBlock [
+		^ [ x := 17 ] value
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> writeTemporaryVariable [
+
+		| temp |
+		temp := 100.
+		^ temp
 ]
 
 { #category : #accessing }
