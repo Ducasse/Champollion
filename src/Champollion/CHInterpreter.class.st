@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'stack',
 		'primitives',
-		'globalEnvironment'
+		'globalScope'
 	],
 	#category : #'Champollion-Core'
 }
@@ -21,6 +21,18 @@ CHInterpreter >> currentMethod [
 	^ self tempAt: #__method
 ]
 
+{ #category : #lookup }
+CHInterpreter >> currentMethodClass [
+	
+	^ self currentMethod propertyAt: #definingClass
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpreter >> currentScope [
+
+	^ self topFrame
+]
+
 { #category : #visiting }
 CHInterpreter >> execute: anAST withReceiver: anObject [
 
@@ -31,8 +43,15 @@ CHInterpreter >> execute: anAST withReceiver: anObject [
 CHInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection [
 	| result thisFrame |	
 	thisFrame := self pushNewFrame.
+	thisFrame parentScope: (CHInstanceScope new
+			receiver: anObject;
+			parentScope: globalScope;
+			yourself);
+		yourself.
+	
 	self tempAt: #__method put: anAST.
-	self tempAt: #self put: anObject.
+	self receiver: anObject.
+	
 	anAST arguments with: aCollection
     do: [ :arg :value | self tempAt: arg name put: value ].
 	result := [ self visitNode: anAST ]
@@ -71,7 +90,7 @@ CHInterpreter >> executePrimitiveMethod: anAST [
 
 { #category : #primitives }
 CHInterpreter >> globalEnvironmentAt: aSymbol put: anObject [ 
-	globalEnvironment at: aSymbol put: anObject
+	globalScope at: aSymbol put: anObject
 ]
 
 { #category : #visiting }
@@ -79,8 +98,8 @@ CHInterpreter >> homeFrame [
 
 	| currentLookupFrame |
 	currentLookupFrame := self topFrame.
-	[ currentLookupFrame includesKey: #__definingContext ]
-		whileTrue: [ currentLookupFrame := currentLookupFrame at: #__definingContext ].
+	[ currentLookupFrame hasDefiningContext ]
+		whileTrue: [ currentLookupFrame := currentLookupFrame parentScope ].
 	^ currentLookupFrame
 ]
 
@@ -88,7 +107,7 @@ CHInterpreter >> homeFrame [
 CHInterpreter >> initialize [
 	super initialize. 
 	stack := Stack new.
-	globalEnvironment := Dictionary new.
+	globalScope := CHGlobalScope new.
 	primitives := Dictionary new.
 	self initializePrimitiveTable.
 ]
@@ -131,7 +150,9 @@ CHInterpreter >> lookup: aSymbol fromClass: aClass [
 
 	"If the class defines a method for the selector, return the AST corresponding to the method"
 	(aClass includesSelector: aSymbol)
-		ifTrue: [ ^ (aClass compiledMethodAt: aSymbol) ast ].
+		ifTrue: [ ^ (RBParser parseMethod: (aClass compiledMethodAt: aSymbol) sourceCode)
+							propertyAt: #definingClass put: aClass;
+							yourself ].
 
 	"Otherwise lookup recursively in the superclass.
 	If we reach the end of the hierarchy return nil"
@@ -198,8 +219,8 @@ CHInterpreter >> primitiveBlockValue [
 		
 	| theBlock |
 	theBlock := self receiver.
-	self receiver: (theBlock definingContext at: #self).
-	self tempAt: #__definingContext put: theBlock definingContext.
+	self topFrame parentScope: theBlock definingContext.
+	self receiver: theBlock definingContext receiver.
 	^ self visitNode: theBlock code body
 ]
 
@@ -208,7 +229,7 @@ CHInterpreter >> primitiveBlockValueWith [
 		
 	| theBlock |
 	theBlock := self receiver.
-	self receiver: (theBlock definingContext at: #self).
+	self receiver: theBlock definingContext receiver.
 	self tempAt: #__definingContext put: theBlock definingContext.
 	theBlock code arguments do: [ :e | | argument |
 		argument := self tempAt: self currentMethod arguments first name.
@@ -332,7 +353,7 @@ CHInterpreter >> primitiveStringAt [
 CHInterpreter >> pushNewFrame [
 
 	| newTop |
-	newTop := Dictionary new.
+	newTop := CHMethodScope new.
 	stack push: newTop.
 	^ newTop
 ]
@@ -340,13 +361,18 @@ CHInterpreter >> pushNewFrame [
 { #category : #accessing }
 CHInterpreter >> receiver [
 
-	^ self tempAt: #self
+	^ self topFrame receiver
 ]
 
 { #category : #accessing }
 CHInterpreter >> receiver: aValue [
 
-	^ self tempAt: #self put: aValue
+	^ self topFrame receiver: aValue
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpreter >> scopeDefining: aName [
+	^ self currentScope scopeDefining: aName
 ]
 
 { #category : #visiting }
@@ -393,18 +419,12 @@ CHInterpreter >> visitArrayNode: aRBArrayNode [
 	^ aRBArrayNode statements collect: [ :e | self visitNode: e ] as: Array
 ]
 
-{ #category : #visiting }
-CHInterpreter >> visitAssignmentNode: aRBAssignmentNode [ 
-	
-	| rightSide |
-	rightSide := self visitNode: aRBAssignmentNode value.
-	aRBAssignmentNode variable variable isLocalVariable
-		ifTrue: [ | definingFrame |
-			definingFrame := self
-				lookupContextDefiningTemporary: aRBAssignmentNode variable name.
-			definingFrame at: aRBAssignmentNode variable name put: rightSide ]
-		ifFalse: [ aRBAssignmentNode variable variable write: rightSide to: self receiver ].
-	^ rightSide
+{ #category : #'as yet unclassified' }
+CHInterpreter >> visitAssignmentNode: anAssignmentNode [
+	| value |
+	value := (self visitNode: anAssignmentNode value).
+	(self scopeDefining: anAssignmentNode variable name) write: anAssignmentNode variable name withValue: value.
+	^ value
 ]
 
 { #category : #visiting }
@@ -423,13 +443,13 @@ CHInterpreter >> visitCascadeNode: aRBCascadeNode [
 { #category : #accessing }
 CHInterpreter >> visitGlobalNode: aRBGlobalNode [ 
 
-	^ globalEnvironment
+	^ globalScope
 		at: aRBGlobalNode name
 		ifAbsent: [ self error: aRBGlobalNode name, ' not found' ]
 ]
 
 { #category : #visiting }
-CHInterpreter >> visitInstanceVariableNode: aRBVariableNode [ 
+CHInterpreter >> visitInstanceVariableNode: aRBVariableNode [
 
 	^ self receiver instVarNamed: aRBVariableNode name
 ]
@@ -457,7 +477,7 @@ CHInterpreter >> visitMessageNode: aMessageNode [
 		        self visitNode: each ].
 
 	lookupClass := aMessageNode receiver isSuperVariable
-		               ifTrue: [ self currentMethod methodClass superclass ]
+		               ifTrue: [ self currentMethodClass superclass ]
 		               ifFalse: [ newReceiver class ].
 	^ self
 		send: aMessageNode selector
@@ -525,4 +545,10 @@ CHInterpreter >> visitTemporaryNode: aTemporaryNode [
 	| definingFrame |
 	definingFrame := self lookupContextDefiningTemporary: aTemporaryNode name.
 	^ definingFrame at: aTemporaryNode name
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpreter >> visitVariableNode: aVariableNode [
+
+	^ (self scopeDefining: aVariableNode name) read: aVariableNode name
 ]

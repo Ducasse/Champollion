@@ -368,7 +368,7 @@ CHInterpretable >> returnUnassignedTemp [
 { #category : #accessing }
 CHInterpretable >> returnX [
 
-	^ x := x
+	^ x
 ]
 
 { #category : #'as yet unclassified' }
