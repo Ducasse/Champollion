@@ -18,10 +18,11 @@ CHInterpreterTest >> executeSelector: selector [
 { #category : #tests }
 CHInterpreterTest >> executeSelector: selector withReceiver: aReceiver [
 
-	| ast result |
-	ast := (CHInterpretable lookupSelector: selector) ast.
-	result := self interpreter execute: ast withReceiver: aReceiver.
-	^ result
+	^ self interpreter
+		send: selector
+		receiver: aReceiver
+		lookupFromClass: aReceiver class
+		arguments: #()
 ]
 
 { #category : #'as yet unclassified' }
@@ -61,7 +62,7 @@ CHInterpreterTest >> testArgumentAccess [
 	self assert: collaborator x equals: 500
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testArgumentAccessDoesNotEscapeItsDefinition [
 	"
 	changeCollaboratorXWithConflictingArgumentNAmes
@@ -91,7 +92,7 @@ CHInterpreterTest >> testAssignmentReturnsAssignedValue [
     equals: 100
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testBalancingStack [
 	"
 	setXAndMessage
@@ -169,7 +170,7 @@ CHInterpreterTest >> testIncreaseEnclosingTemporary [
 	self assert: (self executeSelector: #increaseEnclosingTemporary) equals: 1
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'2-variables' }
 CHInterpreterTest >> testInstanceVariableAccessInMethodActivationDoesNotEscape [
 	"
 	collaboratorX
@@ -182,7 +183,7 @@ CHInterpreterTest >> testInstanceVariableAccessInMethodActivationDoesNotEscape [
 	self assert: (self executeSelector: #collaboratorX) equals: 200
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'2-variables' }
 CHInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSender [
 	"
 	changeCollaboratorX
@@ -212,7 +213,7 @@ CHInterpreterTest >> testLookupSuperMessage [
 	self assert: (self executeSelector: #doesSuperLookupFromSuperclass)
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testLookupSuperMessageNotInReceiverSuperclass [
 	"
 	This tests tests that it does not loop\
@@ -234,7 +235,7 @@ CHInterpreterTest >> testNonLocalReturn [
 	self assert: (self executeSelector: #methodWithGuard) equals: nil
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testReadArgumentVariableAfterMessageSend [
 	"
 	readArgumentVariableAfterMessageSend
@@ -319,7 +320,7 @@ CHInterpreterTest >> testReadHomeTemporaryVariableInBlock [
 	self assert: (self executeSelector: #readHomeTemporaryVariableInBlock) equals: 17
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testReadInstanceVariableAfterMessageSend [
 	"
 	readInstanceVariableAfterMessageSend
@@ -390,7 +391,7 @@ CHInterpreterTest >> testReadSuperInBlock [
 	self assert: (self executeSelector: #readSuperInBlock) equals: receiver
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testReadTemporaryVariableAfterMessageSend [
 	"
 	readTemporaryVariableAfterMessageSend
@@ -406,7 +407,7 @@ CHInterpreterTest >> testReadTemporaryVariableAfterMessageSend [
 	self assert: (self executeSelector: #readTemporaryVariableAfterMessageSend) equals: 17
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testReadTemporaryVariableDoesNotEscapeItsDefinition [
 	"
 	readCollaboratorTemporaryVariable
@@ -441,7 +442,7 @@ CHInterpreterTest >> testReadTwoLevelOuterTemporaryVariableInBlock [
 	self assert: (self executeSelector: #readTwoLevelOuterTemporaryVariableInBlock) equals: 88888
 ]
 
-{ #category : #'chapter one' }
+{ #category : #'2-variables' }
 CHInterpreterTest >> testReturnAccessInstanceVariable [
 
 	receiver x: 100.
@@ -457,7 +458,7 @@ CHInterpreterTest >> testReturnBoolean [
     equals: false
 ]
 
-{ #category : #'chapter one' }
+{ #category : #'1-literals' }
 CHInterpreterTest >> testReturnEmptyArray [
 
 	self assert: (self executeSelector: #returnEmptyArray) equals: #() 
@@ -479,7 +480,7 @@ CHInterpreterTest >> testReturnFloat [
 	self assert: result equals: 3.14
 ]
 
-{ #category : #'chapter one' }
+{ #category : #'2-variables' }
 CHInterpreterTest >> testReturnGlobal [
 
 	| globalObject |
@@ -522,17 +523,13 @@ CHInterpreterTest >> testReturnRecursiveLiteralArray [
 		equals: #(true 1 #('ahah'))
 ]
 
-{ #category : #tests }
+{ #category : #'2-variables' }
 CHInterpreterTest >> testReturnSelf [
 
-	| receiver |
-	receiver := Object new.
-	self 
-		assert: (self executeSelector: #returnSelf withReceiver: receiver) 
-		equals: receiver
+	self assert: (self executeSelector: #returnSelf) equals: receiver
 ]
 
-{ #category : #'chapter one' }
+{ #category : #'2-variables' }
 CHInterpreterTest >> testReturnSuper [
 
 	self assert: (self executeSelector: #returnSuper) equals: receiver
@@ -563,7 +560,7 @@ CHInterpreterTest >> testStore100IntoX [
 	self assert: receiver x equals: 100
 ]
 
-{ #category : #'chapter one' }
+{ #category : #'2-variables' }
 CHInterpreterTest >> testStoreInstanceVariable [
 
 	receiver x: 17.
@@ -571,7 +568,7 @@ CHInterpreterTest >> testStoreInstanceVariable [
 	self assert: receiver x equals: 100
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testUnassignedTempHasNilValue [
 	"
 	creturnUnassignedTemp
@@ -593,7 +590,7 @@ CHInterpreterTest >> testWriteInstanceVariableInBlock [
 	self assert: receiver x equals: 17
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testWriteTemporaryVariable [
 	"writeTemporaryVariable
 		| temp |
@@ -603,7 +600,7 @@ CHInterpreterTest >> testWriteTemporaryVariable [
 	self assert: (self executeSelector: #writeTemporaryVariable) equals: 100
 ]
 
-{ #category : #'chapter two' }
+{ #category : #'3-stack-management' }
 CHInterpreterTest >> testWriteTemporaryVariableDoesNotEscapeItsDefinition [
 	"writeCollaboratorTemporaryVariable
 
