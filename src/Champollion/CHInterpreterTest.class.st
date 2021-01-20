@@ -85,6 +85,20 @@ CHInterpreterTest >> testArgumentAccessDoesNotEscapeItsDefinition [
 ]
 
 { #category : #tests }
+CHInterpreterTest >> testArgumentAccessWithSymbol [
+	collaborator x: 300.
+
+	self executeSelector: #changeCollaboratorWithArgumentSymbol.
+
+	"
+changeCollaboratorWithArgumentSymbol
+
+	collaborator x: #foo
+	"
+	self assert: collaborator x equals: #foo
+]
+
+{ #category : #tests }
 CHInterpreterTest >> testAssignmentReturnsAssignedValue [
 
 	self

@@ -45,6 +45,12 @@ CHInterpretable >> changeCollaboratorWithArgument [
 ]
 
 { #category : #'as yet unclassified' }
+CHInterpretable >> changeCollaboratorWithArgumentSymbol [
+
+	collaborator x: #foo
+]
+
+{ #category : #'as yet unclassified' }
 CHInterpretable >> changeCollaboratorX [
  		collaborator store100IntoX
 ]

@@ -15,31 +15,31 @@ CHInterpreter >> argumentAt: anInteger [
 	^ self tempAt: (self currentMethod arguments at: anInteger) name
 ]
 
-{ #category : #visiting }
+{ #category : #accessing }
 CHInterpreter >> currentMethod [
 
 	^ self tempAt: #__method
 ]
 
-{ #category : #lookup }
+{ #category : #accessing }
 CHInterpreter >> currentMethodClass [
 	
 	^ self currentMethod propertyAt: #definingClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 CHInterpreter >> currentScope [
 
 	^ self topFrame
 ]
 
-{ #category : #visiting }
+{ #category : #executing }
 CHInterpreter >> execute: anAST withReceiver: anObject [
 
 	^ self execute: anAST withReceiver: anObject andArguments: #()
 ]
 
-{ #category : #visiting }
+{ #category : #executing }
 CHInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection [
 	| result thisFrame |	
 	thisFrame := self pushNewFrame.
@@ -64,7 +64,7 @@ CHInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection
 	^ result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #executing }
 CHInterpreter >> executePrimitive: anAST withReceiver: receiver andArguments: arguments [
 
 	| primitiveNumber |
@@ -76,7 +76,7 @@ CHInterpreter >> executePrimitive: anAST withReceiver: receiver andArguments: ar
 	^ self perform: (primitives at: primitiveNumber) with: ({ receiver }, arguments)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #executing }
 CHInterpreter >> executePrimitiveMethod: anAST [
 
 	| primitiveNumber |
@@ -93,7 +93,7 @@ CHInterpreter >> globalEnvironmentAt: aSymbol put: anObject [
 	globalScope at: aSymbol put: anObject
 ]
 
-{ #category : #visiting }
+{ #category : #frame }
 CHInterpreter >> homeFrame [
 
 	| currentLookupFrame |
@@ -103,7 +103,7 @@ CHInterpreter >> homeFrame [
 	^ currentLookupFrame
 ]
 
-{ #category : #visiting }
+{ #category : #initialization }
 CHInterpreter >> initialize [
 	super initialize. 
 	stack := Stack new.
@@ -112,7 +112,7 @@ CHInterpreter >> initialize [
 	self initializePrimitiveTable.
 ]
 
-{ #category : #visiting }
+{ #category : #initialization }
 CHInterpreter >> initializePrimitiveTable [
 
 	primitives at: 1 	put: #primitiveSmallIntegerAdd.
@@ -143,7 +143,7 @@ CHInterpreter >> initializePrimitiveTable [
 	primitives at: 202 put: #primitiveBlockValueWith.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #lookup }
 CHInterpreter >> lookup: aSymbol fromClass: aClass [ 
 
 	"Return the AST of a method or nil if none is found"
@@ -161,7 +161,7 @@ CHInterpreter >> lookup: aSymbol fromClass: aClass [
 		ifNotNil: [ self lookup: aSymbol fromClass: aClass superclass ]
 ]
 
-{ #category : #visiting }
+{ #category : #lookup }
 CHInterpreter >> lookupContextDefiningTemporary: aName [
 
 	| currentLookupFrame |
@@ -177,7 +177,7 @@ CHInterpreter >> numberOfArguments [
 	^ self currentMethod numArgs
 ]
 
-{ #category : #visiting }
+{ #category : #frame }
 CHInterpreter >> popFrame [
 	stack pop
 ]
@@ -237,7 +237,7 @@ CHInterpreter >> primitiveBlockValueWith [
 	^ self visitNode: theBlock code body
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #primitives }
 CHInterpreter >> primitiveIdentical [
 	
 	self numberOfArguments < 1
@@ -349,7 +349,7 @@ CHInterpreter >> primitiveStringAt [
 	^ self receiver at: (self argumentAt: 1)
 ]
 
-{ #category : #visiting }
+{ #category : #frame }
 CHInterpreter >> pushNewFrame [
 
 	| newTop |
@@ -370,12 +370,12 @@ CHInterpreter >> receiver: aValue [
 	^ self topFrame receiver: aValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 CHInterpreter >> scopeDefining: aName [
 	^ self currentScope scopeDefining: aName
 ]
 
-{ #category : #visiting }
+{ #category : #lookup }
 CHInterpreter >> send: aSelector receiver: newReceiver lookupFromClass: lookupClass arguments: arguments [
 	"Lookup a selector from a class, and activate the method.
 	Handle does not undertand case and message reification on demand if lookup fails."
@@ -407,7 +407,7 @@ CHInterpreter >> tempAt: aSymbol put: aValue [
 	^ self topFrame at: aSymbol put: aValue
 ]
 
-{ #category : #accessing }
+{ #category : #frame }
 CHInterpreter >> topFrame [
 
 	^ stack top
@@ -419,7 +419,7 @@ CHInterpreter >> visitArrayNode: aRBArrayNode [
 	^ aRBArrayNode statements collect: [ :e | self visitNode: e ] as: Array
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 CHInterpreter >> visitAssignmentNode: anAssignmentNode [
 	| value |
 	value := (self visitNode: anAssignmentNode value).
@@ -440,7 +440,7 @@ CHInterpreter >> visitCascadeNode: aRBCascadeNode [
 	self shouldBeImplemented.
 ]
 
-{ #category : #accessing }
+{ #category : #visiting }
 CHInterpreter >> visitGlobalNode: aRBGlobalNode [ 
 
 	^ globalScope
@@ -449,9 +449,9 @@ CHInterpreter >> visitGlobalNode: aRBGlobalNode [
 ]
 
 { #category : #visiting }
-CHInterpreter >> visitInstanceVariableNode: aRBVariableNode [
+CHInterpreter >> visitInstanceVariableNode: aVariableNode [
 
-	^ self receiver instVarNamed: aRBVariableNode name
+	^ self receiver valueOfInstanceVariable: aVariableNode name
 ]
 
 { #category : #visiting }
@@ -547,7 +547,7 @@ CHInterpreter >> visitTemporaryNode: aTemporaryNode [
 	^ definingFrame at: aTemporaryNode name
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 CHInterpreter >> visitVariableNode: aVariableNode [
 
 	^ (self scopeDefining: aVariableNode name) read: aVariableNode name
