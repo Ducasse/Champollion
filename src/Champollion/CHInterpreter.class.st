@@ -104,6 +104,11 @@ CHInterpreter >> globalEnvironmentAt: aSymbol put: anObject [
 	globalScope at: aSymbol put: anObject
 ]
 
+{ #category : #initialization }
+CHInterpreter >> globalScopeClass [
+	^ CHGlobalScope
+]
+
 { #category : #frame }
 CHInterpreter >> homeFrame [
 
@@ -116,11 +121,11 @@ CHInterpreter >> homeFrame [
 
 { #category : #initialization }
 CHInterpreter >> initialize [
-	super initialize. 
+	super initialize.
 	stack := Stack new.
-	globalScope := CHGlobalScope new.
+	globalScope := self globalScopeClass new.
 	primitives := Dictionary new.
-	self initializePrimitiveTable.
+	self initializePrimitiveTable
 ]
 
 { #category : #initialization }
