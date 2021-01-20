@@ -7,7 +7,7 @@ Class {
 		'evaluationOrder',
 		'current'
 	],
-	#category : #'Champollion-Core'
+	#category : #'Champollion-Tests'
 }
 
 { #category : #'as yet unclassified' }
@@ -73,7 +73,7 @@ CHInterpretable >> collaborator: anObject [
 { #category : #accessing }
 CHInterpretable >> collaboratorX [
 
-		^ collaborator x
+	^ collaborator x
 ]
 
 { #category : #accessing }

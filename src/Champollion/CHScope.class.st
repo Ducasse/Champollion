@@ -15,3 +15,9 @@ CHScope >> isMethodScope [
 	
 	^ false
 ]
+
+{ #category : #testing }
+CHScope >> scopeDefining: aString [
+
+	self subclassResponsibility 
+]

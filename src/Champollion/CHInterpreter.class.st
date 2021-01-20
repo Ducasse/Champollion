@@ -1,3 +1,11 @@
+"
+- Point to discuss 
+what is the main API (this cannot be execute since execute is for message but )
+we do not have a visit: method
+
+but we have visitNode: 
+ok 
+"
 Class {
 	#name : #CHInterpreter,
 	#superclass : #Object,
@@ -41,25 +49,28 @@ CHInterpreter >> execute: anAST withReceiver: anObject [
 
 { #category : #executing }
 CHInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection [
-	| result thisFrame |	
+	"Execute a message whose body is anAST, receiver is anObject and arguments are in aCollection."
+
+	| result thisFrame |
 	thisFrame := self pushNewFrame.
-	thisFrame parentScope: (CHInstanceScope new
-			receiver: anObject;
-			parentScope: globalScope;
-			yourself);
+	thisFrame
+		parentScope:
+			(self instanceScopeClass new
+				receiver: anObject;
+				parentScope: globalScope;
+				yourself);
 		yourself.
-	
 	self tempAt: #__method put: anAST.
 	self receiver: anObject.
-	
-	anAST arguments with: aCollection
-    do: [ :arg :value | self tempAt: arg name put: value ].
+	anAST arguments
+		with: aCollection
+		do: [ :arg :value | self tempAt: arg name put: value ].
 	result := [ self visitNode: anAST ]
-		on: CHReturn "A return statement was executed"
+		on: CHReturn
 		do: [ :return | 
 			return homeFrame = thisFrame
 				ifTrue: [ return value ]
-				ifFalse: [ return pass ] ].
+				ifFalse: [ return pass ] ].	"A return statement was executed"
 	self popFrame.
 	^ result
 ]
@@ -141,6 +152,11 @@ CHInterpreter >> initializePrimitiveTable [
 		
 	primitives at: 201 put: #primitiveBlockValue.
 	primitives at: 202 put: #primitiveBlockValueWith.
+]
+
+{ #category : #executing }
+CHInterpreter >> instanceScopeClass [
+	^ CHInstanceScope
 ]
 
 { #category : #lookup }
@@ -498,9 +514,10 @@ CHInterpreter >> visitMethodNode: aMethodNode [
 	^ self visitNode: aMethodNode body
 ]
 
-{ #category : #visiting }
+{ #category : #'main API' }
 CHInterpreter >> visitNode: aNode [
-
+	"I'm the main entry to interpreter AST"
+	
 	^ aNode acceptVisitor: self
 ]
 
