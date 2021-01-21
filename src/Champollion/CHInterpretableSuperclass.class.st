@@ -1,7 +1,7 @@
 Class {
 	#name : #CHInterpretableSuperclass,
 	#superclass : #CHInterpretableSecondSuperclass,
-	#category : #'Champollion-Core'
+	#category : #'Champollion-Tests'
 }
 
 { #category : #testing }

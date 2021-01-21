@@ -7,7 +7,7 @@ Class {
 		'evaluationOrder',
 		'current'
 	],
-	#category : #'Champollion-Core'
+	#category : #'Champollion-Tests'
 }
 
 { #category : #'as yet unclassified' }
@@ -45,6 +45,12 @@ CHInterpretable >> changeCollaboratorWithArgument [
 ]
 
 { #category : #'as yet unclassified' }
+CHInterpretable >> changeCollaboratorWithArgumentSymbol [
+
+	collaborator x: #foo
+]
+
+{ #category : #'as yet unclassified' }
 CHInterpretable >> changeCollaboratorX [
  		collaborator store100IntoX
 ]
@@ -67,7 +73,7 @@ CHInterpretable >> collaborator: anObject [
 { #category : #accessing }
 CHInterpretable >> collaboratorX [
 
-		^ collaborator x
+	^ collaborator x
 ]
 
 { #category : #accessing }
