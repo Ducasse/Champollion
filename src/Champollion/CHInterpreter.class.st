@@ -23,6 +23,12 @@ CHInterpreter >> argumentAt: anInteger [
 	^ self tempAt: (self currentMethod arguments at: anInteger) name
 ]
 
+{ #category : #visiting }
+CHInterpreter >> classOf: anObject [
+
+	^ anObject class
+]
+
 { #category : #accessing }
 CHInterpreter >> currentMethod [
 
@@ -417,6 +423,12 @@ CHInterpreter >> send: aSelector receiver: newReceiver lookupFromClass: lookupCl
 ]
 
 { #category : #accessing }
+CHInterpreter >> superclassOf: aClass [
+	
+	^ aClass superclass
+]
+
+{ #category : #accessing }
 CHInterpreter >> tempAt: aSymbol [
 
 	^ self topFrame at: aSymbol
@@ -484,8 +496,8 @@ CHInterpreter >> visitMessageNode: aMessageNode [
 		        self visitNode: each ].
 
 	lookupClass := aMessageNode receiver isSuperVariable
-		               ifTrue: [ self currentMethodClass superclass ]
-		               ifFalse: [ newReceiver class ].
+		               ifTrue: [ self superclassOf: self currentMethodClass ]
+		               ifFalse: [ self classOf: newReceiver ].
 	^ self
 		send: aMessageNode selector
 		receiver: newReceiver
