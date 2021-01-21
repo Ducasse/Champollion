@@ -548,14 +548,6 @@ CHInterpreter >> visitSuperNode: aRBVariableNode [
 ]
 
 { #category : #visiting }
-CHInterpreter >> visitTemporaryNode: aTemporaryNode [
-
-	| definingFrame |
-	definingFrame := self lookupContextDefiningTemporary: aTemporaryNode name.
-	^ definingFrame at: aTemporaryNode name
-]
-
-{ #category : #visiting }
 CHInterpreter >> visitVariableNode: aVariableNode [
 
 	^ (self scopeDefining: aVariableNode name) read: aVariableNode name
