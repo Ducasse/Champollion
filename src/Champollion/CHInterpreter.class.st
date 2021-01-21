@@ -440,20 +440,6 @@ CHInterpreter >> visitCascadeNode: aRBCascadeNode [
 	self shouldBeImplemented.
 ]
 
-{ #category : #accessing }
-CHInterpreter >> visitGlobalNode: aRBGlobalNode [ 
-
-	^ globalScope
-		at: aRBGlobalNode name
-		ifAbsent: [ self error: aRBGlobalNode name, ' not found' ]
-]
-
-{ #category : #visiting }
-CHInterpreter >> visitInstanceVariableNode: aRBVariableNode [
-
-	^ self receiver instVarNamed: aRBVariableNode name
-]
-
 { #category : #visiting }
 CHInterpreter >> visitLiteralArrayNode: aRBLiteralArrayNode [ 
 
