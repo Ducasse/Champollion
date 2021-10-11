@@ -148,6 +148,18 @@ CHInterpretable >> methodWithGuard [
 ]
 
 { #category : #'as yet unclassified' }
+CHInterpretable >> methodWithIfTrueGuard [
+  nil = nil ifTrue: [ ^ 42 ].
+  ^ self doSomethingExpensive
+]
+
+{ #category : #'as yet unclassified' }
+CHInterpretable >> methodWithNilGuard [
+  nil ifNil: [ ^ 42 ].
+  ^ self doSomethingExpensive
+]
+
+{ #category : #'as yet unclassified' }
 CHInterpretable >> next [
   | next |
   "Implement a stream as an increment in terms of Peano axioms.
