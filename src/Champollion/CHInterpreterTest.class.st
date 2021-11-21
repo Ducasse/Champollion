@@ -133,6 +133,22 @@ CHInterpreterTest >> testBlock [
 ]
 
 { #category : #tests }
+CHInterpreterTest >> testBlockDefiningClass [
+	
+	| methodAST originalBlock chBlock interp |
+	interp := CHInterpreter new.
+	
+	methodAST := interp lookup: #buildBlock  fromClass: CHInterpretable.	
+	originalBlock := (methodAST statements at: 1) value.
+	
+	interp pushNewFrame.
+	chBlock := interp visitNode: originalBlock.
+	
+	self assert: chBlock definingClass equals: CHInterpretable.
+
+]
+
+{ #category : #tests }
 CHInterpreterTest >> testBlockTemporaryRead [
 	self
     assert: (self executeSelector: #blockTemporary)
@@ -177,6 +193,12 @@ CHInterpreterTest >> testFailingPrimitive [
 	self
       assert: (self executeSelector: #callingFailingPrimitive)
       equals: 'failure'
+]
+
+{ #category : #tests }
+CHInterpreterTest >> testIfNilNonlocalReturn [
+
+	self assert: (self executeSelector: #methodWithIfTrueGuard) equals: 42
 ]
 
 { #category : #tests }

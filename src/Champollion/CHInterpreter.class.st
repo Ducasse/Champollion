@@ -461,11 +461,13 @@ CHInterpreter >> visitAssignmentNode: anAssignmentNode [
 ]
 
 { #category : #visiting }
-CHInterpreter >> visitBlockNode: aRBBlockNode [ 
+CHInterpreter >> visitBlockNode: aRBBlockNode [
+
 	^ CHBlock new
-		code: aRBBlockNode;
-		definingContext: self topFrame;
-		yourself
+		  code: aRBBlockNode;
+		  definingContext: self topFrame;
+		  interpreter: self;
+		  yourself
 ]
 
 { #category : #visiting }
