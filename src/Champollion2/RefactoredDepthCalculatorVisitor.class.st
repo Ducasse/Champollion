@@ -38,7 +38,7 @@ into: [ :max :node | max max: (node acceptVisitor: self) ])
 { #category : 'visiting' }
 RefactoredDepthCalculatorVisitor >> visitSequenceNode: aSequenceNode [
 
-	^ self visitNodeWithChildren: aSequenceNode 
+	^ self visitNodeWithChildren: aSequenceNode
 ]
 
 { #category : 'visiting' }
