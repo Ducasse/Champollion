@@ -5,6 +5,12 @@ Class {
 	#package : 'Champollion2Tests'
 }
 
+{ #category : 'tests' }
+CInterpretable >> returnBoolean [
+	^ false
+
+]
+
 { #category : 'returning' }
 CInterpretable >> returnFloat [
 

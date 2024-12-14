@@ -5,6 +5,14 @@ Class {
 	#package : 'Champollion2Tests'
 }
 
+{ #category : 'as yet unclassified' }
+CInterpreterTest >> executeSelector: aSymbol [
+	| ast |
+	ast := (CInterpretable >> aSymbol) parseTree.
+	^ self interpreter execute: ast
+
+]
+
 { #category : 'tests' }
 CInterpreterTest >> interpreter [
 
@@ -12,20 +20,22 @@ CInterpreterTest >> interpreter [
 ]
 
 { #category : 'tests' }
-CInterpreterTest >> testReturnFloat [
+CInterpreterTest >> testReturnBoolean [
+  
+	self deny: (self executeSelector: #returnBoolean)
 
-	| ast result |
-	ast := (CInterpretable >> #returnFloat) parseTree.
-	result := self interpreter execute: ast.
-	self assert: result equals: 3.14
+]
+
+{ #category : 'tests' }
+CInterpreterTest >> testReturnFloat [
+	self
+		assert: (self executeSelector: #returnFloat)
+		equals: 3.14
 ]
 
 { #category : 'tests' }
 CInterpreterTest >> testReturnInteger [
-
-	| ast result |
-	ast := (CInterpretable >> #returnInteger) parseTree.
-	result := self interpreter execute: ast.
-	self assert: result equals: 5
-
+	self
+		assert: (self executeSelector: #returnInteger)
+		equals: 5
 ]
