@@ -6,6 +6,19 @@ Class {
 }
 
 { #category : 'tests' }
+SearchVisitorTest >> testTokenInLiteral [
+
+	| tree visitor |
+	tree := Parser parseMethod: 'one 
+
+^ #(''pharoString'')'.
+	visitor := SearchVisitor new.
+	visitor token: 'pharo'.
+	visitor visit: tree.
+	self assert: visitor matchedNodeNames first equals: 'pharoString'
+]
+
+{ #category : 'tests' }
 SearchVisitorTest >> testTokenInMessageArguments [
 
 	| tree visitor |

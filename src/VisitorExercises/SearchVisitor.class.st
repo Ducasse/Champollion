@@ -35,6 +35,13 @@ SearchVisitor >> token: aToken [
 ]
 
 { #category : 'visiting' }
+SearchVisitor >> visitLiteralValueNode: aNode [
+
+	(aNode value asString beginsWith: token) ifTrue: [
+		matchedNodeNames add: aNode value asString ]
+]
+
+{ #category : 'visiting' }
 SearchVisitor >> visitMessageNode: aNode [
 
 	aNode receiver acceptVisitor: self.
