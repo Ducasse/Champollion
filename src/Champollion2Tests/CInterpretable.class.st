@@ -40,3 +40,9 @@ CInterpretable >> returnSelf [
 
 	^ self
 ]
+
+{ #category : 'returning' }
+CInterpretable >> returnSuper [
+
+	^ super
+]

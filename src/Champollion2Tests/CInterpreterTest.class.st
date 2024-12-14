@@ -71,3 +71,14 @@ CInterpreterTest >> testReturnSelf [
           == receiver
 
 ]
+
+{ #category : 'tests - variables' }
+CInterpreterTest >> testReturnSuper [
+  | receiver |
+  receiver := Object new.
+  "Convey our intention of checking identity by using an explicit identity check"
+	self assert: (self
+      executeSelector: #returnSuper
+      withReceiver: receiver)
+          == receiver
+]

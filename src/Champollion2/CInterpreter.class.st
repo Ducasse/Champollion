@@ -73,6 +73,6 @@ CInterpreter >> visitSequenceNode: aSequenceNode [
 { #category : 'visiting' }
 CInterpreter >> visitVariableNode: aVariableNode [
 	
-	aVariableNode name = #self 
+	aVariableNode name = #self | (aVariableNode name = #super)
 		ifTrue: [ ^ self receiver ]
 ]
