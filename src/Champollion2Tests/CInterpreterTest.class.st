@@ -5,7 +5,7 @@ Class {
 	#package : 'Champollion2Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'helpers' }
 CInterpreterTest >> executeSelector: aSymbol [
 	| ast |
 	ast := (CInterpretable >> aSymbol) parseTree.
@@ -13,7 +13,7 @@ CInterpreterTest >> executeSelector: aSymbol [
 
 ]
 
-{ #category : 'tests' }
+{ #category : 'helpers' }
 CInterpreterTest >> interpreter [
 
 	^ CInterpreter new
@@ -24,6 +24,14 @@ CInterpreterTest >> testReturnBoolean [
   
 	self deny: (self executeSelector: #returnBoolean)
 
+]
+
+{ #category : 'helpers' }
+CInterpreterTest >> testReturnEmptyLiteralArray [
+
+	self
+		assert: (self executeSelector: #returnEmptyLiteralArray)
+		equals: #()
 ]
 
 { #category : 'tests' }
@@ -38,4 +46,11 @@ CInterpreterTest >> testReturnInteger [
 	self
 		assert: (self executeSelector: #returnInteger)
 		equals: 5
+]
+
+{ #category : 'helpers' }
+CInterpreterTest >> testReturnRecursiveLiteralArray [
+	self
+		assert: (self executeSelector: #returnRecursiveLiteralArray)
+		equals: #(true 1 #('ahah'))
 ]

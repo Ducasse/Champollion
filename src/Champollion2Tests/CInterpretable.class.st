@@ -5,9 +5,15 @@ Class {
 	#package : 'Champollion2Tests'
 }
 
-{ #category : 'tests' }
+{ #category : 'returning' }
 CInterpretable >> returnBoolean [
 	^ false
+
+]
+
+{ #category : 'returning' }
+CInterpretable >> returnEmptyLiteralArray [
+	^ #()
 
 ]
 
@@ -21,6 +27,12 @@ CInterpretable >> returnFloat [
 CInterpretable >> returnInteger [
 
 	^ 5
+]
+
+{ #category : 'returning' }
+CInterpretable >> returnRecursiveLiteralArray [
+	^ #(true 1 #('ahah'))
+
 ]
 
 { #category : 'returning' }
