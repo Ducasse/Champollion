@@ -12,6 +12,14 @@ CInterpreter >> execute: aMethodNode [
 ]
 
 { #category : 'visiting' }
+CInterpreter >> visitLiteralArrayNode: aLiteralArrayNode [
+
+	^ aLiteralArrayNode contents
+			collect: [ :literalNode | self visitNode: literalNode ]
+			as: Array
+]
+
+{ #category : 'visiting' }
 CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 
 	^ aLiteralValueNode value
