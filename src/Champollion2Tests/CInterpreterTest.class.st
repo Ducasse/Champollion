@@ -7,10 +7,15 @@ Class {
 
 { #category : 'helpers' }
 CInterpreterTest >> executeSelector: aSymbol [
-	| ast |
-	ast := (CInterpretable >> aSymbol) parseTree.
-	^ self interpreter execute: ast
+  ^ self executeSelector: aSymbol withReceiver: nil
 
+]
+
+{ #category : 'helpers' }
+CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver [
+	| ast |
+	ast := RBParser parseMethod: (CInterpretable >> aSymbol) sourceCode.
+	^ self interpreter execute: ast withReceiver: aReceiver
 ]
 
 { #category : 'helpers' }
@@ -53,4 +58,16 @@ CInterpreterTest >> testReturnRecursiveLiteralArray [
 	self
 		assert: (self executeSelector: #returnRecursiveLiteralArray)
 		equals: #(true 1 #('ahah'))
+]
+
+{ #category : 'tests - variables' }
+CInterpreterTest >> testReturnSelf [
+	| receiver |
+	receiver := Object new.
+ 	"Convey our intention of checking identity by using an explicit identity check"
+	self assert: (self
+      executeSelector: #returnSelf
+      withReceiver: receiver)
+          == receiver
+
 ]

@@ -1,6 +1,9 @@
 Class {
 	#name : 'CInterpreter',
 	#superclass : 'Object',
+	#instVars : [
+		'receiver'
+	],
 	#category : 'Champollion2',
 	#package : 'Champollion2'
 }
@@ -9,6 +12,17 @@ Class {
 CInterpreter >> execute: aMethodNode [
 
 	^ self visitNode: aMethodNode
+]
+
+{ #category : 'execution' }
+CInterpreter >> execute: anAST withReceiver: anObject [
+	receiver := anObject.
+	^ self visitNode: anAST
+]
+
+{ #category : 'accessing' }
+CInterpreter >> receiver [ 
+	^ receiver 
 ]
 
 { #category : 'visiting' }
@@ -54,4 +68,11 @@ CInterpreter >> visitSequenceNode: aSequenceNode [
 		do: [ :each | self visitNode: each ].
 	^ self visitNode: aSequenceNode statements last
 
+]
+
+{ #category : 'visiting' }
+CInterpreter >> visitVariableNode: aVariableNode [
+	
+	aVariableNode name = #self 
+		ifTrue: [ ^ self receiver ]
 ]
