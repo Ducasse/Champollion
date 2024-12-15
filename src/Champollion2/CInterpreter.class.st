@@ -40,6 +40,17 @@ CInterpreter >> scopeDefining: aName [
 ]
 
 { #category : 'visiting' }
+CInterpreter >> visitAssignmentNode: anAssignmentNode [
+	| value | 
+	value := self visitNode: anAssignmentNode value.
+	(self scopeDefining: anAssignmentNode variable name)
+    write: anAssignmentNode variable name
+    withValue: value.
+	^ value
+
+]
+
+{ #category : 'visiting' }
 CInterpreter >> visitLiteralArrayNode: aLiteralArrayNode [
 
 	^ aLiteralArrayNode contents

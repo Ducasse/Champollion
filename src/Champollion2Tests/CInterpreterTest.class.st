@@ -35,6 +35,14 @@ CInterpreterTest >> setUp [
 
 ]
 
+{ #category : 'tests - assignments' }
+CInterpreterTest >> testAssignmentReturnsAssignedValue [
+
+	self
+		assert: (self executeSelector: #store100IntoInstanceVariableX)
+		equals: 100
+]
+
 { #category : 'tests' }
 CInterpreterTest >> testReturnBoolean [
   
@@ -97,4 +105,13 @@ CInterpreterTest >> testReturnSuper [
       executeSelector: #returnSuper
       withReceiver: receiver)
           == receiver
+]
+
+{ #category : 'tests - assignments' }
+CInterpreterTest >> testStore100IntoInstanceVariableX [
+	
+	receiver x: 17.
+	self executeSelector: #store100IntoInstanceVariableX.
+	self assert: receiver x equals: 100
+
 ]

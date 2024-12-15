@@ -56,6 +56,12 @@ CInterpretable >> returnSuper [
 	^ super
 ]
 
+{ #category : 'assignments' }
+CInterpretable >> store100IntoInstanceVariableX [
+
+	^ x := 100
+]
+
 { #category : 'accessing' }
 CInterpretable >> x [
 

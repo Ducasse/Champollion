@@ -30,3 +30,8 @@ CInstanceScope >> scopeDefining: aString [
 		ifTrue: [ ^ self ].
 	Error signal: 'Variable ', aString, ' not found'
 ]
+
+{ #category : 'reading' }
+CInstanceScope >> write: aString withValue: anInteger [
+	receiver instVarNamed: aString put: anInteger
+]
