@@ -25,14 +25,15 @@ CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver [
 { #category : 'helpers' }
 CInterpreterTest >> interpreter [
 
-	^ CInterpreter new
+	^ interpreter
 ]
 
 { #category : 'running' }
-CInterpreterTest >> setUp [ 
-	super setUp.
-	receiver := CInterpretable new
+CInterpreterTest >> setUp [
 
+	super setUp.
+	interpreter := CInterpreter new. 
+	receiver := CInterpretable new
 ]
 
 { #category : 'tests - assignments' }
@@ -63,6 +64,14 @@ CInterpreterTest >> testReturnFloat [
 	self
 		assert: (self executeSelector: #returnFloat)
 		equals: 3.14
+]
+
+{ #category : 'tests - variables' }
+CInterpreterTest >> testReturnGlobal [
+	| globalObject |
+	globalObject := Object new.
+	interpreter globalEnvironmentAt: #Global put: globalObject.
+	self assert: (self executeSelector: #returnGlobal) equals: globalObject
 ]
 
 { #category : 'tests - variables' }

@@ -2,7 +2,8 @@ Class {
 	#name : 'CInterpreter',
 	#superclass : 'Object',
 	#instVars : [
-		'receiver'
+		'receiver',
+		'globalScope'
 	],
 	#category : 'Champollion2',
 	#package : 'Champollion2'
@@ -10,10 +11,10 @@ Class {
 
 { #category : 'private' }
 CInterpreter >> currentScope [
-  	^ CInstanceScope new
-  		receiver: self receiver;
-  		yourself
-
+	^ CInstanceScope new
+		receiver: self receiver;
+		parentScope: globalScope;
+		yourself
 ]
 
 { #category : 'execution' }
@@ -26,6 +27,23 @@ CInterpreter >> execute: aMethodNode [
 CInterpreter >> execute: anAST withReceiver: anObject [
 	receiver := anObject.
 	^ self visitNode: anAST
+]
+
+{ #category : 'accessing' }
+CInterpreter >> globalEnvironment [
+	^ globalScope
+]
+
+{ #category : 'accessing' }
+CInterpreter >> globalEnvironmentAt: aSymbol put: anObject [
+	globalScope at: aSymbol put: anObject
+
+]
+
+{ #category : 'initialization' }
+CInterpreter >> initialize [
+	super initialize.
+	globalScope := CGlobalScope new
 ]
 
 { #category : 'accessing' }
@@ -97,8 +115,8 @@ CInterpreter >> visitSequenceNode: aSequenceNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitVariableNode: aVariableNode [
-	
+
 	^ aVariableNode name = #self | (aVariableNode name = #super)
-		ifTrue: [ self receiver ]
-		ifFalse: [ (self scopeDefining: aVariableNode name) read: aVariableNode name ]
+		  ifTrue: [ self receiver ]
+		  ifFalse: [ (self scopeDefining: aVariableNode name) read: aVariableNode name ]
 ]

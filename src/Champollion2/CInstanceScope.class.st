@@ -2,7 +2,8 @@ Class {
 	#name : 'CInstanceScope',
 	#superclass : 'Object',
 	#instVars : [
-		'receiver'
+		'receiver',
+		'parentScope'
 	],
 	#category : 'Champollion2',
 	#package : 'Champollion2'
@@ -11,6 +12,18 @@ Class {
 { #category : 'accessing' }
 CInstanceScope >> definedVariables [
 	^ receiver class allInstVarNames 
+]
+
+{ #category : 'accessing' }
+CInstanceScope >> parentScope [
+
+	^ parentScope
+]
+
+{ #category : 'accessing' }
+CInstanceScope >> parentScope: anObject [
+
+	parentScope := anObject
 ]
 
 { #category : 'reading' }
@@ -28,7 +41,8 @@ CInstanceScope >> receiver: anObject [
 CInstanceScope >> scopeDefining: aString [
 	(self definedVariables includes: aString)
 		ifTrue: [ ^ self ].
-	Error signal: 'Variable ', aString, ' not found'
+	
+	^ self parentScope scopeDefining: aString
 ]
 
 { #category : 'reading' }

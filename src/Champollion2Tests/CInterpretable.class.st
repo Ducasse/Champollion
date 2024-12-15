@@ -8,6 +8,17 @@ Class {
 	#package : 'Champollion2Tests'
 }
 
+{ #category : 'class initialization' }
+CInterpretable class >> initialize [ 
+	self setUpGlobal
+]
+
+{ #category : 'class initialization' }
+CInterpretable class >> setUpGlobal [
+
+	self environment at: #Global put: 33
+]
+
 { #category : 'returning literals' }
 CInterpretable >> returnBoolean [
 	^ false
@@ -24,6 +35,11 @@ CInterpretable >> returnEmptyLiteralArray [
 CInterpretable >> returnFloat [
 
 	^ 3.14
+]
+
+{ #category : 'returning variables' }
+CInterpretable >> returnGlobal [
+	^ Global
 ]
 
 { #category : 'returning variables' }
