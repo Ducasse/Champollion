@@ -46,6 +46,17 @@ CInterpreterTest >> testReturnFloat [
 		equals: 3.14
 ]
 
+{ #category : 'tests - variables' }
+CInterpreterTest >> testReturnInstanceVariableRead [
+
+	| receiver |
+	receiver := CInterpretable new.
+	receiver x: 100.
+	self
+		assert: (self executeSelector: #returnInstanceVariableX withReceiver: receiver)
+		equals: 100
+]
+
 { #category : 'tests' }
 CInterpreterTest >> testReturnInteger [
 	self

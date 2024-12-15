@@ -8,6 +8,14 @@ Class {
 	#package : 'Champollion2'
 }
 
+{ #category : 'private' }
+CInterpreter >> currentScope [
+  	^ CInstanceScope new
+  		receiver: self receiver;
+  		yourself
+
+]
+
 { #category : 'execution' }
 CInterpreter >> execute: aMethodNode [
 
@@ -23,6 +31,12 @@ CInterpreter >> execute: anAST withReceiver: anObject [
 { #category : 'accessing' }
 CInterpreter >> receiver [ 
 	^ receiver 
+]
+
+{ #category : 'private' }
+CInterpreter >> scopeDefining: aName [
+	^ self currentScope scopeDefining: aName
+
 ]
 
 { #category : 'visiting' }
@@ -73,6 +87,7 @@ CInterpreter >> visitSequenceNode: aSequenceNode [
 { #category : 'visiting' }
 CInterpreter >> visitVariableNode: aVariableNode [
 	
-	aVariableNode name = #self | (aVariableNode name = #super)
-		ifTrue: [ ^ self receiver ]
+	^ aVariableNode name = #self | (aVariableNode name = #super)
+		ifTrue: [ self receiver ]
+		ifFalse: [ (self scopeDefining: aVariableNode name) read: aVariableNode name ]
 ]
