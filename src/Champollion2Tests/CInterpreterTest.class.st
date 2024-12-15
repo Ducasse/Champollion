@@ -1,13 +1,17 @@
 Class {
 	#name : 'CInterpreterTest',
 	#superclass : 'TestCase',
+	#instVars : [
+		'interpreter',
+		'receiver'
+	],
 	#category : 'Champollion2Tests',
 	#package : 'Champollion2Tests'
 }
 
 { #category : 'helpers' }
 CInterpreterTest >> executeSelector: aSymbol [
-  ^ self executeSelector: aSymbol withReceiver: nil
+  ^ self executeSelector: aSymbol withReceiver: receiver
 
 ]
 
@@ -22,6 +26,13 @@ CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver [
 CInterpreterTest >> interpreter [
 
 	^ CInterpreter new
+]
+
+{ #category : 'running' }
+CInterpreterTest >> setUp [ 
+	super setUp.
+	receiver := CInterpretable new
+
 ]
 
 { #category : 'tests' }
@@ -49,11 +60,9 @@ CInterpreterTest >> testReturnFloat [
 { #category : 'tests - variables' }
 CInterpreterTest >> testReturnInstanceVariableRead [
 
-	| receiver |
-	receiver := CInterpretable new.
 	receiver x: 100.
 	self
-		assert: (self executeSelector: #returnInstanceVariableX withReceiver: receiver)
+		assert: (self executeSelector: #returnInstanceVariableX)
 		equals: 100
 ]
 
@@ -73,12 +82,8 @@ CInterpreterTest >> testReturnRecursiveLiteralArray [
 
 { #category : 'tests - variables' }
 CInterpreterTest >> testReturnSelf [
-	| receiver |
-	receiver := Object new.
- 	"Convey our intention of checking identity by using an explicit identity check"
-	self assert: (self
-      executeSelector: #returnSelf
-      withReceiver: receiver)
+
+	self assert: (self executeSelector: #returnSelf)
           == receiver
 
 ]
