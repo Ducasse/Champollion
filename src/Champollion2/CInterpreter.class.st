@@ -116,7 +116,5 @@ CInterpreter >> visitSequenceNode: aSequenceNode [
 { #category : 'visiting' }
 CInterpreter >> visitVariableNode: aVariableNode [
 
-	^ aVariableNode name = #self | (aVariableNode name = #super)
-		  ifTrue: [ self receiver ]
-		  ifFalse: [ (self scopeDefining: aVariableNode name) read: aVariableNode name ]
+	^ (self scopeDefining: aVariableNode name) read: aVariableNode name
 ]

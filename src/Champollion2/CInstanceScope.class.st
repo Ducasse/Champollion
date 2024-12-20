@@ -14,6 +14,12 @@ CInstanceScope >> definedVariables [
 	^ receiver class allInstVarNames 
 ]
 
+{ #category : 'query' }
+CInstanceScope >> isSelfSuper: aString [
+
+	^ #( 'self' 'super' ) includes: aString 
+]
+
 { #category : 'accessing' }
 CInstanceScope >> parentScope [
 
@@ -27,7 +33,10 @@ CInstanceScope >> parentScope: anObject [
 ]
 
 { #category : 'reading' }
-CInstanceScope >> read: aString [ 
+CInstanceScope >> read: aString [
+
+	(self isSelfSuper: aString) ifTrue: [ ^ receiver ].
+
 	^ receiver instVarNamed: aString
 ]
 
@@ -39,13 +48,15 @@ CInstanceScope >> receiver: anObject [
 
 { #category : 'query' }
 CInstanceScope >> scopeDefining: aString [
-	(self definedVariables includes: aString)
-		ifTrue: [ ^ self ].
-	
+
+	(self isSelfSuper: aString) ifTrue: [ ^ self ].
+	(self definedVariables includes: aString) ifTrue: [ ^ self ].
 	^ self parentScope scopeDefining: aString
 ]
 
 { #category : 'reading' }
 CInstanceScope >> write: aString withValue: anInteger [
+
+	(self isSelfSuper: aString) ifTrue: [ self error: 'We cannot modify self or super' ].
 	receiver instVarNamed: aString put: anInteger
 ]
