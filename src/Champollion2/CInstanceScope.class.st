@@ -57,6 +57,5 @@ CInstanceScope >> scopeDefining: aString [
 { #category : 'reading' }
 CInstanceScope >> write: aString withValue: anInteger [
 
-	(self isSelfSuper: aString) ifTrue: [ self error: 'We cannot modify self or super' ].
 	receiver instVarNamed: aString put: anInteger
 ]
