@@ -2,11 +2,12 @@ Class {
 	#name : 'CInterpreter',
 	#superclass : 'Object',
 	#instVars : [
-		'receiver',
+		'stack',
 		'globalScope'
 	],
-	#category : 'Champollion2',
-	#package : 'Champollion2'
+	#category : 'Champollion2-Core',
+	#package : 'Champollion2',
+	#tag : 'Core'
 }
 
 { #category : 'private' }
@@ -25,7 +26,9 @@ CInterpreter >> execute: aMethodNode [
 
 { #category : 'execution' }
 CInterpreter >> execute: anAST withReceiver: anObject [
-	receiver := anObject.
+
+	self pushNewFrame.
+	self topFrame receiver: anObject.
 	^ self visitNode: anAST
 ]
 
@@ -42,19 +45,35 @@ CInterpreter >> globalEnvironmentAt: aSymbol put: anObject [
 
 { #category : 'initialization' }
 CInterpreter >> initialize [
+
 	super initialize.
-	globalScope := CGlobalScope new
+	globalScope := CGlobalScope new.
+	stack := CTStack new.
 ]
 
-{ #category : 'accessing' }
-CInterpreter >> receiver [ 
-	^ receiver 
+{ #category : 'execution' }
+CInterpreter >> pushNewFrame [
+	| newTop |
+	newTop := CMethodScope new.
+	stack push: newTop.
+	^ newTop
+
+]
+
+{ #category : 'execution' }
+CInterpreter >> receiver [
+	^ self topFrame receiver
 ]
 
 { #category : 'private' }
 CInterpreter >> scopeDefining: aName [
 	^ self currentScope scopeDefining: aName
 
+]
+
+{ #category : 'execution' }
+CInterpreter >> topFrame [ 
+	^ stack top
 ]
 
 { #category : 'visiting' }
