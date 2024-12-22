@@ -10,6 +10,12 @@ Class {
 	#tag : 'Core'
 }
 
+{ #category : 'visiting' }
+CInterpreter >> astOf: aCompiledMethod [ 
+	^ RBParser parseMethod: aCompiledMethod sourceCode.
+
+]
+
 { #category : 'private' }
 CInterpreter >> currentScope [
 	^ CInstanceScope new
@@ -99,6 +105,14 @@ CInterpreter >> visitLiteralArrayNode: aLiteralArrayNode [
 CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 
 	^ aLiteralValueNode value
+]
+
+{ #category : 'visiting' }
+CInterpreter >> visitMessageNode: aMessageNode [
+	| newReceiver method | 
+	newReceiver := self visitNode: aMessageNode receiver.
+	method := newReceiver class compiledMethodAt: aMessageNode selector.
+	^ self execute: (self astOf: method) withReceiver: newReceiver
 ]
 
 { #category : 'visiting' }

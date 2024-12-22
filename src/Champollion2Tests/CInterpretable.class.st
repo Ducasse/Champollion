@@ -72,6 +72,12 @@ CInterpretable >> returnSuper [
 	^ super
 ]
 
+{ #category : 'messages' }
+CInterpretable >> sendMessageReturnX [
+
+	^ self returnInstanceVariableX
+]
+
 { #category : 'assignments' }
 CInterpretable >> store100IntoInstanceVariableX [
 
