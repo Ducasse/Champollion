@@ -3,7 +3,8 @@ Class {
 	#superclass : 'TestCase',
 	#instVars : [
 		'interpreter',
-		'receiver'
+		'receiver',
+		'collaborator'
 	],
 	#category : 'Champollion2Tests',
 	#package : 'Champollion2Tests'
@@ -33,7 +34,22 @@ CInterpreterTest >> setUp [
 
 	super setUp.
 	interpreter := CInterpreter new. 
-	receiver := CInterpretable new
+	receiver := CInterpretable new.
+	collaborator := CInterpretable new.
+	receiver collaborator: collaborator
+
+]
+
+{ #category : 'tests - message arguments' }
+CInterpreterTest >> testArgumentAccess [
+
+	receiver x: 200.
+	collaborator x: 300.
+
+	self executeSelector: #changeCollaboratorWithArgument.
+
+	self assert: receiver x equals: 200.
+	self assert: collaborator x equals: 500
 ]
 
 { #category : 'tests - assignments' }
@@ -42,6 +58,27 @@ CInterpreterTest >> testAssignmentReturnsAssignedValue [
 	self
 		assert: (self executeSelector: #store100IntoInstanceVariableX)
 		equals: 100
+]
+
+{ #category : 'tests - message send' }
+CInterpreterTest >> testBalancingStack [
+	"check that the stack is popped on return"
+	
+	self
+		assert: (self executeSelector: #setXAndMessage)
+		equals: 1000
+]
+
+{ #category : 'tests - message send' }
+CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSender [
+	receiver x: 200.
+	collaborator x: 300.
+
+	"changeCollaboratorInstanceVariableX will replace collaborator's x but not the receiver's"
+	self executeSelector: #changeCollaboratorInstanceVariableX.
+
+	self assert: receiver x equals: 200.
+	self assert: collaborator x equals: 100
 ]
 
 { #category : 'tests' }

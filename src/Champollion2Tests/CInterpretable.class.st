@@ -2,7 +2,8 @@ Class {
 	#name : 'CInterpretable',
 	#superclass : 'Object',
 	#instVars : [
-		'x'
+		'x',
+		'collaborator'
 	],
 	#category : 'Champollion2Tests',
 	#package : 'Champollion2Tests'
@@ -17,6 +18,28 @@ CInterpretable class >> initialize [
 CInterpretable class >> setUpGlobal [
 
 	self environment at: #Global put: 33
+]
+
+{ #category : 'messages' }
+CInterpretable >> changeCollaboratorInstanceVariableX [
+	collaborator store100IntoInstanceVariableX
+]
+
+{ #category : 'messages' }
+CInterpretable >> changeCollaboratorWithArgument [
+	collaborator x: 500
+]
+
+{ #category : 'accessing' }
+CInterpretable >> collaborator [
+
+	^ collaborator
+]
+
+{ #category : 'accessing' }
+CInterpretable >> collaborator: anObject [
+
+	collaborator := anObject
 ]
 
 { #category : 'returning literals' }
@@ -76,6 +99,13 @@ CInterpretable >> returnSuper [
 CInterpretable >> sendMessageReturnX [
 
 	^ self returnInstanceVariableX
+]
+
+{ #category : 'messages' }
+CInterpretable >> setXAndMessage [
+		x := 1000.
+		collaborator returnInstanceVariableX.
+		^ x
 ]
 
 { #category : 'assignments' }

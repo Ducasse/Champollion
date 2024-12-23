@@ -33,9 +33,12 @@ CInterpreter >> execute: aMethodNode [
 { #category : 'execution' }
 CInterpreter >> execute: anAST withReceiver: anObject [
 
+	| result |
 	self pushNewFrame.
 	self topFrame receiver: anObject.
-	^ self visitNode: anAST
+	result := self visitNode: anAST.
+	self popFrame.
+	^ result
 ]
 
 { #category : 'accessing' }
@@ -57,7 +60,12 @@ CInterpreter >> initialize [
 	stack := CTStack new.
 ]
 
-{ #category : 'execution' }
+{ #category : 'stack frame' }
+CInterpreter >> popFrame [
+	stack pop
+]
+
+{ #category : 'stack frame' }
 CInterpreter >> pushNewFrame [
 	| newTop |
 	newTop := CMethodScope new.
@@ -77,7 +85,7 @@ CInterpreter >> scopeDefining: aName [
 
 ]
 
-{ #category : 'execution' }
+{ #category : 'stack frame' }
 CInterpreter >> topFrame [ 
 	^ stack top
 ]
