@@ -34,7 +34,7 @@ CInterpreter >> execute: aMethodNode [
 CInterpreter >> execute: anAST withReceiver: anObject [
 
 	| result |
-	self pushNewFrame.
+	self pushNewMethodFrame.
 	self topFrame receiver: anObject.
 	result := self visitNode: anAST.
 	self popFrame.
@@ -67,6 +67,16 @@ CInterpreter >> popFrame [
 
 { #category : 'stack frame' }
 CInterpreter >> pushNewFrame [
+	| newTop |
+	newTop := CMethodScope new.
+	stack push: newTop.
+	^ newTop
+
+]
+
+{ #category : 'stack frame' }
+CInterpreter >> pushNewMethodFrame [
+
 	| newTop |
 	newTop := CMethodScope new.
 	stack push: newTop.
