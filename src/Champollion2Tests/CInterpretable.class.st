@@ -95,6 +95,12 @@ CInterpretable >> returnSuper [
 	^ super
 ]
 
+{ #category : 'returning variables' }
+CInterpretable >> returnUnassignedTemp [
+	| temp |
+	^ temp
+]
+
 { #category : 'messages' }
 CInterpretable >> sendMessageReturnX [
 

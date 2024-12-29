@@ -144,7 +144,7 @@ CInterpreterTest >> testReturnSelf [
 
 { #category : 'tests - variables' }
 CInterpreterTest >> testReturnSuper [
-  | receiver |
+ 
   receiver := Object new.
   "Convey our intention of checking identity by using an explicit identity check"
 	self assert: (self
@@ -169,4 +169,11 @@ CInterpreterTest >> testStore100IntoInstanceVariableX [
 	self executeSelector: #store100IntoInstanceVariableX.
 	self assert: receiver x equals: 100
 
+]
+
+{ #category : 'tests - variables' }
+CInterpreterTest >> testUnassignedTempHasNilValue [
+	self
+		assert: (self executeSelector: #returnUnassignedTemp)
+		equals: nil
 ]

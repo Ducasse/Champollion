@@ -45,7 +45,8 @@ CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection 
 	self topFrame receiver: anObject.
 	anAST arguments 
 		with: aCollection
-		do: [ :arg :value | self tempAt: arg name put: value ]. 
+		do: [ :arg :value | self tempAt: arg name put: value ].
+	anAST temporaryNames do: [ :tempName | self tempAt: tempName put: nil ].
 	result := self visitNode: anAST.
 	self popFrame.
 	^ result
