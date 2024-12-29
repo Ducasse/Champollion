@@ -177,3 +177,10 @@ CInterpreterTest >> testUnassignedTempHasNilValue [
 		assert: (self executeSelector: #returnUnassignedTemp)
 		equals: nil
 ]
+
+{ #category : 'tests - variables' }
+CInterpreterTest >> testWriteTemporaryVariable [
+	self
+		assert: (self executeSelector: #writeTemporaryVariable)
+		equals: 100
+]

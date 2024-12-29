@@ -120,6 +120,13 @@ CInterpretable >> store100IntoInstanceVariableX [
 	^ x := 100
 ]
 
+{ #category : 'returning variables' }
+CInterpretable >> writeTemporaryVariable [
+	| temp |
+	temp := 100.
+	^ temp
+]
+
 { #category : 'accessing' }
 CInterpretable >> x [
 

@@ -59,3 +59,8 @@ CMethodScope >> scopeDefining: aString [
 
 	^ self parentScope scopeDefining: aString
 ]
+
+{ #category : 'reading' }
+CMethodScope >> write: aString withValue: aValue [
+	variables at: aString put: aValue
+]
