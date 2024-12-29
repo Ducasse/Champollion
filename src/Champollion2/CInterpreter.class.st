@@ -18,10 +18,7 @@ CInterpreter >> astOf: aCompiledMethod [
 
 { #category : 'private' }
 CInterpreter >> currentScope [
-	^ CInstanceScope new
-		receiver: self receiver;
-		parentScope: globalScope;
-		yourself
+	^ self topFrame
 ]
 
 { #category : 'execution' }
@@ -33,9 +30,22 @@ CInterpreter >> execute: aMethodNode [
 { #category : 'execution' }
 CInterpreter >> execute: anAST withReceiver: anObject [
 
+	^ self execute: anAST withReceiver: anObject andArguments: #()
+]
+
+{ #category : 'execution' }
+CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection [
 	| result |
 	self pushNewMethodFrame.
+	self topFrame parentScope: (CInstanceScope new
+		receiver: anObject;
+		parentScope: globalScope;
+		yourself).
+
 	self topFrame receiver: anObject.
+	anAST arguments 
+		with: aCollection
+		do: [ :arg :value | self topFrame at: arg name put: value ]. 
 	result := self visitNode: anAST.
 	self popFrame.
 	^ result
@@ -127,10 +137,12 @@ CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitMessageNode: aMessageNode [
-	| newReceiver method | 
+	| newReceiver method args | 
 	newReceiver := self visitNode: aMessageNode receiver.
+	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
 	method := newReceiver class compiledMethodAt: aMessageNode selector.
-	^ self execute: (self astOf: method) withReceiver: newReceiver
+	^ self execute: (self astOf: method) withReceiver: newReceiver andArguments: args
+	
 ]
 
 { #category : 'visiting' }
