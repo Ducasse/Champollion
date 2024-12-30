@@ -3,7 +3,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'x',
-		'collaborator'
+		'collaborator',
+		'currentPeanoNumber',
+		'evaluationOrder'
 	],
 	#category : 'Champollion2Tests',
 	#package : 'Champollion2Tests'
@@ -42,6 +44,44 @@ CInterpretable >> collaborator: anObject [
 	collaborator := anObject
 ]
 
+{ #category : 'messages' }
+CInterpretable >> currentButComputeNextPeanoNumber [
+	| result |
+	"Implement a stream as an increment in terms of Peano axioms.
+	See https://en.wikipedia.org/wiki/Peano_axioms"
+	
+	result := currentPeanoNumber.
+	"We increment the counter"
+	currentPeanoNumber := { currentPeanoNumber }.
+	"We return the previous result"
+	^ result
+]
+
+{ #category : 'messages' }
+CInterpretable >> evaluateReceiver [
+	evaluationOrder := self currentButComputeNextPeanoNumber.
+	^ self
+
+]
+
+{ #category : 'accessing' }
+CInterpretable >> evaluationOrder [ 
+
+	^ evaluationOrder
+]
+
+{ #category : 'initialization' }
+CInterpretable >> initialize [
+	super initialize.
+	currentPeanoNumber := { } "Empty"
+
+]
+
+{ #category : 'messages' }
+CInterpretable >> messageArg1: arg1 arg2: arg2 arg3: arg3 [
+	^ {arg1 . arg2 . arg3}
+]
+
 { #category : 'returning literals' }
 CInterpretable >> returnBoolean [
 	^ false
@@ -52,6 +92,14 @@ CInterpretable >> returnBoolean [
 CInterpretable >> returnEmptyLiteralArray [
 	^ #()
 
+]
+
+{ #category : 'messages' }
+CInterpretable >> returnEvaluationOrder [
+	^ self evaluateReceiver
+		messageArg1: self currentButComputeNextPeanoNumber
+		arg2: self currentButComputeNextPeanoNumber
+		arg3: self currentButComputeNextPeanoNumber
 ]
 
 { #category : 'returning literals' }

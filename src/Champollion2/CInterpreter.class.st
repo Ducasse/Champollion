@@ -124,6 +124,13 @@ CInterpreter >> topFrame [
 ]
 
 { #category : 'visiting' }
+CInterpreter >> visitArrayNode: anArrayNode [
+	^ anArrayNode statements 
+		collect: [ :e | self visitNode: e ] 
+		as: Array
+]
+
+{ #category : 'visiting' }
 CInterpreter >> visitAssignmentNode: anAssignmentNode [
 	| value | 
 	value := self visitNode: anAssignmentNode value.
@@ -151,8 +158,8 @@ CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 { #category : 'visiting' }
 CInterpreter >> visitMessageNode: aMessageNode [
 	| newReceiver method args | 
-	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
 	newReceiver := self visitNode: aMessageNode receiver.
+	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
 	method := newReceiver class compiledMethodAt: aMessageNode selector.
 	^ self execute: (self astOf: method) withReceiver: newReceiver andArguments: args
 	

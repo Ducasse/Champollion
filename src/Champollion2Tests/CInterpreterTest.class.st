@@ -29,6 +29,14 @@ CInterpreterTest >> interpreter [
 	^ interpreter
 ]
 
+{ #category : 'tests - message arguments' }
+CInterpreterTest >> peanoToInteger: aPeanoNumber [
+	"Helper method to transform a peano number to a normal Pharo integer"
+	^ aPeanoNumber
+		ifEmpty: [ 0 ]
+		ifNotEmpty: [ 1 + (self peanoToInteger: aPeanoNumber first) ]
+]
+
 { #category : 'running' }
 CInterpreterTest >> setUp [
 
@@ -67,6 +75,24 @@ CInterpreterTest >> testBalancingStack [
 	self
 		assert: (self executeSelector: #setXAndMessage)
 		equals: 1000
+]
+
+{ #category : 'tests - message send' }
+CInterpreterTest >> testEvaluationOrderOfArguments [
+
+	| argumentEvaluationOrder |
+	argumentEvaluationOrder := self executeSelector: #returnEvaluationOrder.
+	self
+		assert: (argumentEvaluationOrder collect: 
+		[ :peano | self peanoToInteger: peano])
+	 equals: #(1 2 3)
+]
+
+{ #category : 'tests - message send' }
+CInterpreterTest >> testEvaluationOrderOfReceiver [
+	self executeSelector: #returnEvaluationOrder.
+	self assert: (self peanoToInteger: receiver evaluationOrder) equals: 0.
+	
 ]
 
 { #category : 'tests - message send' }
