@@ -1,6 +1,6 @@
 Class {
 	#name : 'CInterpretable',
-	#superclass : 'Object',
+	#superclass : 'CInterpretableSuperClass',
 	#instVars : [
 		'x',
 		'collaborator',
