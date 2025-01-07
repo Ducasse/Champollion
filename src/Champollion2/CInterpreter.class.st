@@ -70,8 +70,17 @@ CInterpreter >> initialize [
 
 { #category : 'visiting' }
 CInterpreter >> lookup: aSelector fromClass: aClass [
+	"Return a compiled method or nil if none is found"
 
-	^ aClass compiledMethodAt: aSelector
+	"If the class defines a method for the selector, returns the method"
+	(aClass includesSelector: aSelector)
+		ifTrue: [ ^ aClass compiledMethodAt: aSelector ].
+
+	"Otherwise lookup recursively in the superclass.
+	If we reach the end of the hierarchy return nil"
+	^ aClass superclass
+		ifNil: [ nil ]
+		ifNotNil: [ self lookup: aSelector fromClass: aClass superclass ]
 ]
 
 { #category : 'execution' }
