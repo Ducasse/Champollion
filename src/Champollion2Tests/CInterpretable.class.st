@@ -149,6 +149,11 @@ CInterpretable >> returnUnassignedTemp [
 	^ temp
 ]
 
+{ #category : 'lookup' }
+CInterpretable >> sendMessageInSuperclass [
+	^ self methodInSuperclass
+]
+
 { #category : 'messages' }
 CInterpretable >> sendMessageReturnX [
 

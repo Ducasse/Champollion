@@ -107,6 +107,13 @@ CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSend
 	self assert: collaborator x equals: 100
 ]
 
+{ #category : 'tests - lookup' }
+CInterpreterTest >> testLookupMessageInSuperclass [
+	self 
+		assert: (self executeSelector: #sendMessageInSuperclass) 
+		equals: 5
+]
+
 { #category : 'tests' }
 CInterpreterTest >> testReturnBoolean [
   
