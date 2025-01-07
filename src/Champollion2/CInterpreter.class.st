@@ -68,6 +68,12 @@ CInterpreter >> initialize [
 	stack := CTStack new.
 ]
 
+{ #category : 'visiting' }
+CInterpreter >> lookup: aSelector fromClass: aClass [
+
+	^ aClass compiledMethodAt: aSelector
+]
+
 { #category : 'execution' }
 CInterpreter >> manageArgumentsTemps: aCollection of: anAST [
 
@@ -160,7 +166,7 @@ CInterpreter >> visitMessageNode: aMessageNode [
 	| newReceiver method args | 
 	newReceiver := self visitNode: aMessageNode receiver.
 	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
-	method := newReceiver class compiledMethodAt: aMessageNode selector.
+	method := self lookup: aMessageNode selector fromClass: newReceiver class.
 	^ self execute: (self astOf: method) withReceiver: newReceiver andArguments: args
 	
 ]
