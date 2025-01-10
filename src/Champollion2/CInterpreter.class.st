@@ -16,6 +16,11 @@ CInterpreter >> astOf: aCompiledMethod [
 
 ]
 
+{ #category : 'visiting' }
+CInterpreter >> currentMethod [
+	^ self tempAt: #___method
+]
+
 { #category : 'private' }
 CInterpreter >> currentScope [
 	^ self topFrame
@@ -137,6 +142,11 @@ CInterpreter >> scopeDefining: aName [
 ]
 
 { #category : 'accessing' }
+CInterpreter >> tempAt: aSymbol [
+	^ self topFrame at: aSymbol
+]
+
+{ #category : 'accessing' }
 CInterpreter >> tempAt: aSymbol put: anInteger [
 	self topFrame at: aSymbol put: anInteger
 ]
@@ -180,10 +190,13 @@ CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitMessageNode: aMessageNode [
-	| newReceiver method args | 
+	| newReceiver method args lookupClass | 
 	newReceiver := self visitNode: aMessageNode receiver.
 	args := self handleArgumentsOf: aMessageNode.
-	method := self lookup: aMessageNode selector fromClass: newReceiver class.
+	lookupClass := aMessageNode isSuperSend 
+		ifTrue: [ self currentMethod methodClass superclass ] 
+		ifFalse: [ newReceiver class ].
+	method := self lookup: aMessageNode selector fromClass: lookupClass.
 	^ self execute: (self astOf: method) withReceiver: newReceiver andArguments: args
 	
 ]

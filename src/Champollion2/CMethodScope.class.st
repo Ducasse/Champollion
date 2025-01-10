@@ -12,6 +12,11 @@ Class {
 }
 
 { #category : 'accessing' }
+CMethodScope >> at: aKey [
+	^ variables at: aKey
+]
+
+{ #category : 'accessing' }
 CMethodScope >> at: aKey put: aValue [
 	variables at: aKey put: aValue
 ]
