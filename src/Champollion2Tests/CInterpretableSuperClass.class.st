@@ -14,3 +14,8 @@ CInterpretableSuperClass >> isInSuperclass [
 CInterpretableSuperClass >> methodInSuperclass [
 	^ 5
 ]
+
+{ #category : 'overridden methods' }
+CInterpretableSuperClass >> overriddenMethod [
+	^ 5
+]
