@@ -20,6 +20,7 @@ CInterpreterTest >> executeSelector: aSymbol [
 CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver [
 	| ast |
 	ast := RBParser parseMethod: (CInterpretable >> aSymbol) sourceCode.
+	ast methodClass: CInterpretable.
 	^ self interpreter execute: ast withReceiver: aReceiver
 ]
 
