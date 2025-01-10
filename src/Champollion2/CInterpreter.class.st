@@ -143,6 +143,17 @@ CInterpreter >> scopeDefining: aName [
 
 ]
 
+{ #category : 'execution' }
+CInterpreter >> send: aSelector receiver: newReceiver lookupFromClass: lookupClass arguments: arguments [
+	"Lookup a selector from a class, and activate the method."
+
+	| method |
+	method := self lookup: aSelector fromClass: lookupClass.
+	^ self execute: (self astOf: method) 
+			withReceiver: newReceiver 
+			andArguments: arguments
+]
+
 { #category : 'accessing' }
 CInterpreter >> tempAt: aSymbol [
 	^ self topFrame at: aSymbol

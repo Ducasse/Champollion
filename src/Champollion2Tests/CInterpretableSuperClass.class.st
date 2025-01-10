@@ -19,3 +19,8 @@ CInterpretableSuperClass >> methodInSuperclass [
 CInterpretableSuperClass >> overriddenMethod [
 	^ 5
 ]
+
+{ #category : 'method lookup' }
+CInterpretableSuperClass >> redefinedMethod [
+	^ super redefinedMethod
+]

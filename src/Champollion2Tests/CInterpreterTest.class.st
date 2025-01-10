@@ -18,10 +18,12 @@ CInterpreterTest >> executeSelector: aSymbol [
 
 { #category : 'helpers' }
 CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver [
-	| ast |
-	ast := RBParser parseMethod: (CInterpretable >> aSymbol) sourceCode.
-	ast methodClass: CInterpretable.
-	^ self interpreter execute: ast withReceiver: aReceiver
+
+	^ self interpreter
+		send: aSymbol
+		receiver: aReceiver
+		lookupFromClass: aReceiver class
+		arguments: #()
 ]
 
 { #category : 'helpers' }
@@ -135,6 +137,11 @@ CInterpreterTest >> testLookupSuperMessage [
 	self assert: (self executeSelector: #doesSuperLookupFromSuperclass)
 ]
 
+{ #category : 'tests - lookup' }
+CInterpreterTest >> testLookupSuperMessageNotInReceiverSuperclass [
+	self assert: (self executeSelector: #redefinedMethod) equals: 5
+]
+
 { #category : 'tests' }
 CInterpreterTest >> testReturnBoolean [
   
@@ -199,7 +206,7 @@ CInterpreterTest >> testReturnSelf [
 { #category : 'tests - variables' }
 CInterpreterTest >> testReturnSuper [
  
-  receiver := Object new.
+  receiver := CInterpretable new.
   "Convey our intention of checking identity by using an explicit identity check"
 	self assert: (self
       executeSelector: #returnSuper
