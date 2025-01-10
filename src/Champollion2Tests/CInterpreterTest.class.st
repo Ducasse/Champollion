@@ -54,7 +54,6 @@ CInterpreterTest >> testASTHasClass [
 	| ast |
 	ast := (RBParser parseMethod: (Point>>#degrees) sourceCode).
 	ast methodClass: Point. 
-	self halt.
 	self deny: ast methodClass isNil.
 	self assert: ast methodClass equals: Point
 ]

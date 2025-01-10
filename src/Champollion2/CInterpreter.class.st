@@ -14,11 +14,8 @@ Class {
 CInterpreter >> astOf: aCompiledMethod [
 	| ast |
 	ast := RBParser parseMethod: aCompiledMethod sourceCode.
-	self halt.
 	ast methodClass: aCompiledMethod methodClass.
-	self halt.
 	^ ast
-
 ]
 
 { #category : 'visiting' }
