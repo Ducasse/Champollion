@@ -57,6 +57,11 @@ CInterpretable >> currentButComputeNextPeanoNumber [
 	^ result
 ]
 
+{ #category : 'lookup' }
+CInterpretable >> doesSuperLookupFromSuperclass [
+	^ super isInSuperclass
+]
+
 { #category : 'messages' }
 CInterpretable >> evaluateReceiver [
 	evaluationOrder := self currentButComputeNextPeanoNumber.
@@ -75,6 +80,11 @@ CInterpretable >> initialize [
 	super initialize.
 	currentPeanoNumber := { } "Empty"
 
+]
+
+{ #category : 'lookup' }
+CInterpretable >> isInSuperclass [
+	^ false
 ]
 
 { #category : 'messages' }

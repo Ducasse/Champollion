@@ -6,6 +6,11 @@ Class {
 }
 
 { #category : 'lookup' }
+CInterpretableSuperClass >> isInSuperclass [
+	^ true
+]
+
+{ #category : 'lookup' }
 CInterpretableSuperClass >> methodInSuperclass [
 	^ 5
 ]

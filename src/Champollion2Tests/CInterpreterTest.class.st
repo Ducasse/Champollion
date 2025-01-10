@@ -114,6 +114,11 @@ CInterpreterTest >> testLookupMessageInSuperclass [
 		equals: 5
 ]
 
+{ #category : 'tests - lookup' }
+CInterpreterTest >> testLookupSuperMessage [
+	self assert: (self executeSelector: #doesSuperLookupFromSuperclass)
+]
+
 { #category : 'tests' }
 CInterpreterTest >> testReturnBoolean [
   
