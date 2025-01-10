@@ -57,6 +57,11 @@ CInterpretable >> currentButComputeNextPeanoNumber [
 	^ result
 ]
 
+{ #category : 'does not understand' }
+CInterpretable >> doesNotUnderstand: aMessage [
+	^ aMessage
+]
+
 { #category : 'lookup' }
 CInterpretable >> doesSuperLookupFromSuperclass [
 	^ super isInSuperclass

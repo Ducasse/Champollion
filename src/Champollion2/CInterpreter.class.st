@@ -149,9 +149,23 @@ CInterpreter >> send: aSelector receiver: newReceiver lookupFromClass: lookupCla
 
 	| method |
 	method := self lookup: aSelector fromClass: lookupClass.
-	^ self execute: (self astOf: method) 
-			withReceiver: newReceiver 
-			andArguments: arguments
+	method ifNil: [ | messageReification |
+		"Handle does not understand:
+		 - lookup the #doesNotUnderstand: selector
+		 - reify the message
+		 - activate"
+		messageReification := Message
+			selector: aSelector
+			arguments: arguments.
+		^ self
+			send: #doesNotUnderstand:
+			receiver: newReceiver
+			lookupFromClass: lookupClass
+			arguments: { messageReification } ].
+
+	^ self execute: (self astOf: method) withReceiver: newReceiver andArguments: arguments
+	
+
 ]
 
 { #category : 'accessing' }
