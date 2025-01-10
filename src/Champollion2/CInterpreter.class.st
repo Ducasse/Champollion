@@ -42,6 +42,7 @@ CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection 
 			 receiver: anObject;
 			 parentScope: globalScope;
 			 yourself).
+	self tempAt: #___method put: anAST.
 	self topFrame receiver: anObject.
 	self manageArgumentsTemps: aCollection of: anAST.
 	result := self visitNode: anAST.
@@ -58,6 +59,13 @@ CInterpreter >> globalEnvironment [
 CInterpreter >> globalEnvironmentAt: aSymbol put: anObject [
 	globalScope at: aSymbol put: anObject
 
+]
+
+{ #category : 'visiting' }
+CInterpreter >> handleArgumentsOf: aMessageNode [ 
+
+	^ aMessageNode arguments collect: [ :each | self visitNode: each ]
+	
 ]
 
 { #category : 'initialization' }
@@ -174,7 +182,7 @@ CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 CInterpreter >> visitMessageNode: aMessageNode [
 	| newReceiver method args | 
 	newReceiver := self visitNode: aMessageNode receiver.
-	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
+	args := self handleArgumentsOf: aMessageNode.
 	method := self lookup: aMessageNode selector fromClass: newReceiver class.
 	^ self execute: (self astOf: method) withReceiver: newReceiver andArguments: args
 	
