@@ -48,6 +48,17 @@ CInterpreterTest >> setUp [
 
 ]
 
+{ #category : 'tests - utils' }
+CInterpreterTest >> testASTHasClass [
+
+	| ast |
+	ast := (RBParser parseMethod: (Point>>#degrees) sourceCode).
+	ast methodClass: Point. 
+	self halt.
+	self deny: ast methodClass isNil.
+	self assert: ast methodClass equals: Point
+]
+
 { #category : 'tests - message arguments' }
 CInterpreterTest >> testArgumentAccess [
 

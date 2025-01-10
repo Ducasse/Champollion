@@ -11,8 +11,13 @@ Class {
 }
 
 { #category : 'visiting' }
-CInterpreter >> astOf: aCompiledMethod [ 
-	^ RBParser parseMethod: aCompiledMethod sourceCode.
+CInterpreter >> astOf: aCompiledMethod [
+	| ast |
+	ast := RBParser parseMethod: aCompiledMethod sourceCode.
+	self halt.
+	ast methodClass: aCompiledMethod methodClass.
+	self halt.
+	^ ast
 
 ]
 
@@ -197,7 +202,10 @@ CInterpreter >> visitMessageNode: aMessageNode [
 		ifTrue: [ self currentMethod methodClass superclass ] 
 		ifFalse: [ newReceiver class ].
 	method := self lookup: aMessageNode selector fromClass: lookupClass.
-	^ self execute: (self astOf: method) withReceiver: newReceiver andArguments: args
+	^ self 
+		execute: (self astOf: method) 
+		withReceiver: newReceiver 
+		andArguments: args
 	
 ]
 
