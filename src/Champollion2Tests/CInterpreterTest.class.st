@@ -90,6 +90,20 @@ CInterpreterTest >> testBalancingStack [
 		equals: 1000
 ]
 
+{ #category : 'tests - lookup' }
+CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithArguments [
+	self
+		assert: (self executeSelector: #sendMessageNotUnderstood) arguments
+		equals: #( 17 27 )
+]
+
+{ #category : 'tests - lookup' }
+CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithSelector [
+	self
+		assert: (self executeSelector: #sendMessageNotUnderstood) selector
+		equals: #messageIDoNotUnderstandWithArg1:withArg2:
+]
+
 { #category : 'tests - message send' }
 CInterpreterTest >> testEvaluationOrderOfArguments [
 

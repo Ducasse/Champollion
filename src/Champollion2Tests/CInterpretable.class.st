@@ -169,6 +169,11 @@ CInterpretable >> sendMessageInSuperclass [
 	^ self methodInSuperclass
 ]
 
+{ #category : 'lookup' }
+CInterpretable >> sendMessageNotUnderstood [
+	^ self messageIDoNotUnderstandWithArg1: 17 withArg2: 27
+]
+
 { #category : 'messages' }
 CInterpretable >> sendMessageReturnX [
 
