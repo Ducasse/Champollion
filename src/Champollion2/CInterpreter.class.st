@@ -3,12 +3,18 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'stack',
-		'globalScope'
+		'globalScope',
+		'primitives'
 	],
 	#category : 'Champollion2-Core',
 	#package : 'Champollion2',
 	#tag : 'Core'
 }
+
+{ #category : 'execution' }
+CInterpreter >> argumentAt: anInteger [
+	^ self tempAt: (self currentMethod arguments at: anInteger) name
+]
 
 { #category : 'visiting' }
 CInterpreter >> astOf: aCompiledMethod [
@@ -77,10 +83,16 @@ CInterpreter >> handleArgumentsOf: aMessageNode [
 
 { #category : 'initialization' }
 CInterpreter >> initialize [
+	super initialize. 
+	stack := Stack new.
+	primitives := Dictionary new.
+	self initializePrimitiveTable.
+]
 
-	super initialize.
-	globalScope := CGlobalScope new.
-	stack := CTStack new.
+{ #category : 'initialization' }
+CInterpreter >> initializePrimitiveTable [
+	primitives at: 1 put: #primitiveSmallIntegerAdd
+
 ]
 
 { #category : 'visiting' }
@@ -111,6 +123,15 @@ CInterpreter >> manageArgumentsTemps: aCollection of: anAST [
 { #category : 'stack frame' }
 CInterpreter >> popFrame [
 	stack pop
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerAdd [
+
+	| receiver argument |
+	receiver := self receiver.
+	argument := self argumentAt: 1.
+	^ receiver + argument
 ]
 
 { #category : 'stack frame' }
