@@ -63,6 +63,17 @@ CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection 
 	^ result
 ]
 
+{ #category : 'execution' }
+CInterpreter >> executePrimitiveMethod: anAST [
+
+	| primitiveNumber |
+	primitiveNumber := anAST pragmas
+		detect: [ :each | each isPrimitive ]
+		ifFound: [ :aPragmaPrimitive | aPragmaPrimitive arguments first value ]
+		ifNone: [ self error: 'Not a primitive method' ].
+	^ self perform: (primitives at: primitiveNumber)
+]
+
 { #category : 'accessing' }
 CInterpreter >> globalEnvironment [
 	^ globalScope
@@ -254,6 +265,9 @@ CInterpreter >> visitMessageNode: aMessageNode [
 { #category : 'visiting' }
 CInterpreter >> visitMethodNode: aMethodNode [
 
+	aMethodNode isPrimitive ifTrue: [ 
+		"Do not handle primitive failures for now"
+		^ self executePrimitiveMethod: aMethodNode ].
 	^ self visitNode: aMethodNode body
 ]
 
