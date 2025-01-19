@@ -95,6 +95,7 @@ CInterpreter >> handleArgumentsOf: aMessageNode [
 { #category : 'initialization' }
 CInterpreter >> initialize [
 	super initialize. 
+	globalScope := CGlobalScope new.
 	stack := Stack new.
 	primitives := Dictionary new.
 	self initializePrimitiveTable.
