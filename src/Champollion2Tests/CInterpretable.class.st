@@ -208,6 +208,21 @@ CInterpretable >> smallintAdd [
 	^ 1 + 5
 ]
 
+{ #category : 'primitives' }
+CInterpretable >> smallintDivision [
+	^ 20 / 5
+]
+
+{ #category : 'primitives' }
+CInterpretable >> smallintMult [
+	^ 2 * 5
+]
+
+{ #category : 'primitives' }
+CInterpretable >> smallintSub [
+	^ 1 - 5
+]
+
 { #category : 'assignments' }
 CInterpretable >> store100IntoInstanceVariableX [
 

@@ -103,8 +103,11 @@ CInterpreter >> initialize [
 
 { #category : 'initialization' }
 CInterpreter >> initializePrimitiveTable [
-	primitives at: 1 put: #primitiveSmallIntegerAdd
 
+	primitives at: 1 put: #primitiveSmallIntegerAdd.
+	primitives at: 2 put: #primitiveSmallIntegerMinus.
+	primitives at: 9 put: #primitiveSmallIntegerMultiply.
+	primitives at: 10 put: #primitiveSmallIntegerDivide.
 ]
 
 { #category : 'visiting' }
@@ -132,6 +135,12 @@ CInterpreter >> manageArgumentsTemps: aCollection of: anAST [
 		self tempAt: tempName put: nil ]
 ]
 
+{ #category : 'execution' }
+CInterpreter >> numberOfArguments [
+
+	^ self currentMethod numArgs
+]
+
 { #category : 'stack frame' }
 CInterpreter >> popFrame [
 	stack pop
@@ -139,12 +148,86 @@ CInterpreter >> popFrame [
 
 { #category : 'primitives' }
 CInterpreter >> primitiveSmallIntegerAdd [
-	| receiver argument |
+	| receiver argument result |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
 	receiver := self receiver.
 	receiver class = SmallInteger
 		ifFalse: [ CPrimitiveFailed signal ].
+
 	argument := self argumentAt: 1.
-	^ receiver + argument
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	result := receiver + argument.
+	result class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ result
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerDivide [
+	| receiver argument result |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	(argument class = SmallInteger
+		and: [ argument ~= 0 ])
+			ifFalse: [ CPrimitiveFailed signal ].
+
+	result := receiver / argument.
+	result class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ result
+
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerMinus [
+	| receiver argument result |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	argument := self argumentAt: 1.
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	result := receiver - argument.
+	result class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ result
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerMultiply [
+
+	| receiver argument result |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	argument class = SmallInteger
+			ifFalse: [ CPrimitiveFailed signal ].
+
+	result := receiver * argument.
+	result class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ result
+
 ]
 
 { #category : 'stack frame' }

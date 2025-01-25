@@ -251,6 +251,27 @@ CInterpreterTest >> testSmallIntAddPrimitive [
 		equals: 6
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testSmallIntDivisionPrimitive [
+	self
+		assert: (self executeSelector: #smallintDivision)
+		equals: 4
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testSmallIntMultiplicationPrimitive [
+	self
+		assert: (self executeSelector: #smallintMult)
+		equals: 10
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testSmallIntSubPrimitive [
+	self
+		assert: (self executeSelector: #smallintSub)
+		equals: -4
+]
+
 { #category : 'tests - assignments' }
 CInterpreterTest >> testStore100IntoInstanceVariableX [
 	
