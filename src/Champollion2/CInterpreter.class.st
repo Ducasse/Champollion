@@ -139,9 +139,10 @@ CInterpreter >> popFrame [
 
 { #category : 'primitives' }
 CInterpreter >> primitiveSmallIntegerAdd [
-
 	| receiver argument |
 	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
 	argument := self argumentAt: 1.
 	^ receiver + argument
 ]
@@ -265,10 +266,11 @@ CInterpreter >> visitMessageNode: aMessageNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitMethodNode: aMethodNode [
-
-	aMethodNode isPrimitive ifTrue: [ 
-		"Do not handle primitive failures for now"
-		^ self executePrimitiveMethod: aMethodNode ].
+	[ aMethodNode isPrimitive ifTrue: [ 
+		^ self executePrimitiveMethod: aMethodNode ]]
+		on: CPrimitiveFailed do: [ :err | 
+			"Nothing, just continue with the method body" ].
+	
 	^ self visitNode: aMethodNode body
 ]
 

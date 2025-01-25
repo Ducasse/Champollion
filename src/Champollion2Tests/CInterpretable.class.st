@@ -22,6 +22,11 @@ CInterpretable class >> setUpGlobal [
 	self environment at: #Global put: 33
 ]
 
+{ #category : 'primitives' }
+CInterpretable >> callingFailingPrimitive [
+	^ self failingPrimitive
+]
+
 { #category : 'messages' }
 CInterpretable >> changeCollaboratorInstanceVariableX [
 	collaborator store100IntoInstanceVariableX
@@ -78,6 +83,12 @@ CInterpretable >> evaluateReceiver [
 CInterpretable >> evaluationOrder [ 
 
 	^ evaluationOrder
+]
+
+{ #category : 'primitives' }
+CInterpretable >> failingPrimitive [
+	<primitive: 1>
+	^ 'failure'
 ]
 
 { #category : 'initialization' }

@@ -122,6 +122,13 @@ CInterpreterTest >> testEvaluationOrderOfReceiver [
 	
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testFailingPrimitive [
+	self
+		assert: (self executeSelector: #callingFailingPrimitive)
+		equals: 'failure'
+]
+
 { #category : 'tests - message send' }
 CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSender [
 	receiver x: 200.
