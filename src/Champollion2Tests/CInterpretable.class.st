@@ -91,6 +91,12 @@ CInterpretable >> failingPrimitive [
 	^ 'failure'
 ]
 
+{ #category : 'primitives' }
+CInterpretable >> identical [ 
+
+	^ 1 == 1
+]
+
 { #category : 'initialization' }
 CInterpretable >> initialize [
 	super initialize.
@@ -106,6 +112,12 @@ CInterpretable >> isInSuperclass [
 { #category : 'messages' }
 CInterpretable >> messageArg1: arg1 arg2: arg2 arg3: arg3 [
 	^ {arg1 . arg2 . arg3}
+]
+
+{ #category : 'primitives' }
+CInterpretable >> notIdentical [ 
+
+	^ 1 == 2
 ]
 
 { #category : 'overridden methods' }
@@ -211,6 +223,12 @@ CInterpretable >> smallintAdd [
 { #category : 'primitives' }
 CInterpretable >> smallintDivision [
 	^ 20 / 5
+]
+
+{ #category : 'primitives' }
+CInterpretable >> smallintLessThan [
+
+	^ 1 < 5
 ]
 
 { #category : 'primitives' }

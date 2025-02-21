@@ -129,6 +129,12 @@ CInterpreterTest >> testFailingPrimitive [
 		equals: 'failure'
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testIdentical [
+	self assert: (self executeSelector: #identical)
+	
+]
+
 { #category : 'tests - message send' }
 CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSender [
 	receiver x: 200.
@@ -161,6 +167,12 @@ CInterpreterTest >> testLookupSuperMessage [
 { #category : 'tests - lookup' }
 CInterpreterTest >> testLookupSuperMessageNotInReceiverSuperclass [
 	self assert: (self executeSelector: #redefinedMethod) equals: 5
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testNotIdentical [
+	self deny: (self executeSelector: #notIdentical)
+	
 ]
 
 { #category : 'tests' }
@@ -270,6 +282,13 @@ CInterpreterTest >> testSmallIntSubPrimitive [
 	self
 		assert: (self executeSelector: #smallintSub)
 		equals: -4
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testSmallIntegerLessThan [
+	self
+		assert: (self executeSelector: #smallintLessThan)
+	
 ]
 
 { #category : 'tests - assignments' }
