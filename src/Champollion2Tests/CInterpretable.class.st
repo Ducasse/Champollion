@@ -35,6 +35,15 @@ CInterpretable >> atOutSideBounds [
 ]
 
 { #category : 'primitives - atput' }
+CInterpretable >> atPut [
+
+	| ar |
+	ar := #(11 22 33).
+	ar at: 2 put: 44.
+	^ ar
+]
+
+{ #category : 'primitives - atput' }
 CInterpretable >> atSize [
 
 	^ #(11 22 33) size

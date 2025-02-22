@@ -116,6 +116,11 @@ CInterpreterTest >> testAtNot [
 ]
 
 { #category : 'tests - primitives - atput' }
+CInterpreterTest >> testAtPut [
+	self assert: (self executeSelector: #atPut) equals: #(11 44 33)
+]
+
+{ #category : 'tests - primitives - atput' }
 CInterpreterTest >> testAtSize [
 
 	self assert: (self executeSelector: #atSize) equals: 3
