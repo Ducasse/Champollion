@@ -147,6 +147,12 @@ CInterpretable >> messageArg1: arg1 arg2: arg2 arg3: arg3 [
 	^ {arg1 . arg2 . arg3}
 ]
 
+{ #category : 'primitives - atput' }
+CInterpretable >> newPoint [
+
+	^ Point basicNew  
+]
+
 { #category : 'primitives' }
 CInterpretable >> notIdentical [ 
 

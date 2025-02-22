@@ -124,7 +124,10 @@ CInterpreter >> initializePrimitiveTable [
 	primitives at: 61 	put: #primitiveAtPut.
 	primitives at: 62 	put: #primitiveSize.
 	primitives at: 63 	put: #primitiveStringAt.
-	primitives at: 64 	put: #primitiveStringAtPut.
+	"primitives at: 64 	put: #primitiveStringAtPut. we should do it but are not string immutable?"
+		
+	primitives at: 70 	put: #primitiveBasicNew.
+	primitives at: 71 	put: #primitiveBasicNewVariable.
 
 ]
 
@@ -200,6 +203,30 @@ CInterpreter >> primitiveAtPut [
 		ifFalse: [ CPrimitiveFailed signal ].
 		
 	^ self receiver basicAt: (self argumentAt: 1) put: (self argumentAt: 2)
+]
+
+{ #category : 'primitives - object allocation' }
+CInterpreter >> primitiveBasicNew [
+	self receiver isClass
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ self receiver basicNew
+
+]
+
+{ #category : 'primitives - object allocation' }
+CInterpreter >> primitiveBasicNewVariable [
+	self numberOfArguments = 1
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	self receiver isClass
+		ifFalse: [ CPrimitiveFailed signal ].
+	self receiver class classLayout isVariable
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	((self argumentAt: 1) isKindOf: SmallInteger)
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	^ self receiver basicNew: (self argumentAt: 1)
 ]
 
 { #category : 'primitives' }

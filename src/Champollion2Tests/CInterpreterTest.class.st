@@ -224,6 +224,18 @@ CInterpreterTest >> testNotIdentical [
 	
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testPointNew [
+	
+	| p |
+	self interpreter globalEnvironmentAt: #Point put: Point.
+	p := (self executeSelector: #newPoint).
+	self
+		assert: p class 
+		equals: Point.
+	 
+]
+
 { #category : 'tests' }
 CInterpreterTest >> testReturnBoolean [
   
