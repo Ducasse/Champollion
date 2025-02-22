@@ -35,6 +35,12 @@ CInterpretable >> atOutSideBounds [
 ]
 
 { #category : 'primitives - atput' }
+CInterpretable >> atSize [
+
+	^ #(11 22 33) size
+]
+
+{ #category : 'primitives - atput' }
 CInterpretable >> atString [
 
 	^ 'abc' at: 2

@@ -115,6 +115,16 @@ CInterpreterTest >> testAtNot [
 	
 ]
 
+{ #category : 'tests - primitives - atput' }
+CInterpreterTest >> testAtSize [
+
+	self assert: (self executeSelector: #atSize) equals: 3
+	
+		
+		
+	
+]
+
 { #category : 'tests - message send' }
 CInterpreterTest >> testBalancingStack [
 	"check that the stack is popped on return"

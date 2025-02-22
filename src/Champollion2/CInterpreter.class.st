@@ -193,6 +193,7 @@ CInterpreter >> primitiveIdentical [
 
 { #category : 'primitives - atput' }
 CInterpreter >> primitiveSize [
+
 	self receiver class classLayout isVariable
 		ifFalse: [ CPrimitiveFailed signal ].
 
