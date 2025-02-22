@@ -164,6 +164,25 @@ CInterpreter >> popFrame [
 	stack pop
 ]
 
+{ #category : 'primitives - atput' }
+CInterpreter >> primitiveAt [
+
+	self numberOfArguments = 1
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	self receiver class classLayout isVariable
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	((self argumentAt: 1) isKindOf: SmallInteger)
+		ifFalse: [ CPrimitiveFailed signal ].
+		
+	"Bounds check"
+	((self argumentAt: 1) between: 1 and: self receiver size)
+		ifFalse: [ CPrimitiveFailed signal ].
+		
+	^ self receiver basicAt: (self argumentAt: 1)
+]
+
 { #category : 'primitives' }
 CInterpreter >> primitiveIdentical [
 	self numberOfArguments < 1
@@ -172,7 +191,16 @@ CInterpreter >> primitiveIdentical [
 	^ self receiver == (self argumentAt: 1)
 ]
 
-{ #category : 'primitives' }
+{ #category : 'primitives - atput' }
+CInterpreter >> primitiveSize [
+	self receiver class classLayout isVariable
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	^ self receiver basicSize
+
+]
+
+{ #category : 'primitives - math' }
 CInterpreter >> primitiveSmallIntegerAdd [
 	| receiver argument result |
 	self numberOfArguments < 1
@@ -192,7 +220,7 @@ CInterpreter >> primitiveSmallIntegerAdd [
 	^ result
 ]
 
-{ #category : 'primitives' }
+{ #category : 'primitives - math' }
 CInterpreter >> primitiveSmallIntegerDivide [
 	| receiver argument result |
 	self numberOfArguments < 1
@@ -214,7 +242,7 @@ CInterpreter >> primitiveSmallIntegerDivide [
 
 ]
 
-{ #category : 'primitives' }
+{ #category : 'primitives - magnitude' }
 CInterpreter >> primitiveSmallIntegerGreaterOrEqualsThan [
 
 	| receiver argument |
@@ -232,7 +260,7 @@ CInterpreter >> primitiveSmallIntegerGreaterOrEqualsThan [
 	^ receiver >= argument
 ]
 
-{ #category : 'primitives' }
+{ #category : 'primitives - magnitude' }
 CInterpreter >> primitiveSmallIntegerGreaterThan [
 
 	| receiver argument |
@@ -250,7 +278,7 @@ CInterpreter >> primitiveSmallIntegerGreaterThan [
 	^ receiver > argument
 ]
 
-{ #category : 'primitives' }
+{ #category : 'primitives - magnitude' }
 CInterpreter >> primitiveSmallIntegerLessOrEqualsThan [
 
 	| receiver argument |
@@ -268,7 +296,7 @@ CInterpreter >> primitiveSmallIntegerLessOrEqualsThan [
 	^ receiver <= argument
 ]
 
-{ #category : 'primitives' }
+{ #category : 'primitives - magnitude' }
 CInterpreter >> primitiveSmallIntegerLessThan [
 
 	| receiver argument |
@@ -286,7 +314,7 @@ CInterpreter >> primitiveSmallIntegerLessThan [
 	^ receiver < argument
 ]
 
-{ #category : 'primitives' }
+{ #category : 'primitives - math' }
 CInterpreter >> primitiveSmallIntegerMinus [
 	| receiver argument result |
 	self numberOfArguments < 1
@@ -306,7 +334,7 @@ CInterpreter >> primitiveSmallIntegerMinus [
 	^ result
 ]
 
-{ #category : 'primitives' }
+{ #category : 'primitives - math' }
 CInterpreter >> primitiveSmallIntegerMultiply [
 
 	| receiver argument result |
@@ -325,6 +353,25 @@ CInterpreter >> primitiveSmallIntegerMultiply [
 	result class = SmallInteger
 		ifFalse: [ CPrimitiveFailed signal ].
 	^ result
+
+]
+
+{ #category : 'primitives - atput' }
+CInterpreter >> primitiveStringAt [
+	self numberOfArguments = 1
+		ifFalse: [ CPrimitiveFailed signal ].
+		
+	self receiver class classLayout isBytes
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	((self argumentAt: 1) isKindOf: SmallInteger)
+		ifFalse: [ CPrimitiveFailed signal ].
+	"Bounds check"
+	
+	((self argumentAt: 1) between: 1 and: self receiver size)
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	^ self receiver at: (self argumentAt: 1)
 
 ]
 
@@ -447,6 +494,8 @@ CInterpreter >> visitMessageNode: aMessageNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitMethodNode: aMethodNode [
+
+
 	[ aMethodNode isPrimitive ifTrue: [ 
 		^ self executePrimitiveMethod: aMethodNode ]]
 		on: CPrimitiveFailed do: [ :err | 

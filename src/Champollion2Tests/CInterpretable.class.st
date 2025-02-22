@@ -22,6 +22,24 @@ CInterpretable class >> setUpGlobal [
 	self environment at: #Global put: 33
 ]
 
+{ #category : 'primitives - atput' }
+CInterpretable >> at [
+
+	^ #(11 22 33) at: 2
+]
+
+{ #category : 'primitives - atput' }
+CInterpretable >> atOutSideBounds [
+
+	^ #(11 22 33) at: 66
+]
+
+{ #category : 'primitives - atput' }
+CInterpretable >> atString [
+
+	^ 'abc' at: 2
+]
+
 { #category : 'primitives' }
 CInterpretable >> callingFailingPrimitive [
 	^ self failingPrimitive

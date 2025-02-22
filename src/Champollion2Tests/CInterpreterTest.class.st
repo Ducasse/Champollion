@@ -81,6 +81,40 @@ CInterpreterTest >> testAssignmentReturnsAssignedValue [
 		equals: 100
 ]
 
+{ #category : 'tests - primitives - atput' }
+CInterpreterTest >> testAt [
+	self
+		assert: (self executeSelector: #at) equals: 22
+	
+]
+
+{ #category : 'tests - primitives - atput' }
+CInterpreterTest >> testAtNot [
+
+	self skip.
+	"But we have 
+	
+	visitMethodNode: aMethodNode 
+	
+	[aMethodNode isPrimitive ifTrue: [ 
+		""Do not handle primitive failures for now""
+		^ self executePrimitiveMethod: aMethodNode ]]
+		on: CHPrimitiveFail do: [ :err | 
+			""Nothing, just continue with the method body"" ].
+	
+	^ self visitNode: aMethodNode body
+	
+	so on failure we are trying to visit the body. 
+	We need block interpretation to execute the body of at: primitive	
+	"
+	self
+		should: [  self executeSelector: #atOutSideBounds ] 
+		raise: CPrimitiveFailed 
+		
+		
+	
+]
+
 { #category : 'tests - message send' }
 CInterpreterTest >> testBalancingStack [
 	"check that the stack is popped on return"
@@ -340,6 +374,13 @@ CInterpreterTest >> testStore100IntoInstanceVariableX [
 	self executeSelector: #store100IntoInstanceVariableX.
 	self assert: receiver x equals: 100
 
+]
+
+{ #category : 'tests - primitives - atput' }
+CInterpreterTest >> testStringAt [
+	self
+		assert: (self executeSelector: #atString) equals: $b
+	
 ]
 
 { #category : 'tests - variables' }
