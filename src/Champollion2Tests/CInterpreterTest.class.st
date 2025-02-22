@@ -284,10 +284,52 @@ CInterpreterTest >> testSmallIntSubPrimitive [
 		equals: -4
 ]
 
-{ #category : 'tests - primitives' }
+{ #category : 'tests - primitives magnitude' }
 CInterpreterTest >> testSmallIntegerLessThan [
 	self
 		assert: (self executeSelector: #smallintLessThan)
+	
+]
+
+{ #category : 'tests - primitives magnitude' }
+CInterpreterTest >> testSmallIntegerLessThanNot [
+	self deny: (self executeSelector: #smallintLessThanNot)
+	
+]
+
+{ #category : 'tests - primitives magnitude' }
+CInterpreterTest >> testSmallintGreaterEqualThan [
+	self assert: (self executeSelector: #smallintGreaterEqualThan)
+	
+]
+
+{ #category : 'tests - primitives magnitude' }
+CInterpreterTest >> testSmallintGreaterEqualThanNot [
+	self deny: (self executeSelector: #smallintGreaterEqualThanNot)
+	
+]
+
+{ #category : 'tests - primitives magnitude' }
+CInterpreterTest >> testSmallintGreaterThan [
+	self assert: (self executeSelector: #smallintGreaterThan)
+	
+]
+
+{ #category : 'tests - primitives magnitude' }
+CInterpreterTest >> testSmallintGreaterThanNot [
+	self deny: (self executeSelector: #smallintGreaterThanNot)
+	
+]
+
+{ #category : 'tests - primitives magnitude' }
+CInterpreterTest >> testSmallintLessOrEqualsThan [
+	self assert: (self executeSelector: #smallintLessOrEqualsThan)
+	
+]
+
+{ #category : 'tests - primitives magnitude' }
+CInterpreterTest >> testSmallintLessOrEqualsThanNot [
+	self deny: (self executeSelector: #smallintLessOrEqualsThanNot)
 	
 ]
 

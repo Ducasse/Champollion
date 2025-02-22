@@ -119,6 +119,12 @@ CInterpreter >> initializePrimitiveTable [
 
 	primitives at: 110 	put: #primitiveIdentical.
 	primitives at: 111 	put: #primitiveNotIdentical.
+		
+	primitives at: 60 	put: #primitiveAt.
+	primitives at: 61 	put: #primitiveAtPut.
+	primitives at: 62 	put: #primitiveSize.
+	primitives at: 63 	put: #primitiveStringAt.
+	primitives at: 64 	put: #primitiveStringAtPut.
 
 ]
 
@@ -209,7 +215,62 @@ CInterpreter >> primitiveSmallIntegerDivide [
 ]
 
 { #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerGreaterOrEqualsThan [
+
+	| receiver argument |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	^ receiver >= argument
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerGreaterThan [
+
+	| receiver argument |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	^ receiver > argument
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerLessOrEqualsThan [
+
+	| receiver argument |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	^ receiver <= argument
+]
+
+{ #category : 'primitives' }
 CInterpreter >> primitiveSmallIntegerLessThan [
+
 	| receiver argument |
 	self numberOfArguments < 1
 		ifTrue: [ CPrimitiveFailed signal ].

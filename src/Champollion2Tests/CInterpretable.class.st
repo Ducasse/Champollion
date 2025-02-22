@@ -225,10 +225,52 @@ CInterpretable >> smallintDivision [
 	^ 20 / 5
 ]
 
-{ #category : 'primitives' }
+{ #category : 'primitives - magnitude' }
+CInterpretable >> smallintGreaterEqualThan [
+
+	^ 5 >= 5
+]
+
+{ #category : 'primitives - magnitude' }
+CInterpretable >> smallintGreaterEqualThanNot [
+
+	^ 5 >= 6
+]
+
+{ #category : 'primitives - magnitude' }
+CInterpretable >> smallintGreaterThan [
+
+	^ 1 < 5
+]
+
+{ #category : 'primitives - magnitude' }
+CInterpretable >> smallintGreaterThanNot [
+
+	^ 1 > 5
+]
+
+{ #category : 'primitives - magnitude' }
+CInterpretable >> smallintLessOrEqualsThan [
+
+	^ 1 <= 1 
+]
+
+{ #category : 'primitives - magnitude' }
+CInterpretable >> smallintLessOrEqualsThanNot [
+
+	^ 2 <= 1 
+]
+
+{ #category : 'primitives - magnitude' }
 CInterpretable >> smallintLessThan [
 
 	^ 1 < 5
+]
+
+{ #category : 'primitives - magnitude' }
+CInterpretable >> smallintLessThanNot [
+
+	^ 6 < 5
 ]
 
 { #category : 'primitives' }
