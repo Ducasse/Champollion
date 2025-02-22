@@ -220,7 +220,7 @@ CInterpreter >> primitiveBasicNewVariable [
 
 	self receiver isClass
 		ifFalse: [ CPrimitiveFailed signal ].
-	self receiver class classLayout isVariable
+	self receiver classLayout isVariable
 		ifFalse: [ CPrimitiveFailed signal ].
 	
 	((self argumentAt: 1) isKindOf: SmallInteger)
@@ -543,6 +543,7 @@ CInterpreter >> visitMessageNode: aMessageNode [
 CInterpreter >> visitMethodNode: aMethodNode [
 
 	[ aMethodNode isPrimitive ifTrue: [ 
+		self halt.
 		^ self executePrimitiveMethod: aMethodNode ]]
 		on: CPrimitiveFailed do: [ :err | 
 			"Nothing, just continue with the method body" ].

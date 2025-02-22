@@ -148,6 +148,12 @@ CInterpretable >> messageArg1: arg1 arg2: arg2 arg3: arg3 [
 ]
 
 { #category : 'primitives - atput' }
+CInterpretable >> newArray [
+
+	^ Array basicNew: 4
+]
+
+{ #category : 'primitives - atput' }
 CInterpretable >> newPoint [
 
 	^ Point basicNew  
