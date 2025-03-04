@@ -128,6 +128,8 @@ CInterpreter >> initializePrimitiveTable [
 		
 	primitives at: 70 	put: #primitiveBasicNew.
 	primitives at: 71 	put: #primitiveBasicNewVariable.
+		
+	primitives at: 207 put: #primitiveBlockValue
 
 ]
 
@@ -227,6 +229,12 @@ CInterpreter >> primitiveBasicNewVariable [
 		ifFalse: [ CPrimitiveFailed signal ].
 	
 	^ self receiver basicNew: (self argumentAt: 1)
+]
+
+{ #category : 'blocks' }
+CInterpreter >> primitiveBlockValue [
+
+	^ self visitNode: self receiver code body
 ]
 
 { #category : 'primitives' }
@@ -510,6 +518,13 @@ CInterpreter >> visitAssignmentNode: anAssignmentNode [
 
 ]
 
+{ #category : 'blocks' }
+CInterpreter >> visitBlockNode: aBlockNode [ 
+	^ CBlock new
+		code: aBlockNode;
+		yourself
+]
+
 { #category : 'visiting' }
 CInterpreter >> visitLiteralArrayNode: aLiteralArrayNode [
 
@@ -543,7 +558,6 @@ CInterpreter >> visitMessageNode: aMessageNode [
 CInterpreter >> visitMethodNode: aMethodNode [
 
 	[ aMethodNode isPrimitive ifTrue: [ 
-		self halt.
 		^ self executePrimitiveMethod: aMethodNode ]]
 		on: CPrimitiveFailed do: [ :err | 
 			"Nothing, just continue with the method body" ].

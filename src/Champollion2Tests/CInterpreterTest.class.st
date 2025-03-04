@@ -152,6 +152,25 @@ CInterpreterTest >> testBalancingStack [
 		equals: 1000
 ]
 
+{ #category : 'tests - block' }
+CInterpreterTest >> testBlockDefinition [
+
+	| bk |
+	bk := (self executeSelector: #returnBlock).
+	self 
+		assert: bk class 
+		equals: CBlock.
+		
+	self 
+		assert: bk code class 
+		equals: RBBlockNode 
+]
+
+{ #category : 'tests - block' }
+CInterpreterTest >> testBlockValueIsLastStatementValue [
+	self assert: (self executeSelector: #returnBlockValue) equals: 5
+]
+
 { #category : 'tests - lookup' }
 CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithArguments [
 	self
