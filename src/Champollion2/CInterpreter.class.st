@@ -231,9 +231,10 @@ CInterpreter >> primitiveBasicNewVariable [
 	^ self receiver basicNew: (self argumentAt: 1)
 ]
 
-{ #category : 'blocks' }
+{ #category : 'primitive - value' }
 CInterpreter >> primitiveBlockValue [
-
+	"Receiver is an instance of CBlock"
+	
 	^ self visitNode: self receiver code body
 ]
 
