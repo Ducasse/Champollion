@@ -57,7 +57,7 @@ CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection 
 			 yourself).
 	self tempAt: #___method put: anAST.
 	self topFrame receiver: anObject.
-	self manageArgumentsTemps: aCollection of: anAST.
+	self manageArguments: aCollection of: anAST.
 	result := self visitNode: anAST.
 	self popFrame.
 	^ result
@@ -149,13 +149,11 @@ CInterpreter >> lookup: aSelector fromClass: aClass [
 ]
 
 { #category : 'execution' }
-CInterpreter >> manageArgumentsTemps: aCollection of: anAST [
+CInterpreter >> manageArguments: aCollection of: anAST [
 
 	anAST arguments
 		with: aCollection
 		do: [ :arg :value | self tempAt: arg name put: value ].
-	anAST temporaryNames do: [ :tempName |
-		self tempAt: tempName put: nil ]
 ]
 
 { #category : 'execution' }
@@ -586,8 +584,9 @@ CInterpreter >> visitReturnNode: aReturnNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitSequenceNode: aSequenceNode [
-	"Visit the sequence and return the result of the last statement. 
-	Does not look at temporaris declaration for now."
+	"Visit the sequence and return the result of the last statement."
+	
+	aSequenceNode temporaryNames do: [ :e | self tempAt: e put: nil ].
 	
 	aSequenceNode statements allButLast
 		do: [ :each | self visitNode: each ].
