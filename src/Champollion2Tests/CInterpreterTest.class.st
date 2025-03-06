@@ -171,6 +171,11 @@ CInterpreterTest >> testBlockValueIsLastStatementValue [
 	self assert: (self executeSelector: #returnBlockValue) equals: 5
 ]
 
+{ #category : 'tests - block' }
+CInterpreterTest >> testBlockValueWithTemporariesValue [
+	self assert: (self executeSelector: #returnBlockWithVariableValue) equals: 3
+]
+
 { #category : 'tests - lookup' }
 CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithArguments [
 	self

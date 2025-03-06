@@ -235,7 +235,11 @@ CInterpreter >> primitiveBasicNewVariable [
 CInterpreter >> primitiveBlockValue [
 	"Receiver is an instance of CBlock"
 	
-	^ self visitNode: self receiver code body
+	| blockCode |
+	blockCode := self receiver code.
+	blockCode temporaryNames do: [ :e | self tempAt: e put: nil ].
+	^ self visitNode: blockCode body
+
 ]
 
 { #category : 'primitives' }

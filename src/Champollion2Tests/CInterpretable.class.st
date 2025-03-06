@@ -180,6 +180,16 @@ CInterpretable >> returnBlockValue [
 	^ [ 1 . 5 ] value
 ]
 
+{ #category : 'block' }
+CInterpretable >> returnBlockWithVariableValue [
+
+	^ [ | a b |
+		a := 1.
+		b := 2.
+		a + b ] value
+
+]
+
 { #category : 'returning literals' }
 CInterpretable >> returnBoolean [
 	^ false
