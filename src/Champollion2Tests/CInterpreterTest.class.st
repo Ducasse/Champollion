@@ -273,6 +273,13 @@ CInterpreterTest >> testPointNew [
 	 
 ]
 
+{ #category : 'tests - block' }
+CInterpreterTest >> testReadSelfInBlock [
+	self 
+		assert: (self executeSelector: #readSelfInBlock) 
+		equals: receiver
+]
+
 { #category : 'tests' }
 CInterpreterTest >> testReturnBoolean [
   

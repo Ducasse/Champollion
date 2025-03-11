@@ -171,6 +171,12 @@ CInterpretable >> overriddenMethod [
 ]
 
 { #category : 'block' }
+CInterpretable >> readSelfInBlock [
+	^ [ self ] value
+
+]
+
+{ #category : 'block' }
 CInterpretable >> returnBlock [
 	^ [ 1 . 5 ]
 ]
