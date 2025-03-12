@@ -2,7 +2,6 @@ Class {
 	#name : 'CMethodScope',
 	#superclass : 'Object',
 	#instVars : [
-		'receiver',
 		'parentScope',
 		'variables'
 	],
@@ -47,14 +46,14 @@ CMethodScope >> read: aString [
 
 { #category : 'accessing' }
 CMethodScope >> receiver [
+	^ self at: #self
 
-	^ receiver
 ]
 
 { #category : 'accessing' }
 CMethodScope >> receiver: anObject [
 
-	receiver := anObject
+	self at: #self put: anObject 
 ]
 
 { #category : 'query' }

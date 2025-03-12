@@ -234,9 +234,10 @@ CInterpreter >> primitiveBlockValue [
 	"Receiver is an instance of CBlock"
 	
 	| blockCode |
-	blockCode := self receiver code.
-	blockCode temporaryNames do: [ :e | self tempAt: e put: nil ].
-	^ self visitNode: blockCode body
+	blockCode := self receiver.
+	blockCode code temporaryNames do: [ :e | self tempAt: e put: nil ].
+	self receiver: blockCode definingContext receiver.
+	^ self visitNode: blockCode code body
 
 ]
 
@@ -457,6 +458,12 @@ CInterpreter >> receiver [
 	^ self topFrame receiver
 ]
 
+{ #category : 'primitive - value' }
+CInterpreter >> receiver: aValue [
+
+	self topFrame receiver: aValue
+]
+
 { #category : 'private' }
 CInterpreter >> scopeDefining: aName [
 	^ self currentScope scopeDefining: aName
@@ -522,9 +529,10 @@ CInterpreter >> visitAssignmentNode: anAssignmentNode [
 ]
 
 { #category : 'blocks' }
-CInterpreter >> visitBlockNode: aBlockNode [ 
+CInterpreter >> visitBlockNode: aRBBlockNode [
 	^ CBlock new
-		code: aBlockNode;
+		code: aRBBlockNode;
+		definingContext: self topFrame;
 		yourself
 ]
 
@@ -586,10 +594,12 @@ CInterpreter >> visitReturnNode: aReturnNode [
 CInterpreter >> visitSequenceNode: aSequenceNode [
 	"Visit the sequence and return the result of the last statement."
 	
+	
 	aSequenceNode temporaryNames do: [ :e | self tempAt: e put: nil ].
 	
 	aSequenceNode statements allButLast
 		do: [ :each | self visitNode: each ].
+
 	^ self visitNode: aSequenceNode statements last
 
 ]

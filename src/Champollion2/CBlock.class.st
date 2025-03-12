@@ -2,7 +2,8 @@ Class {
 	#name : 'CBlock',
 	#superclass : 'Object',
 	#instVars : [
-		'code'
+		'code',
+		'definingContext'
 	],
 	#category : 'Champollion2-Scopes',
 	#package : 'Champollion2',
@@ -18,6 +19,16 @@ CBlock >> code [
 { #category : 'accessing' }
 CBlock >> code: aBlockNode [ 
 	code := aBlockNode
+]
+
+{ #category : 'accessing' }
+CBlock >> definingContext [
+	^ definingContext
+]
+
+{ #category : 'accessing' }
+CBlock >> definingContext: aCMethodScope [ 
+	definingContext := aCMethodScope
 ]
 
 { #category : 'accessing' }
