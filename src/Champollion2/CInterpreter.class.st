@@ -235,7 +235,7 @@ CInterpreter >> primitiveBlockValue [
 	
 	| blockCode |
 	blockCode := self receiver.
-	blockCode code temporaryNames do: [ :e | self tempAt: e put: nil ].
+	"blockCode code temporaryNames do: [ :e | self tempAt: e put: nil ]."
 	self receiver: blockCode definingContext receiver.
 	^ self visitNode: blockCode code body
 
