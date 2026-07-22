@@ -116,6 +116,14 @@ CInterpreterTest >> testReturnSuper [
           == receiver
 ]
 
+{ #category : 'tests - messages' }
+CInterpreterTest >> testSelfSend [
+	receiver x: 100.
+	self 
+		assert: (self executeSelector: #sendMessageReturnX) 
+		equals: 100
+]
+
 { #category : 'tests - assignments' }
 CInterpreterTest >> testStore100IntoInstanceVariableX [
 	

@@ -2,7 +2,7 @@ Class {
 	#name : 'CInterpreter',
 	#superclass : 'Object',
 	#instVars : [
-		'receiver',
+		'stack',
 		'globalScope'
 	],
 	#category : 'Champollion2',
@@ -25,7 +25,8 @@ CInterpreter >> execute: aMethodNode [
 
 { #category : 'execution' }
 CInterpreter >> execute: anAST withReceiver: anObject [
-	receiver := anObject.
+	self pushNewMethodFrame.
+	self topFrame receiver: anObject.
 	^ self visitNode: anAST
 ]
 
@@ -43,18 +44,32 @@ CInterpreter >> globalEnvironmentAt: aSymbol put: anObject [
 { #category : 'initialization' }
 CInterpreter >> initialize [
 	super initialize.
-	globalScope := CGlobalScope new
+	globalScope := CGlobalScope new.
+	stack := CTStack new
+]
+
+{ #category : 'execution' }
+CInterpreter >> pushNewMethodFrame [
+	| newTop |
+	newTop := CMethodScope new.
+	stack push: newTop.
+	^ newTop
 ]
 
 { #category : 'accessing' }
-CInterpreter >> receiver [ 
-	^ receiver 
+CInterpreter >> receiver [
+	^ self topFrame receiver
 ]
 
 { #category : 'private' }
 CInterpreter >> scopeDefining: aName [
 	^ self currentScope scopeDefining: aName
 
+]
+
+{ #category : 'accessing' }
+CInterpreter >> topFrame [ 
+	^ stack top 
 ]
 
 { #category : 'visiting' }
@@ -80,6 +95,15 @@ CInterpreter >> visitLiteralArrayNode: aLiteralArrayNode [
 CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 
 	^ aLiteralValueNode value
+]
+
+{ #category : 'visiting' }
+CInterpreter >> visitMessageNode: aMessageNode [
+	| newReceiver method ast | 
+	newReceiver := self visitNode: aMessageNode receiver.
+	method := newReceiver class compiledMethodAt: aMessageNode selector.
+	ast := OCParser parseMethod: method sourceCode.
+	^ self execute: ast withReceiver: newReceiver
 ]
 
 { #category : 'visiting' }
