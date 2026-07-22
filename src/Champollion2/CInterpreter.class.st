@@ -10,6 +10,14 @@ Class {
 }
 
 { #category : 'private' }
+CInterpreter >> astOf: aCompiledMethod [ 
+	| ast |
+	ast := OCParser parseMethod: aCompiledMethod sourceCode.
+	ast methodClass: aCompiledMethod methodClass.
+	^ ast
+]
+
+{ #category : 'private' }
 CInterpreter >> currentScope [
 	^ CInstanceScope new
 		receiver: self receiver;
@@ -99,11 +107,10 @@ CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitMessageNode: aMessageNode [
-	| newReceiver method ast | 
+	| newReceiver method | 
 	newReceiver := self visitNode: aMessageNode receiver.
 	method := newReceiver class compiledMethodAt: aMessageNode selector.
-	ast := OCParser parseMethod: method sourceCode.
-	^ self execute: ast withReceiver: newReceiver
+	^ self execute: (self astOf: method) withReceiver: newReceiver
 ]
 
 { #category : 'visiting' }
