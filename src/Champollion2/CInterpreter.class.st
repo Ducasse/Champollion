@@ -33,9 +33,12 @@ CInterpreter >> execute: aMethodNode [
 
 { #category : 'execution' }
 CInterpreter >> execute: anAST withReceiver: anObject [
+	| result |
 	self pushNewMethodFrame.
 	self topFrame receiver: anObject.
-	^ self visitNode: anAST
+	result := self visitNode: anAST.
+	self popFrame.
+	^ result
 ]
 
 { #category : 'accessing' }
@@ -54,6 +57,11 @@ CInterpreter >> initialize [
 	super initialize.
 	globalScope := CGlobalScope new.
 	stack := CTStack new
+]
+
+{ #category : 'execution' }
+CInterpreter >> popFrame [
+	stack pop
 ]
 
 { #category : 'execution' }
