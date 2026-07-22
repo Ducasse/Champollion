@@ -3,7 +3,8 @@ Class {
 	#superclass : 'TestCase',
 	#instVars : [
 		'interpreter',
-		'receiver'
+		'receiver',
+		'collaborator'
 	],
 	#category : 'Champollion2Tests',
 	#package : 'Champollion2Tests'
@@ -33,7 +34,8 @@ CInterpreterTest >> setUp [
 	super setUp.
 	interpreter := CInterpreter new. 
 	receiver := CInterpretable new.
-	receiver collaborator: CInterpretable new
+	collaborator := CInterpretable new.
+	receiver collaborator: collaborator
 ]
 
 { #category : 'tests - assignments' }
@@ -49,6 +51,18 @@ CInterpreterTest >> testBalancingStack [
 	self
 		assert: (self executeSelector: #setXAndMessage)
 		equals: 1000
+]
+
+{ #category : 'tests - messages' }
+CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSender [
+	receiver x: 200.
+	collaborator x: 300.
+
+	"changeCollaboratorInstanceVariableX will replace collaborator's x but not the receiver's"
+	self executeSelector: #changeCollaboratorInstanceVariableX.
+
+	self assert: receiver x equals: 200.
+	self assert: collaborator x equals: 100
 ]
 
 { #category : 'tests' }

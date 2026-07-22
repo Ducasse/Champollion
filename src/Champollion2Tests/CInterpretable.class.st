@@ -20,6 +20,11 @@ CInterpretable class >> setUpGlobal [
 	self environment at: #Global put: 33
 ]
 
+{ #category : 'send messages' }
+CInterpretable >> changeCollaboratorInstanceVariableX [
+	collaborator store100IntoInstanceVariableX
+]
+
 { #category : 'accessing' }
 CInterpretable >> collaborator [
 	^ collaborator
