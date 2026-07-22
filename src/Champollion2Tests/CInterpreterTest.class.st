@@ -30,10 +30,10 @@ CInterpreterTest >> interpreter [
 
 { #category : 'running' }
 CInterpreterTest >> setUp [
-
 	super setUp.
 	interpreter := CInterpreter new. 
-	receiver := CInterpretable new
+	receiver := CInterpretable new.
+	receiver collaborator: CInterpretable new
 ]
 
 { #category : 'tests - assignments' }
@@ -42,6 +42,13 @@ CInterpreterTest >> testAssignmentReturnsAssignedValue [
 	self
 		assert: (self executeSelector: #store100IntoInstanceVariableX)
 		equals: 100
+]
+
+{ #category : 'tests - messages' }
+CInterpreterTest >> testBalancingStack [
+	self
+		assert: (self executeSelector: #setXAndMessage)
+		equals: 1000
 ]
 
 { #category : 'tests' }
