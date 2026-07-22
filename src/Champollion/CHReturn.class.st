@@ -1,30 +1,32 @@
 Class {
-	#name : #CHReturn,
-	#superclass : #Error,
+	#name : 'CHReturn',
+	#superclass : 'Error',
 	#instVars : [
 		'value',
 		'homeFrame'
 	],
-	#category : #'Champollion-Core'
+	#category : 'Champollion-Core',
+	#package : 'Champollion',
+	#tag : 'Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHReturn >> homeFrame [
 	
 	^ homeFrame
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHReturn >> homeFrame: aCollection [ 
 	homeFrame := aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHReturn >> value [
 	^ value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHReturn >> value: anObject [
 	value := anObject
 ]

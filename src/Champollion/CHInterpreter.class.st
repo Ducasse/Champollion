@@ -7,53 +7,55 @@ but we have visitNode:
 ok 
 "
 Class {
-	#name : #CHInterpreter,
-	#superclass : #Object,
+	#name : 'CHInterpreter',
+	#superclass : 'Object',
 	#instVars : [
 		'stack',
 		'primitives',
 		'globalScope'
 	],
-	#category : #'Champollion-Core'
+	#category : 'Champollion-Core',
+	#package : 'Champollion',
+	#tag : 'Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> argumentAt: anInteger [ 
 	
 	^ self tempAt: (self currentMethod arguments at: anInteger) name
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> classOf: anObject [
 
 	^ anObject class
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> currentMethod [
 
 	^ self tempAt: #__method
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> currentMethodClass [
 	
 	^ self currentMethod propertyAt: #definingClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> currentScope [
 
 	^ self topFrame
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 CHInterpreter >> execute: anAST withReceiver: anObject [
 
 	^ self execute: anAST withReceiver: anObject andArguments: #()
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 CHInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection [
 	"Execute a message whose body is anAST, receiver is anObject and arguments are in aCollection."
 
@@ -81,7 +83,7 @@ CHInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection
 	^ result
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 CHInterpreter >> executePrimitive: anAST withReceiver: receiver andArguments: arguments [
 
 	| primitiveNumber |
@@ -93,7 +95,7 @@ CHInterpreter >> executePrimitive: anAST withReceiver: receiver andArguments: ar
 	^ self perform: (primitives at: primitiveNumber) with: ({ receiver }, arguments)
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 CHInterpreter >> executePrimitiveMethod: anAST [
 
 	| primitiveNumber |
@@ -105,17 +107,17 @@ CHInterpreter >> executePrimitiveMethod: anAST [
 	^ self perform: (primitives at: primitiveNumber)
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> globalEnvironmentAt: aSymbol put: anObject [ 
 	globalScope at: aSymbol put: anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 CHInterpreter >> globalScopeClass [
 	^ CHGlobalScope
 ]
 
-{ #category : #frame }
+{ #category : 'frame' }
 CHInterpreter >> homeFrame [
 
 	| currentLookupFrame |
@@ -125,7 +127,7 @@ CHInterpreter >> homeFrame [
 	^ currentLookupFrame
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 CHInterpreter >> initialize [
 	super initialize.
 	stack := Stack new.
@@ -134,7 +136,7 @@ CHInterpreter >> initialize [
 	self initializePrimitiveTable
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 CHInterpreter >> initializePrimitiveTable [
 
 	primitives at: 1 	put: #primitiveSmallIntegerAdd.
@@ -165,19 +167,19 @@ CHInterpreter >> initializePrimitiveTable [
 	primitives at: 202 put: #primitiveBlockValueWith.
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 CHInterpreter >> instanceScopeClass [
 	^ CHInstanceScope
 ]
 
-{ #category : #lookup }
+{ #category : 'lookup' }
 CHInterpreter >> lookup: aSymbol fromClass: aClass [ 
 
 	"Return the AST of a method or nil if none is found"
 
 	"If the class defines a method for the selector, return the AST corresponding to the method"
 	(aClass includesSelector: aSymbol)
-		ifTrue: [ ^ (RBParser parseMethod: (aClass compiledMethodAt: aSymbol) sourceCode)
+		ifTrue: [ ^ (OCParser parseMethod: (aClass compiledMethodAt: aSymbol) sourceCode)
 							propertyAt: #definingClass put: aClass;
 							yourself ].
 
@@ -188,7 +190,7 @@ CHInterpreter >> lookup: aSymbol fromClass: aClass [
 		ifNotNil: [ self lookup: aSymbol fromClass: aClass superclass ]
 ]
 
-{ #category : #lookup }
+{ #category : 'lookup' }
 CHInterpreter >> lookupContextDefiningTemporary: aName [
 
 	| currentLookupFrame |
@@ -198,18 +200,18 @@ CHInterpreter >> lookupContextDefiningTemporary: aName [
 	^ currentLookupFrame
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> numberOfArguments [
 	
 	^ self currentMethod numArgs
 ]
 
-{ #category : #frame }
+{ #category : 'frame' }
 CHInterpreter >> popFrame [
 	stack pop
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> primitiveAt [
 	
 	self receiver class classLayout isVariable
@@ -221,7 +223,7 @@ CHInterpreter >> primitiveAt [
 	^ self receiver basicAt: (self argumentAt: 1)
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveBasicNew [
 	
 	self receiver isClass
@@ -229,7 +231,7 @@ CHInterpreter >> primitiveBasicNew [
 	^ self receiver basicNew
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveBasicNewVariable [
 	
 	self receiver isClass
@@ -241,7 +243,7 @@ CHInterpreter >> primitiveBasicNewVariable [
 	^ self receiver basicNew: (self argumentAt: 1)
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveBlockValue [
 		
 	| theBlock |
@@ -251,7 +253,7 @@ CHInterpreter >> primitiveBlockValue [
 	^ self visitNode: theBlock code body
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveBlockValueWith [
 		
 	| theBlock |
@@ -264,7 +266,7 @@ CHInterpreter >> primitiveBlockValueWith [
 	^ self visitNode: theBlock code body
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveIdentical [
 	
 	self numberOfArguments < 1
@@ -273,7 +275,7 @@ CHInterpreter >> primitiveIdentical [
 	^ self receiver == (self argumentAt: 1)
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveSmallIntegerAdd [
 	
 	| receiver argument result |
@@ -294,7 +296,7 @@ CHInterpreter >> primitiveSmallIntegerAdd [
 	^ result
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveSmallIntegerDivide [
 	
 	| receiver argument result |
@@ -313,7 +315,7 @@ CHInterpreter >> primitiveSmallIntegerDivide [
 	^ result
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveSmallIntegerLessThan [
 	
 	| receiver argument result |
@@ -328,7 +330,7 @@ CHInterpreter >> primitiveSmallIntegerLessThan [
 	^ receiver < argument
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveSmallIntegerMinus [
 	
 	| receiver argument result |
@@ -346,7 +348,7 @@ CHInterpreter >> primitiveSmallIntegerMinus [
 	^ result
 ]
 
-{ #category : #primitives }
+{ #category : 'primitives' }
 CHInterpreter >> primitiveSmallIntegerMultiply [
 	
 	| receiver argument result |
@@ -364,7 +366,7 @@ CHInterpreter >> primitiveSmallIntegerMultiply [
 	^ result
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> primitiveStringAt [
 	
 	self receiver class classLayout isBytes
@@ -376,7 +378,7 @@ CHInterpreter >> primitiveStringAt [
 	^ self receiver at: (self argumentAt: 1)
 ]
 
-{ #category : #frame }
+{ #category : 'frame' }
 CHInterpreter >> pushNewFrame [
 
 	| newTop |
@@ -385,24 +387,24 @@ CHInterpreter >> pushNewFrame [
 	^ newTop
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> receiver [
 
 	^ self topFrame receiver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> receiver: aValue [
 
 	^ self topFrame receiver: aValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> scopeDefining: aName [
 	^ self currentScope scopeDefining: aName
 ]
 
-{ #category : #lookup }
+{ #category : 'lookup' }
 CHInterpreter >> send: aSelector receiver: newReceiver lookupFromClass: lookupClass arguments: arguments [
 	"Lookup a selector from a class, and activate the method.
 	Handle does not undertand case and message reification on demand if lookup fails."
@@ -422,37 +424,37 @@ CHInterpreter >> send: aSelector receiver: newReceiver lookupFromClass: lookupCl
 	^ self execute: method withReceiver: newReceiver andArguments: arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> superclassOf: aClass [
 	
 	^ aClass superclass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> tempAt: aSymbol [
 
 	^ self topFrame at: aSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInterpreter >> tempAt: aSymbol put: aValue [
 
 	^ self topFrame at: aSymbol put: aValue
 ]
 
-{ #category : #frame }
+{ #category : 'frame' }
 CHInterpreter >> topFrame [
 
 	^ stack top
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitArrayNode: aRBArrayNode [ 
 	
 	^ aRBArrayNode statements collect: [ :e | self visitNode: e ] as: Array
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitAssignmentNode: anAssignmentNode [
 	| value |
 	value := (self visitNode: anAssignmentNode value).
@@ -460,7 +462,7 @@ CHInterpreter >> visitAssignmentNode: anAssignmentNode [
 	^ value
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitBlockNode: aRBBlockNode [
 
 	^ CHBlock new
@@ -470,12 +472,12 @@ CHInterpreter >> visitBlockNode: aRBBlockNode [
 		  yourself
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitCascadeNode: aRBCascadeNode [ 
 	self shouldBeImplemented.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitLiteralArrayNode: aRBLiteralArrayNode [ 
 
 	^ aRBLiteralArrayNode contents 
@@ -483,13 +485,13 @@ CHInterpreter >> visitLiteralArrayNode: aRBLiteralArrayNode [
 			as: Array
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitLiteralValueNode: aRBLiteralValueNode [ 
 
 	^ aRBLiteralValueNode value
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitMessageNode: aMessageNode [
 
 	| newReceiver args lookupClass |
@@ -507,7 +509,7 @@ CHInterpreter >> visitMessageNode: aMessageNode [
 		arguments: args asArray
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitMethodNode: aMethodNode [ 
 	
 	[aMethodNode isPrimitive ifTrue: [ 
@@ -519,14 +521,14 @@ CHInterpreter >> visitMethodNode: aMethodNode [
 	^ self visitNode: aMethodNode body
 ]
 
-{ #category : #'main API' }
+{ #category : 'main API' }
 CHInterpreter >> visitNode: aNode [
 	"I'm the main entry to interpreter AST"
 	
 	^ aNode acceptVisitor: self
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitReturnNode: aReturnNode [ 
 
 	CHReturn new
@@ -535,13 +537,13 @@ CHInterpreter >> visitReturnNode: aReturnNode [
 		signal
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitSelfNode: aRBVariableNode [ 
 	
 	^ self receiver
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitSequenceNode: aSequenceNode [ 
 
 	"Initialize all temporaries in nil"
@@ -555,13 +557,13 @@ CHInterpreter >> visitSequenceNode: aSequenceNode [
 	^ self visitNode: aSequenceNode statements last
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitSuperNode: aRBVariableNode [ 
 	
 	^ self receiver
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 CHInterpreter >> visitVariableNode: aVariableNode [
 
 	^ (self scopeDefining: aVariableNode name) read: aVariableNode name

@@ -1,22 +1,24 @@
 Class {
-	#name : #CHScope,
-	#superclass : #Object,
-	#category : #'Champollion-Core'
+	#name : 'CHScope',
+	#superclass : 'Object',
+	#category : 'Champollion-Core',
+	#package : 'Champollion',
+	#tag : 'Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHScope >> hasDefiningContext [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHScope >> isMethodScope [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHScope >> scopeDefining: aString [
 
 	self subclassResponsibility 

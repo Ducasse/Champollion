@@ -1,46 +1,48 @@
 Class {
-	#name : #CHInstanceScope,
-	#superclass : #CHScope,
+	#name : 'CHInstanceScope',
+	#superclass : 'CHScope',
 	#instVars : [
 		'receiver',
 		'parentScope'
 	],
-	#category : #'Champollion-Core'
+	#category : 'Champollion-Core',
+	#package : 'Champollion',
+	#tag : 'Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInstanceScope >> definedVariables [
 	
 	^ receiver class allInstVarNames 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInstanceScope >> parentScope [
 	^ parentScope
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInstanceScope >> parentScope: anObject [
 	parentScope := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInstanceScope >> read: aString [ 
 	
 	^ receiver instVarNamed: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInstanceScope >> receiver [
 	^ receiver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHInstanceScope >> receiver: aCHInterpretable [ 
 	receiver := aCHInterpretable
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHInstanceScope >> scopeDefining: aString [
 	
 	(self definedVariables includes: aString)
@@ -49,7 +51,7 @@ CHInstanceScope >> scopeDefining: aString [
 	^ self parentScope scopeDefining: aString
 ]
 
-{ #category : #asd }
+{ #category : 'asd' }
 CHInstanceScope >> write: aString withValue: anInteger [ 
 	
 	receiver instVarNamed: aString put: anInteger

@@ -1,10 +1,12 @@
 Class {
-	#name : #CHInterpretableSecondSuperclass,
-	#superclass : #Object,
-	#category : #'Champollion-Tests'
+	#name : 'CHInterpretableSecondSuperclass',
+	#superclass : 'Object',
+	#category : 'Champollion-Tests',
+	#package : 'Champollion',
+	#tag : 'Tests'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHInterpretableSecondSuperclass >> redefinedMethodAtThreeLevels [
 		^ 5
 ]

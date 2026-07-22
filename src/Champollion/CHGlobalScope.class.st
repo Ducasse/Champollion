@@ -1,42 +1,44 @@
 Class {
-	#name : #CHGlobalScope,
-	#superclass : #CHScope,
+	#name : 'CHGlobalScope',
+	#superclass : 'CHScope',
 	#instVars : [
 		'globalsDictionary'
 	],
-	#category : #'Champollion-Core'
+	#category : 'Champollion-Core',
+	#package : 'Champollion',
+	#tag : 'Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHGlobalScope >> at: aKey put: aValue [
 
 	globalsDictionary at: aKey put: aValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHGlobalScope >> globalsDictionary [
 	^ globalsDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHGlobalScope >> globalsDictionary: anObject [
 	globalsDictionary := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHGlobalScope >> initialize [
 
 	super initialize.
 	globalsDictionary := Dictionary new
 ]
 
-{ #category : #'meta-object-protocol' }
+{ #category : 'meta-object-protocol' }
 CHGlobalScope >> read: aString [ 
 	
 	^ globalsDictionary at: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHGlobalScope >> scopeDefining: aString [ 
 	"I'm the root scope..."
 	^ self

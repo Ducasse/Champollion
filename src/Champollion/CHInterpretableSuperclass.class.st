@@ -1,26 +1,28 @@
 Class {
-	#name : #CHInterpretableSuperclass,
-	#superclass : #CHInterpretableSecondSuperclass,
-	#category : #'Champollion-Tests'
+	#name : 'CHInterpretableSuperclass',
+	#superclass : 'CHInterpretableSecondSuperclass',
+	#category : 'Champollion-Tests',
+	#package : 'Champollion',
+	#tag : 'Tests'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHInterpretableSuperclass >> isInSuperclass [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHInterpretableSuperclass >> methodInSuperclass [
 	^ 5
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHInterpretableSuperclass >> overriddenMethod [
 	^ 5
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHInterpretableSuperclass >> redefinedMethodAtThreeLevels [
 
 	^ super redefinedMethodAtThreeLevels

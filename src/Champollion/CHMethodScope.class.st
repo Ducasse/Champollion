@@ -1,79 +1,81 @@
 Class {
-	#name : #CHMethodScope,
-	#superclass : #CHScope,
+	#name : 'CHMethodScope',
+	#superclass : 'CHScope',
 	#instVars : [
 		'receiver',
 		'variables',
 		'parentScope'
 	],
-	#category : #'Champollion-Core'
+	#category : 'Champollion-Core',
+	#package : 'Champollion',
+	#tag : 'Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHMethodScope >> at: aKey [
 
 	^ variables at: aKey
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHMethodScope >> at: aKey put: aValue [
 
 	variables at: aKey put: aValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHMethodScope >> hasDefiningContext [
 	
 	^ self parentScope isMethodScope
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHMethodScope >> includesKey: aString [ 
 	
 	^ variables includesKey: aString 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHMethodScope >> initialize [
 
 	super initialize.
 	variables := Dictionary new.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHMethodScope >> isMethodScope [
 	
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHMethodScope >> parentScope [
 	^ parentScope
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHMethodScope >> parentScope: aScope [
 	
 	parentScope := aScope
 ]
 
-{ #category : #'meta-object-protocol' }
+{ #category : 'meta-object-protocol' }
 CHMethodScope >> read: aString [ 
 	
 	^ variables at: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHMethodScope >> receiver [
 	^ receiver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHMethodScope >> receiver: aCHInterpretable [ 
 	receiver := aCHInterpretable
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 CHMethodScope >> scopeDefining: aString [ 
 	
 	(variables includesKey: aString)
@@ -82,7 +84,7 @@ CHMethodScope >> scopeDefining: aString [
 	^ self parentScope scopeDefining: aString
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 CHMethodScope >> write: aString withValue: aValue [
 	
 	variables at: aString put: aValue

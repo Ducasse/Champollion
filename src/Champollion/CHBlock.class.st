@@ -1,53 +1,55 @@
 Class {
-	#name : #CHBlock,
-	#superclass : #Object,
+	#name : 'CHBlock',
+	#superclass : 'Object',
 	#instVars : [
 		'code',
 		'definingContext',
 		'interpreter'
 	],
-	#category : #'Champollion-Core'
+	#category : 'Champollion-Core',
+	#package : 'Champollion',
+	#tag : 'Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHBlock >> code [
 	^ code
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHBlock >> code: aRBBlockNode [
 	code := aRBBlockNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHBlock >> definingClass [
 
 	^ code methodNode propertyAt: #definingClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHBlock >> definingContext [
 	^ definingContext
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHBlock >> definingContext: aContext [
 	
 	definingContext := aContext
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHBlock >> interpreter [
 	^ interpreter 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHBlock >> interpreter: anInterpreter [
 
 	interpreter := anInterpreter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHBlock >> value [
 
 	<primitive: 201>
@@ -62,7 +64,7 @@ CHBlock >> value [
 	^ result 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CHBlock >> value: anArg [
 
 	<primitive: 202>
