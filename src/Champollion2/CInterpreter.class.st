@@ -54,7 +54,7 @@ CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection 
 	self topFrame receiver: anObject.
 	anAST arguments 
 		with: aCollection
-		do: [ :arg :value | self topFrame at: arg name put: value ]. 
+		do: [ :arg :value | self tempAt: arg name put: value ].
 	result := self visitNode: anAST.
 	self popFrame.
 	^ result
@@ -100,6 +100,11 @@ CInterpreter >> receiver [
 CInterpreter >> scopeDefining: aName [
 	^ self currentScope scopeDefining: aName
 
+]
+
+{ #category : 'accessing' }
+CInterpreter >> tempAt: aSymbol put: anInteger [
+	self topFrame at: aSymbol put: anInteger
 ]
 
 { #category : 'accessing' }
