@@ -30,32 +30,24 @@ CInterpreter >> execute: aMethodNode [
 
 { #category : 'execution' }
 CInterpreter >> execute: anAST withReceiver: anObject [
-	| result |
-	self pushNewMethodFrame.
-	self topFrame parentScope: (CInstanceScope new
-		receiver: anObject;
-		parentScope: globalScope;
-		yourself).
-
-	self topFrame receiver: anObject.
-	result := self visitNode: anAST.
-	self popFrame.
-	^ result
+	^ self 
+		execute: anAST 
+		withReceiver: anObject 
+		andArguments: #()
 ]
 
 { #category : 'execution' }
 CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection [
-	| result |
+	| result  |
 	self pushNewMethodFrame.
 	self topFrame parentScope: (CInstanceScope new
 		receiver: anObject;
 		parentScope: globalScope;
 		yourself).
 	self topFrame receiver: anObject.
-	anAST arguments 
-		with: aCollection
-		do: [ :arg :value | self tempAt: arg name put: value ].
-	result := self visitNode: anAST.
+	anAST arguments with: aCollection do: [ :arg :value | self tempAt: arg name put: value ].
+	anAST temporaryNames do: [ :tempName | self tempAt: tempName put: nil ].
+	result := self visitNode: anAST body.
 	self popFrame.
 	^ result
 ]

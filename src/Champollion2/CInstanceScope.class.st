@@ -48,7 +48,7 @@ CInstanceScope >> receiver: anObject [
 
 { #category : 'query' }
 CInstanceScope >> scopeDefining: aString [
-
+	
 	(self isSelfSuper: aString) ifTrue: [ ^ self ].
 	(self definedVariables includes: aString) ifTrue: [ ^ self ].
 	^ self parentScope scopeDefining: aString

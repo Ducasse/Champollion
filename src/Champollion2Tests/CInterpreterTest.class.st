@@ -12,6 +12,7 @@ Class {
 
 { #category : 'helpers' }
 CInterpreterTest >> executeSelector: aSymbol [
+
   ^ self executeSelector: aSymbol withReceiver: receiver
 
 ]
@@ -19,7 +20,7 @@ CInterpreterTest >> executeSelector: aSymbol [
 { #category : 'helpers' }
 CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver [
 	| ast |
-	ast := RBParser parseMethod: (CInterpretable >> aSymbol) sourceCode.
+	ast := OCParser parseMethod: (CInterpretable >> aSymbol) sourceCode.
 	^ self interpreter execute: ast withReceiver: aReceiver
 ]
 
@@ -164,4 +165,11 @@ CInterpreterTest >> testStore100IntoInstanceVariableX [
 	self executeSelector: #store100IntoInstanceVariableX.
 	self assert: receiver x equals: 100
 
+]
+
+{ #category : 'tests - messages' }
+CInterpreterTest >> testUnassignedTempHasNilValue [
+	self
+		assert: (self executeSelector: #returnUnassignedTemp)
+		equals: nil
 ]
