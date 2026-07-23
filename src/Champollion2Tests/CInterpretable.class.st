@@ -25,6 +25,11 @@ CInterpretable >> changeCollaboratorInstanceVariableX [
 	collaborator store100IntoInstanceVariableX
 ]
 
+{ #category : 'send messages' }
+CInterpretable >> changeCollaboratorWithArgument [
+	collaborator x: 500
+]
+
 { #category : 'accessing' }
 CInterpretable >> collaborator [
 	^ collaborator

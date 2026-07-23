@@ -38,6 +38,18 @@ CInterpreterTest >> setUp [
 	receiver collaborator: collaborator
 ]
 
+{ #category : 'tests - messages' }
+CInterpreterTest >> testArgumentAccess [
+
+	receiver x: 200.
+	collaborator x: 300.
+
+	self executeSelector: #changeCollaboratorWithArgument.
+
+	self assert: receiver x equals: 200.
+	self assert: collaborator x equals: 500
+]
+
 { #category : 'tests - assignments' }
 CInterpreterTest >> testAssignmentReturnsAssignedValue [
 
