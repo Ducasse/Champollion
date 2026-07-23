@@ -38,16 +38,16 @@ CInterpreter >> execute: anAST withReceiver: anObject [
 
 { #category : 'execution' }
 CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection [
-	| result  |
+
+	| result |
 	self pushNewMethodFrame.
 	self topFrame parentScope: (CInstanceScope new
-		receiver: anObject;
-		parentScope: globalScope;
-		yourself).
+			 receiver: anObject;
+			 parentScope: globalScope;
+			 yourself).
 	self topFrame receiver: anObject.
-	anAST arguments with: aCollection do: [ :arg :value | self tempAt: arg name put: value ].
-	anAST temporaryNames do: [ :tempName | self tempAt: tempName put: nil ].
-	result := self visitNode: anAST body.
+	self manageArgumentsTemps: aCollection of: anAST.
+	result := self visitNode: anAST.
 	self popFrame.
 	^ result
 ]
@@ -68,6 +68,15 @@ CInterpreter >> initialize [
 	super initialize.
 	globalScope := CGlobalScope new.
 	stack := CTStack new
+]
+
+{ #category : 'private' }
+CInterpreter >> manageArgumentsTemps: aCollection of: anAST [
+	anAST arguments
+		with: aCollection
+		do: [ :arg :value | self tempAt: arg name put: value ].
+	anAST temporaryNames do: [ :tempName |
+		self tempAt: tempName put: nil ]
 ]
 
 { #category : 'execution' }
