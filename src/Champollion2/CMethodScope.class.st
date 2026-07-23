@@ -62,3 +62,8 @@ CMethodScope >> scopeDefining: aString [
 		ifTrue: [ ^ self ].
 	^ self parentScope scopeDefining: aString
 ]
+
+{ #category : 'scope' }
+CMethodScope >> write: aString withValue: aValue [
+	variables at: aString put: aValue
+]
