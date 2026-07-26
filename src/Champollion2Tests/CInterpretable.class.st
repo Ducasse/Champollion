@@ -1,6 +1,6 @@
 Class {
 	#name : 'CInterpretable',
-	#superclass : 'Object',
+	#superclass : 'CInterpretableSuperclass',
 	#instVars : [
 		'x',
 		'collaborator',
@@ -54,6 +54,11 @@ CInterpretable >> currentButComputeNextPeanoNumber [
 	^ result
 ]
 
+{ #category : 'super' }
+CInterpretable >> doesSuperLookupFromSuperclass [
+	^ super isInSuperclass
+]
+
 { #category : 'send messages' }
 CInterpretable >> evaluateReceiver [
 
@@ -71,6 +76,11 @@ CInterpretable >> evaluationOrder [
 CInterpretable >> initialize [
 	super initialize.
 	currentPeanoNumber := {}
+]
+
+{ #category : 'super' }
+CInterpretable >> isInSuperclass [
+	^ false
 ]
 
 { #category : 'send messages' }
@@ -146,6 +156,11 @@ CInterpretable >> returnSuper [
 CInterpretable >> returnUnassignedTemp [
 	| temp |
 	^ temp
+]
+
+{ #category : 'lookup' }
+CInterpretable >> sendMessageInSuperclass [
+	^ self methodInSuperclass
 ]
 
 { #category : 'send messages' }

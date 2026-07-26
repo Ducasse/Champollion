@@ -18,6 +18,11 @@ CInterpreter >> astOf: aCompiledMethod [
 ]
 
 { #category : 'private' }
+CInterpreter >> currentMethod [
+	^ self tempAt: #___method
+]
+
+{ #category : 'private' }
 CInterpreter >> currentScope [
 	^ self topFrame
 ]
@@ -41,6 +46,9 @@ CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection 
 
 	| result |
 	self pushNewMethodFrame.
+	self tempAt: #___method put: anAST.
+	self tempAt: #self put: anObject.
+	self flag: #sd. "check self declaration as variables."
 	self topFrame parentScope: (CInstanceScope new
 			 receiver: anObject;
 			 parentScope: globalScope;
@@ -63,12 +71,31 @@ CInterpreter >> globalEnvironmentAt: aSymbol put: anObject [
 
 ]
 
+{ #category : 'private' }
+CInterpreter >> handleArgumentsOf: aMessageNode [ 
+	^ aMessageNode arguments collect: [ :each | self visitNode: each ]
+]
+
 { #category : 'initialization' }
 CInterpreter >> initialize [
 	super initialize.
 	globalScope := CGlobalScope new.
 	globalScope at: #Transcript put: Transcript.
 	stack := CTStack new
+]
+
+{ #category : 'lookup' }
+CInterpreter >> lookup: aSelector fromClass: aClass [
+	"Return a compiled method or nil if none is found"
+	
+	"If the class defines a method for the selector, returns the method"
+	(aClass includesSelector: aSelector)
+		ifTrue: [ ^ aClass compiledMethodAt: aSelector ].
+	"Otherwise lookup recursively in the superclass.
+	If we reach the end of the hierarchy return nil"
+	^ aClass superclass
+		ifNil: [ nil ]
+		ifNotNil: [ self lookup: aSelector fromClass: aClass superclass ]
 ]
 
 { #category : 'private' }
@@ -102,6 +129,11 @@ CInterpreter >> receiver [
 CInterpreter >> scopeDefining: aName [
 	^ self currentScope scopeDefining: aName
 
+]
+
+{ #category : 'private' }
+CInterpreter >> tempAt: aSymbol [
+	^ self topFrame at: aSymbol
 ]
 
 { #category : 'accessing' }
@@ -148,10 +180,13 @@ CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitMessageNode: aMessageNode [
-	| newReceiver method args | 
+	| newReceiver method args lookupClass | 
 	newReceiver := self visitNode: aMessageNode receiver.
-	args := aMessageNode arguments collect: [ :each | self visitNode: each ].
-	method := newReceiver class compiledMethodAt: aMessageNode selector.
+	args := self handleArgumentsOf: aMessageNode.
+	lookupClass := aMessageNode isSuperSend 
+		ifTrue: [ self currentMethod methodClass superclass ] 
+		ifFalse: [ newReceiver class ].
+	method := self lookup: aMessageNode selector fromClass: lookupClass.	
 	^ self execute: (self astOf: method) withReceiver: newReceiver andArguments: args
 ]
 
