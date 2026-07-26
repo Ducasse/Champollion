@@ -102,8 +102,9 @@ CHInterpretable >> evaluateBlock: aBlock [
 
 { #category : 'as yet unclassified' }
 CHInterpretable >> evaluateReceiver [
-  evaluationOrder := self next.
-  ^ self
+
+	evaluationOrder := self next.
+	^ self
 ]
 
 { #category : 'accessing' }

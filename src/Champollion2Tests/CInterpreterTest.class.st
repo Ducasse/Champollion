@@ -30,6 +30,15 @@ CInterpreterTest >> interpreter [
 	^ interpreter
 ]
 
+{ #category : 'tests - messages' }
+CInterpreterTest >> peanoToInteger: aPeanoNumber [
+	"Helper method to transform a peano number to a normal Pharo integer"
+	
+	^ aPeanoNumber
+		ifEmpty: [ 0 ]
+		ifNotEmpty: [ 1 + (self peanoToInteger: aPeanoNumber first) ]
+]
+
 { #category : 'running' }
 CInterpreterTest >> setUp [
 	super setUp.
@@ -64,6 +73,24 @@ CInterpreterTest >> testBalancingStack [
 	self
 		assert: (self executeSelector: #setXAndMessage)
 		equals: 1000
+]
+
+{ #category : 'tests - messages' }
+CInterpreterTest >> testEvaluationOrderOfArguments [
+	| argumentEvaluationOrder |
+	argumentEvaluationOrder := self executeSelector: #returnEvaluationOrder.
+	"I do not get it currentButComputeNext is executed 4 times."
+	self
+		assert: (argumentEvaluationOrder collect: 
+			[ :peano | self peanoToInteger: peano])
+	 	equals: #(1 2 3)
+]
+
+{ #category : 'tests - messages' }
+CInterpreterTest >> testEvaluationOrderOfReceiver [
+
+	self executeSelector: #evaluateReceiver.
+	self assert: (self peanoToInteger: receiver evaluationOrder) equals: 0
 ]
 
 { #category : 'tests - messages' }
