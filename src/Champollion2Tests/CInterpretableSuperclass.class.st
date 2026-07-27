@@ -14,3 +14,8 @@ CInterpretableSuperclass >> isInSuperclass [
 CInterpretableSuperclass >> methodInSuperclass [
 	^ 5
 ]
+
+{ #category : 'protocol' }
+CInterpretableSuperclass >> overriddenMethod [
+	^ 5
+]

@@ -89,6 +89,16 @@ CInterpretable >> messageArg1: arg1 arg2: arg2 arg3: arg3 [
 	^ {arg1 . arg2 . arg3}
 ]
 
+{ #category : 'protocol' }
+CInterpretable >> overriddenMethod [
+	^ super overriddenMethod
+]
+
+{ #category : 'protocol' }
+CInterpretable >> overriddenMethod2 [
+	^ super overriddenMethod2
+]
+
 { #category : 'returning literals' }
 CInterpretable >> returnBoolean [
 	^ false

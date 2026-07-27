@@ -115,6 +115,16 @@ CInterpreterTest >> testLookupMessageInSuperclass [
 ]
 
 { #category : 'tests - lookup' }
+CInterpreterTest >> testLookupRedefinedMethod [
+	self assert: (self executeSelector: #overriddenMethod) equals: 5
+]
+
+{ #category : 'tests - lookup' }
+CInterpreterTest >> testLookupRedefinedMethod2 [
+	self assert: (self executeSelector: #overriddenMethod2) equals: 5
+]
+
+{ #category : 'tests - lookup' }
 CInterpreterTest >> testLookupSuperMessage [
 	self assert: (self executeSelector: #doesSuperLookupFromSuperclass)
 ]
