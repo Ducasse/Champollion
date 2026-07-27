@@ -5,7 +5,12 @@ Class {
 	#package : 'Champollion2Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'super' }
 CInterpretableRoot >> overriddenMethod2 [
+	^ 5
+]
+
+{ #category : 'super' }
+CInterpretableRoot >> redefinedMethod [
 	^ 5
 ]

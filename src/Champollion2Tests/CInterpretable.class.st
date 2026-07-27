@@ -54,6 +54,11 @@ CInterpretable >> currentButComputeNextPeanoNumber [
 	^ result
 ]
 
+{ #category : 'dnu' }
+CInterpretable >> doesNotUnderstand: aMessage [
+	^ aMessage
+]
+
 { #category : 'super' }
 CInterpretable >> doesSuperLookupFromSuperclass [
 	^ super isInSuperclass
@@ -171,6 +176,11 @@ CInterpretable >> returnUnassignedTemp [
 { #category : 'lookup' }
 CInterpretable >> sendMessageInSuperclass [
 	^ self methodInSuperclass
+]
+
+{ #category : 'dnu' }
+CInterpretable >> sendMessageNotUnderstood [
+	^ self messageIDoNotUnderstandWithArg1: 17 withArg2: 27
 ]
 
 { #category : 'send messages' }

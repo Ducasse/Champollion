@@ -78,6 +78,20 @@ CInterpreterTest >> testBalancingStack [
 		equals: 1000
 ]
 
+{ #category : 'test - dnu' }
+CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithArguments [
+	self
+		assert: (self executeSelector: #sendMessageNotUnderstood) arguments
+		equals: #( 17 27 )
+]
+
+{ #category : 'test - dnu' }
+CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithSelector [
+	self
+		assert: (self executeSelector: #sendMessageNotUnderstood) selector
+		equals: #messageIDoNotUnderstandWithArg1:withArg2:
+]
+
 { #category : 'tests - messages' }
 CInterpreterTest >> testEvaluationOrderOfArguments [
 	| argumentEvaluationOrder |
@@ -127,6 +141,11 @@ CInterpreterTest >> testLookupRedefinedMethod2 [
 { #category : 'tests - lookup' }
 CInterpreterTest >> testLookupSuperMessage [
 	self assert: (self executeSelector: #doesSuperLookupFromSuperclass)
+]
+
+{ #category : 'tests - lookup' }
+CInterpreterTest >> testLookupSuperMessageNotInReceiverSuperclass [
+	self assert: (self executeSelector: #redefinedMethod) equals: 5
 ]
 
 { #category : 'tests' }
