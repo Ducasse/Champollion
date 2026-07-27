@@ -194,14 +194,17 @@ CInterpreter >> visitLiteralValueNode: aLiteralValueNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitMessageNode: aMessageNode [
-	| newReceiver method args lookupClass | 
+	| newReceiver args lookupClass | 
 	newReceiver := self visitNode: aMessageNode receiver.
 	args := self handleArgumentsOf: aMessageNode.
 	lookupClass := aMessageNode isSuperSend 
 		ifTrue: [ self currentMethod methodClass superclass ] 
 		ifFalse: [ newReceiver class ].
-	method := self lookup: aMessageNode selector fromClass: lookupClass.	
-	^ self execute: (self astOf: method) withReceiver: newReceiver andArguments: args
+	^ self
+		send: aMessageNode selector
+		receiver: newReceiver
+		lookupFromClass: lookupClass
+		arguments: args asArray
 ]
 
 { #category : 'visiting' }
