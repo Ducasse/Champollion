@@ -131,6 +131,20 @@ CInterpreter >> scopeDefining: aName [
 
 ]
 
+{ #category : 'execution' }
+CInterpreter >> send: aSelector 
+	receiver: newReceiver 
+	lookupFromClass: lookupClass 
+	arguments: arguments [
+
+	| method |
+	method := self lookup: aSelector fromClass: lookupClass.
+	^ self 
+		execute: (self astOf: method) 
+		withReceiver: newReceiver 
+		andArguments: arguments
+]
+
 { #category : 'private' }
 CInterpreter >> tempAt: aSymbol [
 	^ self topFrame at: aSymbol

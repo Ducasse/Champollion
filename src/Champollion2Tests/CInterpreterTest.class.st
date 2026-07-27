@@ -19,10 +19,12 @@ CInterpreterTest >> executeSelector: aSymbol [
 
 { #category : 'helpers' }
 CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver [
-	| ast |
-	ast := OCParser parseMethod: (CInterpretable >> aSymbol) sourceCode.
-	ast methodClass: CInterpretable.
-	^ self interpreter execute: ast withReceiver: aReceiver
+	
+	^ self interpreter
+		send: aSymbol
+		receiver: aReceiver
+		lookupFromClass: aReceiver class
+		arguments: #()
 ]
 
 { #category : 'helpers' }
@@ -180,13 +182,11 @@ CInterpreterTest >> testReturnSelf [
 
 { #category : 'tests - variables' }
 CInterpreterTest >> testReturnSuper [
-  | receiver |
-  receiver := Object new.
-  "Convey our intention of checking identity by using an explicit identity check"
+	receiver := CInterpretable new.
+	"Convey our intention of checking identity by using an explicit identity check"
 	self assert: (self
-      executeSelector: #returnSuper
-      withReceiver: receiver)
-          == receiver
+		executeSelector: #returnSuper
+		withReceiver: receiver) == receiver
 ]
 
 { #category : 'tests - messages' }
