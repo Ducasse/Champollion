@@ -21,6 +21,7 @@ CInterpreterTest >> executeSelector: aSymbol [
 CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver [
 	| ast |
 	ast := OCParser parseMethod: (CInterpretable >> aSymbol) sourceCode.
+	ast methodClass: CInterpretable.
 	^ self interpreter execute: ast withReceiver: aReceiver
 ]
 
