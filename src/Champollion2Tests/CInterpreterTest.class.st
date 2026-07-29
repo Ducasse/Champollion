@@ -110,6 +110,13 @@ CInterpreterTest >> testEvaluationOrderOfReceiver [
 	self assert: (self peanoToInteger: receiver evaluationOrder) equals: 0
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testFailingPrimitive [
+	self
+		assert: (self executeSelector: #callingFailingPrimitive)
+		equals: 'failure'
+]
+
 { #category : 'tests - messages' }
 CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSender [
 	receiver x: 200.

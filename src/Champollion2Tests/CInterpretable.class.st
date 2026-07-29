@@ -22,6 +22,11 @@ CInterpretable class >> setUpGlobal [
 	self environment at: #Global put: 33
 ]
 
+{ #category : 'primitives' }
+CInterpretable >> callingFailingPrimitive [
+	^ self failingPrimitive
+]
+
 { #category : 'send messages' }
 CInterpretable >> changeCollaboratorInstanceVariableX [
 	collaborator store100IntoInstanceVariableX
@@ -75,6 +80,14 @@ CInterpretable >> evaluateReceiver [
 CInterpretable >> evaluationOrder [
 
 	^ evaluationOrder
+]
+
+{ #category : 'primitives' }
+CInterpretable >> failingPrimitive [
+	"this primitive should fail because the receiver must be a SmallInteger and this is clearly not the case."
+	
+	<primitive: 1>
+	^ 'failure'
 ]
 
 { #category : 'initialization' }
@@ -196,7 +209,7 @@ CInterpretable >> setXAndMessage [
 	^ x
 ]
 
-{ #category : 'accessing' }
+{ #category : 'primitives' }
 CInterpretable >> smallintAdd [
 	^ 1 + 5
 ]
