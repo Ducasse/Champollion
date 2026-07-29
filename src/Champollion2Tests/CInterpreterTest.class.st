@@ -226,6 +226,13 @@ CInterpreterTest >> testSelfSend [
 		equals: 100
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testSmallIntAddPrimitive [
+	self
+		assert: (self executeSelector: #smallintAdd)
+		equals: 6
+]
+
 { #category : 'tests - assignments' }
 CInterpreterTest >> testStore100IntoInstanceVariableX [
 	

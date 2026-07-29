@@ -196,6 +196,11 @@ CInterpretable >> setXAndMessage [
 	^ x
 ]
 
+{ #category : 'accessing' }
+CInterpretable >> smallintAdd [
+	^ 1 + 5
+]
+
 { #category : 'assignments' }
 CInterpretable >> store100IntoInstanceVariableX [
 

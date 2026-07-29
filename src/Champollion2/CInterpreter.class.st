@@ -3,11 +3,17 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'stack',
-		'globalScope'
+		'globalScope',
+		'primitives'
 	],
 	#category : 'Champollion2',
 	#package : 'Champollion2'
 }
+
+{ #category : 'accessing' }
+CInterpreter >> argumentAt: anInteger [
+	^ self tempAt: (self currentMethod arguments at: anInteger) name
+]
 
 { #category : 'private' }
 CInterpreter >> astOf: aCompiledMethod [ 
@@ -60,6 +66,16 @@ CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection 
 	^ result
 ]
 
+{ #category : 'primitives' }
+CInterpreter >> executePrimitiveMethod: anAST [
+	| primitiveNumber |
+	primitiveNumber := anAST pragmas
+		detect: [ :each | each isPrimitive ]
+		ifFound: [ :aPragmaPrimitive | aPragmaPrimitive arguments first value ]
+		ifNone: [ self error: 'Not a primitive method' ].
+	^ self perform: (primitives at: primitiveNumber)
+]
+
 { #category : 'accessing' }
 CInterpreter >> globalEnvironment [
 	^ globalScope
@@ -78,10 +94,17 @@ CInterpreter >> handleArgumentsOf: aMessageNode [
 
 { #category : 'initialization' }
 CInterpreter >> initialize [
-	super initialize.
+	
+	super initialize. 
+	stack := CTStack new.
 	globalScope := CGlobalScope new.
-	globalScope at: #Transcript put: Transcript.
-	stack := CTStack new
+	primitives := Dictionary new.
+	self initializePrimitiveTable.
+]
+
+{ #category : 'initialization' }
+CInterpreter >> initializePrimitiveTable [
+	primitives at: 1 put: #primitiveSmallIntegerAdd
 ]
 
 { #category : 'lookup' }
@@ -110,6 +133,14 @@ CInterpreter >> manageArgumentsTemps: aCollection of: anAST [
 { #category : 'execution' }
 CInterpreter >> popFrame [
 	stack pop
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerAdd [
+	| receiver argument |
+	receiver := self receiver.
+	argument := self argumentAt: 1.
+	^ receiver + argument
 ]
 
 { #category : 'execution' }
@@ -224,7 +255,10 @@ CInterpreter >> visitMessageNode: aMessageNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitMethodNode: aMethodNode [
-
+	aMethodNode isPrimitive ifTrue: [ 
+		"Do not handle primitive failures for now"
+		^ self executePrimitiveMethod: aMethodNode ].
+	
 	^ self visitNode: aMethodNode body
 ]
 
