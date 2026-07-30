@@ -130,6 +130,11 @@ CInterpreter >> manageArgumentsTemps: aCollection of: anAST [
 		self tempAt: tempName put: nil ]
 ]
 
+{ #category : 'accessing' }
+CInterpreter >> numberOfArguments [
+	^ self currentMethod numArgs
+]
+
 { #category : 'execution' }
 CInterpreter >> popFrame [
 	stack pop
@@ -137,12 +142,22 @@ CInterpreter >> popFrame [
 
 { #category : 'primitives' }
 CInterpreter >> primitiveSmallIntegerAdd [
-	| receiver argument |
+	| receiver argument result |
+	self numberOfArguments = 1
+		ifFalse: [ CPrimitiveFailed signal ].
+
 	receiver := self receiver.
 	receiver class = SmallInteger
 		ifFalse: [ CPrimitiveFailed signal ].
+
 	argument := self argumentAt: 1.
-	^ receiver + argument
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	result := receiver + argument.
+	result class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ result
 ]
 
 { #category : 'execution' }
