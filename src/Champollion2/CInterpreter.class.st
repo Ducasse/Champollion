@@ -157,6 +157,22 @@ CInterpreter >> popFrame [
 ]
 
 { #category : 'primitives' }
+CInterpreter >> primitiveIdentical [
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	^ self receiver == (self argumentAt: 1)
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveNotIdentical [
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	^ self receiver ~= (self argumentAt: 1)
+]
+
+{ #category : 'primitives' }
 CInterpreter >> primitiveSmallIntegerAdd [
 	| receiver argument result |
 	self numberOfArguments = 1

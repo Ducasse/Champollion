@@ -28,6 +28,16 @@ CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver [
 ]
 
 { #category : 'helpers' }
+CInterpreterTest >> executeSelector: aSymbol withReceiver: aReceiver andArgs: args [
+	
+	^ self interpreter
+		send: aSymbol
+		receiver: aReceiver
+		lookupFromClass: aReceiver class
+		arguments: args
+]
+
+{ #category : 'helpers' }
 CInterpreterTest >> interpreter [
 
 	^ interpreter
@@ -141,6 +151,20 @@ CInterpreterTest >> testGreaterThanIsTrue [
 	
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testIdenticalIsFalse [
+
+	self executeSelector: #== withReceiver: 1 andArgs: {2}.
+	self executeSelector: #== withReceiver: receiver andArgs: { 2 }.
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testIdenticalIsTrue [
+
+	self executeSelector: #== withReceiver: 1 andArgs: {1}.
+	self executeSelector: #== withReceiver: receiver andArgs: { receiver }.
+]
+
 { #category : 'tests - messages' }
 CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSender [
 	receiver x: 200.
@@ -198,6 +222,13 @@ CInterpreterTest >> testLookupSuperMessage [
 { #category : 'tests - lookup' }
 CInterpreterTest >> testLookupSuperMessageNotInReceiverSuperclass [
 	self assert: (self executeSelector: #redefinedMethod) equals: 5
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testNotIdenticalIsTrue [
+
+	self executeSelector: #== withReceiver: 1 andArgs: {2}.
+	self executeSelector: #== withReceiver: receiver andArgs: { 2 }.
 ]
 
 { #category : 'tests' }
