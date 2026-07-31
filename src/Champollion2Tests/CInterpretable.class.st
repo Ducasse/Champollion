@@ -160,6 +160,16 @@ CInterpretable >> messageArg1: arg1 arg2: arg2 arg3: arg3 [
 	^ {arg1 . arg2 . arg3}
 ]
 
+{ #category : 'primitives' }
+CInterpretable >> newArray [
+	^ Array basicNew: 4
+]
+
+{ #category : 'primitives' }
+CInterpretable >> newPoint [
+	^ Point basicNew
+]
+
 { #category : 'protocol' }
 CInterpretable >> overriddenMethod [
 	^ super overriddenMethod

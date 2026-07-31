@@ -125,10 +125,11 @@ CInterpreter >> initializePrimitiveTable [
 	primitives at: 63 	put: #primitiveStringAt.
 	primitives at: 64 	put: #primitiveStringAtPut.
 	
-
 	primitives at: 110 	put: #primitiveIdentical.
 	primitives at: 111 	put: #primitiveNotIdentical.
-		
+	
+	primitives at: 70 	put: #primitiveBasicNew.
+	primitives at: 71 	put: #primitiveBasicNewVariable.	
 
 ]
 
@@ -202,6 +203,30 @@ CInterpreter >> primitiveAtPut [
 		ifFalse: [ CPrimitiveFailed signal ].
 		
 	^ self receiver basicAt: argument put: (self argumentAt: 2)
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveBasicNew [
+	self receiver isClass
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ self receiver basicNew
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveBasicNewVariable [
+	| argument |
+	self numberOfArguments = 1
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	self receiver isClass
+		ifFalse: [ CPrimitiveFailed signal ].
+	self receiver classLayout isVariable
+		ifFalse: [ CPrimitiveFailed signal ].
+	argument := self argumentAt: 1.
+	(argument isKindOf: SmallInteger)
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	^ self receiver basicNew: argument
 ]
 
 { #category : 'primitives' }

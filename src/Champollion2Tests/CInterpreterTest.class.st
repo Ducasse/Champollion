@@ -73,6 +73,20 @@ CInterpreterTest >> testArgumentAccess [
 	self assert: collaborator x equals: 500
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testArrayNew [
+	
+	| p |
+	self interpreter globalEnvironmentAt: #Array put: Array.
+	p := (self executeSelector: #newArray).
+	self
+		assert: p class 
+		equals: Array.
+	self 
+		assert: p size 
+		equals: 4
+]
+
 { #category : 'tests - assignments' }
 CInterpreterTest >> testAssignmentReturnsAssignedValue [
 
@@ -253,6 +267,17 @@ CInterpreterTest >> testNotIdenticalIsTrue [
 
 	self executeSelector: #== withReceiver: 1 andArgs: {2}.
 	self executeSelector: #== withReceiver: receiver andArgs: { 2 }.
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testPointNew [
+	
+	| p |
+	self interpreter globalEnvironmentAt: #Point put: Point.
+	p := self executeSelector: #newPoint.
+	self
+		assert: p class 
+		equals: Point
 ]
 
 { #category : 'tests' }
