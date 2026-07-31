@@ -91,6 +91,16 @@ CInterpretable >> failingPrimitive [
 ]
 
 { #category : 'primitives' }
+CInterpretable >> greaterOrEqualIsFalse [
+	^ 1 >= 5
+]
+
+{ #category : 'primitives' }
+CInterpretable >> greaterOrEqualIsTrue [
+	^ 5 >= 5
+]
+
+{ #category : 'primitives' }
 CInterpretable >> greaterThanIsFalse [
 	^ 1 > 5
 ]
@@ -114,6 +124,11 @@ CInterpretable >> isInSuperclass [
 { #category : 'primitives' }
 CInterpretable >> lessOrEqualIsFalse [
 	^ 1 >= 5
+]
+
+{ #category : 'primitives' }
+CInterpretable >> lessOrEqualIsTrue [
+	^ 5 >= 5
 ]
 
 { #category : 'primitives' }

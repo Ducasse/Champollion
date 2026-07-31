@@ -198,6 +198,23 @@ CInterpreter >> primitiveSmallIntegerDivide [
 ]
 
 { #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerGreaterOrEqualsThan [
+	| receiver argument |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	^ receiver >= argument
+]
+
+{ #category : 'primitives' }
 CInterpreter >> primitiveSmallIntegerGreaterThan [
 	| receiver argument |
 	self numberOfArguments < 1
@@ -212,6 +229,23 @@ CInterpreter >> primitiveSmallIntegerGreaterThan [
 		ifFalse: [ CPrimitiveFailed signal ].
 
 	^ receiver > argument
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerLessOrEqualsThan [
+	| receiver argument |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	^ receiver <= argument
 ]
 
 { #category : 'primitives' }
