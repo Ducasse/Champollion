@@ -81,6 +81,30 @@ CInterpreterTest >> testAssignmentReturnsAssignedValue [
 		equals: 100
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testAt [
+
+	 self 
+		assert: (self executeSelector: #at) 
+		equals: 22
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testAtForArray [
+
+	self 
+		assert: (self executeSelector: #at: withReceiver: #(1  22 333) andArgs: {2} )
+		equals: 22
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testAtForString [
+
+	self 
+		assert: (self executeSelector: #at: withReceiver: 'Abcdef' andArgs: {2} )
+		equals: $b
+]
+
 { #category : 'tests - messages' }
 CInterpreterTest >> testBalancingStack [
 	self

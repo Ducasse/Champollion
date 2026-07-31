@@ -23,6 +23,11 @@ CInterpretable class >> setUpGlobal [
 ]
 
 { #category : 'primitives' }
+CInterpretable >> at [ 
+	^ #(11 22 33) at: 2
+]
+
+{ #category : 'primitives' }
 CInterpretable >> callingFailingPrimitive [
 	^ self failingPrimitive
 ]

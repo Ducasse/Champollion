@@ -119,8 +119,17 @@ CInterpreter >> initializePrimitiveTable [
 	primitives at: 7 	put: #primitiveSmallIntegerEqualsThan.
 	primitives at: 8 	put: #primitiveSmallIntegerNotEqualsThan.
 
+	primitives at: 60 	put: #primitiveAt.
+	primitives at: 61 	put: #primitiveAtPut.
+	primitives at: 62 	put: #primitiveSize.
+	primitives at: 63 	put: #primitiveStringAt.
+	primitives at: 64 	put: #primitiveStringAtPut.
+	
+
 	primitives at: 110 	put: #primitiveIdentical.
 	primitives at: 111 	put: #primitiveNotIdentical.
+		
+
 ]
 
 { #category : 'lookup' }
@@ -154,6 +163,26 @@ CInterpreter >> numberOfArguments [
 { #category : 'execution' }
 CInterpreter >> popFrame [
 	stack pop
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveAt [
+	| argument |
+	self numberOfArguments = 1
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	self receiver class classLayout isVariable
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	argument := self argumentAt: 1.
+	(argument isKindOf: SmallInteger)
+		ifFalse: [ CPrimitiveFailed signal ].
+		
+	"Bounds check"
+	(argument between: 1 and: self receiver size)
+		ifFalse: [ CPrimitiveFailed signal ].
+		
+	^ self receiver basicAt: argument
 ]
 
 { #category : 'primitives' }
@@ -315,6 +344,25 @@ CInterpreter >> primitiveSmallIntegerMultiply [
 	result class = SmallInteger
 		ifFalse: [ CPrimitiveFailed signal ].
 	^ result
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveStringAt [
+	| argument |
+	self numberOfArguments = 1
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	self receiver class classLayout isBytes
+		ifFalse: [ CPrimitiveFailed signal ].
+	argument := self argumentAt: 1.
+	(argument isKindOf: SmallInteger)
+		ifFalse: [ CPrimitiveFailed signal ].
+	"Bounds check"
+
+	(argument between: 1 and: self receiver size)
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	^ self receiver at: argument
 ]
 
 { #category : 'execution' }
