@@ -117,6 +117,18 @@ CInterpreterTest >> testFailingPrimitive [
 		equals: 'failure'
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testGreaterThanIsFalse [
+	self deny: (self executeSelector: #greaterThanIsFalse)
+	
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testGreaterThanIsTrue [
+	self assert: (self executeSelector: #greaterThanIsTrue)
+	
+]
+
 { #category : 'tests - messages' }
 CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSender [
 	receiver x: 200.
@@ -127,6 +139,17 @@ CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSend
 
 	self assert: receiver x equals: 200.
 	self assert: collaborator x equals: 100
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testLessThanIsFalse [
+	self deny: (self executeSelector: #lessThanIsFalse)
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testLessThanIsTrue [
+	self assert: (self executeSelector: #lessThanIsTrue)
+	
 ]
 
 { #category : 'tests - lookup' }

@@ -90,6 +90,16 @@ CInterpretable >> failingPrimitive [
 	^ 'failure'
 ]
 
+{ #category : 'primitives' }
+CInterpretable >> greaterThanIsFalse [
+	^ 1 > 5
+]
+
+{ #category : 'primitives' }
+CInterpretable >> greaterThanIsTrue [
+	^ 5 > 1
+]
+
 { #category : 'initialization' }
 CInterpretable >> initialize [
 	super initialize.
@@ -99,6 +109,21 @@ CInterpretable >> initialize [
 { #category : 'super' }
 CInterpretable >> isInSuperclass [
 	^ false
+]
+
+{ #category : 'primitives' }
+CInterpretable >> lessOrEqualIsFalse [
+	^ 1 >= 5
+]
+
+{ #category : 'primitives' }
+CInterpretable >> lessThanIsFalse [
+	^ 1 > 5
+]
+
+{ #category : 'primitives' }
+CInterpretable >> lessThanIsTrue [
+	^ 1 < 5
 ]
 
 { #category : 'send messages' }
