@@ -104,7 +104,11 @@ CInterpreter >> initialize [
 
 { #category : 'initialization' }
 CInterpreter >> initializePrimitiveTable [
-	primitives at: 1 put: #primitiveSmallIntegerAdd
+
+	primitives at: 1	put: #primitiveSmallIntegerAdd.
+	primitives at: 2	put: #primitiveSmallIntegerMinus.
+	primitives at: 9	put: #primitiveSmallIntegerMultiply.
+	primitives at: 10	put: #primitiveSmallIntegerDivide.
 ]
 
 { #category : 'lookup' }
@@ -155,6 +159,63 @@ CInterpreter >> primitiveSmallIntegerAdd [
 		ifFalse: [ CPrimitiveFailed signal ].
 
 	result := receiver + argument.
+	result class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ result
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerDivide [
+	| receiver argument result |
+	self numberOfArguments < 1
+		ifTrue: [ CPrimitiveFailed signal ].
+
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	(argument class = SmallInteger
+		and: [ argument ~= 0 ])
+			ifFalse: [ CPrimitiveFailed signal ].
+
+	result := receiver / argument.
+	result class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ result
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerMinus [
+	
+	| receiver argument result |
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	result := receiver - argument.
+	result class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ result
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSmallIntegerMultiply [
+	
+	| receiver argument result |
+	receiver := self receiver.
+	receiver class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+	
+	argument := self argumentAt: 1.
+	argument class = SmallInteger
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	result := receiver * argument.
 	result class = SmallInteger
 		ifFalse: [ CPrimitiveFailed signal ].
 	^ result
