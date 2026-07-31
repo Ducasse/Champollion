@@ -28,6 +28,14 @@ CInterpretable >> at [
 ]
 
 { #category : 'primitives' }
+CInterpretable >> atPut [
+	| ar |
+	ar := #(11 22 33).
+	ar at: 2 put: 44.
+	^ ar
+]
+
+{ #category : 'primitives' }
 CInterpretable >> callingFailingPrimitive [
 	^ self failingPrimitive
 ]

@@ -186,6 +186,25 @@ CInterpreter >> primitiveAt [
 ]
 
 { #category : 'primitives' }
+CInterpreter >> primitiveAtPut [
+	| argument |
+	self numberOfArguments = 2
+		ifFalse: [ CPrimitiveFailed signal ].
+
+	self receiver class classLayout isVariable
+		ifFalse: [ CPrimitiveFailed signal ].
+	argument := self argumentAt: 1.
+	(argument isKindOf: SmallInteger)
+		ifFalse: [ CPrimitiveFailed signal ].
+		
+	"Bounds check"
+	(argument between: 1 and: self receiver size)
+		ifFalse: [ CPrimitiveFailed signal ].
+		
+	^ self receiver basicAt: argument put: (self argumentAt: 2)
+]
+
+{ #category : 'primitives' }
 CInterpreter >> primitiveIdentical [
 	self numberOfArguments < 1
 		ifTrue: [ CPrimitiveFailed signal ].
@@ -199,6 +218,13 @@ CInterpreter >> primitiveNotIdentical [
 		ifTrue: [ CPrimitiveFailed signal ].
 
 	^ self receiver ~= (self argumentAt: 1)
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveSize [
+	self receiver class classLayout isVariable
+		ifFalse: [ CPrimitiveFailed signal ].
+	^ self receiver basicSize
 ]
 
 { #category : 'primitives' }

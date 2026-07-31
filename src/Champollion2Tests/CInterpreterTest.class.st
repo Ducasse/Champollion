@@ -85,8 +85,8 @@ CInterpreterTest >> testAssignmentReturnsAssignedValue [
 CInterpreterTest >> testAt [
 
 	 self 
-		assert: (self executeSelector: #at) 
-		equals: 22
+		assert: (self executeSelector: #atPut) 
+		equals: #(11 44 33)
 ]
 
 { #category : 'tests - primitives' }
@@ -331,6 +331,17 @@ CInterpreterTest >> testSelfSend [
 	self 
 		assert: (self executeSelector: #sendMessageReturnX) 
 		equals: 100
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testSize [
+
+	self 
+		assert: (self executeSelector: #size withReceiver: 'Abcdef')
+		equals: 6.
+	self 
+		assert: (self executeSelector: #size withReceiver: #(1 22 333))
+		equals: 3
 ]
 
 { #category : 'tests - primitives' }
