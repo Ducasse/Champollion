@@ -233,7 +233,11 @@ CInterpreter >> primitiveBasicNewVariable [
 
 { #category : 'primitives' }
 CInterpreter >> primitiveBlockValue [
-	^ self visitNode: self receiver code body
+	"Initialize all temporaries to nil"
+	| blockCode |
+	blockCode := self receiver code.
+	blockCode temporaryNames do: [ :e | self tempAt: e put: nil ].
+	^ self visitNode: blockCode body
 ]
 
 { #category : 'primitives' }
