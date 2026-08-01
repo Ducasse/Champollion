@@ -60,7 +60,7 @@ CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection 
 			 parentScope: globalScope;
 			 yourself).
 	self topFrame receiver: anObject.
-	self manageArgumentsTemps: aCollection of: anAST.
+	self manageArguments: aCollection of: anAST.
 	result := self visitNode: anAST.
 	self popFrame.
 	^ result
@@ -150,12 +150,11 @@ CInterpreter >> lookup: aSelector fromClass: aClass [
 ]
 
 { #category : 'private' }
-CInterpreter >> manageArgumentsTemps: aCollection of: anAST [
+CInterpreter >> manageArguments: aCollection of: anAST [
 	anAST arguments
 		with: aCollection
 		do: [ :arg :value | self tempAt: arg name put: value ].
-	anAST temporaryNames do: [ :tempName |
-		self tempAt: tempName put: nil ]
+	
 ]
 
 { #category : 'accessing' }
@@ -233,11 +232,8 @@ CInterpreter >> primitiveBasicNewVariable [
 
 { #category : 'primitives' }
 CInterpreter >> primitiveBlockValue [
-	"Initialize all temporaries to nil"
-	| blockCode |
-	blockCode := self receiver code.
-	blockCode temporaryNames do: [ :e | self tempAt: e put: nil ].
-	^ self visitNode: blockCode body
+
+	^ self visitNode: self receiver code body
 ]
 
 { #category : 'primitives' }
@@ -572,13 +568,16 @@ CInterpreter >> visitReturnNode: aReturnNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitSequenceNode: aSequenceNode [
-	"Visit the sequence and return the result of the last statement. 
-	Does not look at temporaris declaration for now."
-	
-	aSequenceNode statements allButLast
-		do: [ :each | self visitNode: each ].
-	^ self visitNode: aSequenceNode statements last
+	"Visit the sequence and return the result of the last statement.
+	Initialize the sequence temporaries to nil."
 
+	aSequenceNode temporaryNames do: [ :e | self tempAt: e put: nil ].
+
+	"Visit all but the last statement without caring about the result"
+	aSequenceNode statements allButLast 
+		do: [ :each | self visitNode: each ].
+	"Return the result of visiting the last statement"
+	^ self visitNode: aSequenceNode statements last
 ]
 
 { #category : 'visiting' }
