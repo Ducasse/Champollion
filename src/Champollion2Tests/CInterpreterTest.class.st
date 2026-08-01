@@ -140,6 +140,11 @@ CInterpreterTest >> testBlockDefinition [
 		equals: OCBlockNode 
 ]
 
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testBlockValueIsLastStatementValue [
+	self assert: (self executeSelector: #returnBlockValue) equals: 5
+]
+
 { #category : 'test - dnu' }
 CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithArguments [
 	self

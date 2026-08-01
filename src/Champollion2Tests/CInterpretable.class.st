@@ -185,6 +185,11 @@ CInterpretable >> returnBlock [
 	^ [ 'a' . 5 ]
 ]
 
+{ #category : 'blocks' }
+CInterpretable >> returnBlockValue [
+	^ [ 'a' . 5 ] value
+]
+
 { #category : 'returning literals' }
 CInterpretable >> returnBoolean [
 	^ false

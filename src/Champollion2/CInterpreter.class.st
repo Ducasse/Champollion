@@ -130,6 +130,8 @@ CInterpreter >> initializePrimitiveTable [
 	
 	primitives at: 70 	put: #primitiveBasicNew.
 	primitives at: 71 	put: #primitiveBasicNewVariable.	
+			
+	primitives at: 207 put: #primitiveBlockValue.
 
 ]
 
@@ -227,6 +229,11 @@ CInterpreter >> primitiveBasicNewVariable [
 		ifFalse: [ CPrimitiveFailed signal ].
 	
 	^ self receiver basicNew: argument
+]
+
+{ #category : 'primitives' }
+CInterpreter >> primitiveBlockValue [
+	^ self visitNode: self receiver code body
 ]
 
 { #category : 'primitives' }
