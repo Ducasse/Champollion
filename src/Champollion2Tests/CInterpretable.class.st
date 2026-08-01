@@ -180,6 +180,11 @@ CInterpretable >> overriddenMethod2 [
 	^ super overriddenMethod2
 ]
 
+{ #category : 'as yet unclassified' }
+CInterpretable >> readSelfInBlock [
+	^ [ self ] value
+]
+
 { #category : 'blocks' }
 CInterpretable >> returnBlock [
 	^ [ 'a' . 5 ]

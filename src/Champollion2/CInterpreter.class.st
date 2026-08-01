@@ -232,8 +232,10 @@ CInterpreter >> primitiveBasicNewVariable [
 
 { #category : 'primitives' }
 CInterpreter >> primitiveBlockValue [
-
-	^ self visitNode: self receiver code body
+	| theBlock |
+	theBlock := self receiver.
+	self receiver: theBlock definingContext receiver.
+	^ self visitNode: theBlock code body
 ]
 
 { #category : 'primitives' }
@@ -436,6 +438,11 @@ CInterpreter >> receiver [
 	^ self topFrame receiver
 ]
 
+{ #category : 'accessing' }
+CInterpreter >> receiver: aValue [
+	^ self tempAt: #self put: aValue
+]
+
 { #category : 'private' }
 CInterpreter >> scopeDefining: aName [
 	^ self currentScope scopeDefining: aName
@@ -505,9 +512,10 @@ CInterpreter >> visitAssignmentNode: anAssignmentNode [
 ]
 
 { #category : 'visiting' }
-CInterpreter >> visitBlockNode: aBlockNode [ 
+CInterpreter >> visitBlockNode: aOCBlockNode [
 	^ CBlock new
-		code: aBlockNode;
+		code: aOCBlockNode;
+		definingContext: self topFrame;
 		yourself
 ]
 

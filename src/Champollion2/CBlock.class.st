@@ -2,7 +2,8 @@ Class {
 	#name : 'CBlock',
 	#superclass : 'Object',
 	#instVars : [
-		'code'
+		'code',
+		'definingContext'
 	],
 	#category : 'Champollion2',
 	#package : 'Champollion2'
@@ -16,6 +17,18 @@ CBlock >> code [
 { #category : 'accessing' }
 CBlock >> code: anOCBlockNode [ 
 	code := anOCBlockNode
+]
+
+{ #category : 'accessing' }
+CBlock >> definingContext [
+
+	^ definingContext
+]
+
+{ #category : 'accessing' }
+CBlock >> definingContext: anObject [
+
+	definingContext := anObject
 ]
 
 { #category : 'evaluating' }
