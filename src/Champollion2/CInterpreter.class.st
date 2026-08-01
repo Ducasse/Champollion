@@ -498,6 +498,13 @@ CInterpreter >> visitAssignmentNode: anAssignmentNode [
 ]
 
 { #category : 'visiting' }
+CInterpreter >> visitBlockNode: aBlockNode [ 
+	^ CBlock new
+		code: aBlockNode;
+		yourself
+]
+
+{ #category : 'visiting' }
 CInterpreter >> visitLiteralArrayNode: aLiteralArrayNode [
 
 	^ aLiteralArrayNode contents

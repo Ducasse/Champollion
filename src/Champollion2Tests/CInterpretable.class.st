@@ -180,6 +180,11 @@ CInterpretable >> overriddenMethod2 [
 	^ super overriddenMethod2
 ]
 
+{ #category : 'blocks' }
+CInterpretable >> returnBlock [
+	^ [ 'a' . 5 ]
+]
+
 { #category : 'returning literals' }
 CInterpretable >> returnBoolean [
 	^ false

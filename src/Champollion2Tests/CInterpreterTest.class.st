@@ -126,6 +126,20 @@ CInterpreterTest >> testBalancingStack [
 		equals: 1000
 ]
 
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testBlockDefinition [
+
+	| bk |
+	bk := (self executeSelector: #returnBlock).
+	self 
+		assert: bk class 
+		equals: CBlock.
+		
+	self 
+		assert: bk code class 
+		equals: OCBlockNode 
+]
+
 { #category : 'test - dnu' }
 CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithArguments [
 	self
