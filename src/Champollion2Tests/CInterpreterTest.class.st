@@ -391,6 +391,16 @@ CInterpreterTest >> testSelfSend [
 		equals: 100
 ]
 
+{ #category : 'tests - cascade' }
+CInterpreterTest >> testSimpleCascade [
+
+	| bk |
+	bk := (self executeSelector: #simpleCascade).
+	self 
+		assert: bk 
+		equals: 22
+]
+
 { #category : 'tests - primitives' }
 CInterpreterTest >> testSize [
 

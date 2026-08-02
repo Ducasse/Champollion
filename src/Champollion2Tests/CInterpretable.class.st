@@ -295,6 +295,15 @@ CInterpretable >> setXAndMessage [
 	^ x
 ]
 
+{ #category : 'cascade' }
+CInterpretable >> simpleCascade [
+
+	^ #(1 2 3)
+		at: 2 put: 22;
+		at: 3 put: 33;
+		at: 2
+]
+
 { #category : 'primitives' }
 CInterpretable >> smallintAdd [
 	^ 1 + 5

@@ -520,6 +520,27 @@ CInterpreter >> visitBlockNode: aOCBlockNode [
 ]
 
 { #category : 'visiting' }
+CInterpreter >> visitCascadeNode: aCascadeNode [
+	| receiver last |
+	receiver := self visitNode: aCascadeNode receiver.
+	aCascadeNode messages allButLast do:
+		[ :msg |
+			self 
+				send: msg selector 
+				receiver: receiver 
+				lookupFromClass: receiver class 
+				arguments: (self handleArgumentsOf: msg)
+				].
+	last := aCascadeNode messages last.
+	^ self 
+		send: last selector 
+		receiver: receiver 
+		lookupFromClass: receiver class 
+		arguments: (self handleArgumentsOf: last)
+
+]
+
+{ #category : 'visiting' }
 CInterpreter >> visitLiteralArrayNode: aLiteralArrayNode [
 
 	^ aLiteralArrayNode contents
