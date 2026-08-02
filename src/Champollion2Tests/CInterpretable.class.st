@@ -297,8 +297,8 @@ CInterpretable >> setXAndMessage [
 
 { #category : 'cascade' }
 CInterpretable >> simpleCascade [
-
-	^ #(1 2 3)
+	"self new simpleCascade"
+	^ { 1 . 2 . 3 }
 		at: 2 put: 22;
 		at: 3 put: 33;
 		at: 2

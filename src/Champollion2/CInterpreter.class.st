@@ -521,6 +521,7 @@ CInterpreter >> visitBlockNode: aOCBlockNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitCascadeNode: aCascadeNode [
+
 	| receiver last |
 	receiver := self visitNode: aCascadeNode receiver.
 	aCascadeNode messages allButLast do:
