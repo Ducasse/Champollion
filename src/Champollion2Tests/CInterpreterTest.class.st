@@ -247,7 +247,7 @@ CInterpreterTest >> testIdenticalIsTrue [
 
 { #category : 'tests - blocks' }
 CInterpreterTest >> testIncreaseEnclosingTemporary [
-	self skip.
+
 	self assert: (self executeSelector: #increaseEnclosingTemporary) equals: 1
 ]
 
@@ -428,10 +428,10 @@ CInterpreterTest >> testSelfSend [
 { #category : 'tests - blocks' }
 CInterpreterTest >> testSetVariableAndDefineBlock [
 	"self new setVariableAndDefineBlock"
-	self skip.
+
 	self 
 		assert: (self executeSelector: #setVariableAndDefineBlock)
-		equals: 2
+		equals: 42
 ]
 
 { #category : 'tests - cascade' }

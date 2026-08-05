@@ -513,13 +513,18 @@ CInterpreter >> visitArrayNode: anArrayNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitAssignmentNode: anAssignmentNode [
-	| value | 
-	value := self visitNode: anAssignmentNode value.
-	(self scopeDefining: anAssignmentNode variable name)
-    write: anAssignmentNode variable name
-    withValue: value.
-	^ value
-
+	| rightSide name|
+	rightSide := self visitNode: anAssignmentNode value.
+	name := anAssignmentNode variable name.
+	(self topFrame includesVariableName: #__definingContext)
+		ifTrue: [ | definingFrame |
+			definingFrame := self
+				lookupFrameDefiningTemporary:  name.
+			definingFrame at: anAssignmentNode variable name put: rightSide ]
+		ifFalse: [ (self scopeDefining: name)
+    write: name
+    withValue: rightSide ].
+	^ rightSide
 ]
 
 { #category : 'visiting' }
