@@ -623,11 +623,12 @@ CInterpreter >> visitSequenceNode: aSequenceNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitVariableNode: aVariableNode [
-	
-	| tempScope |
-	tempScope := self lookupFrameDefiningTemporary: aVariableNode name.
-	(tempScope includesVariableName: aVariableNode name)
-		 ifTrue: [^ tempScope read: aVariableNode name ].	
+
+	(self topFrame includesVariableName: #__definingContext)
+		 ifTrue: [
+			| tempScope |
+			tempScope := self lookupFrameDefiningTemporary: aVariableNode name.
+			^ tempScope read: aVariableNode name ].	
 	^ (self scopeDefining: aVariableNode name) read: aVariableNode name
 
 ]

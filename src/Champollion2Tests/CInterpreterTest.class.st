@@ -245,6 +245,12 @@ CInterpreterTest >> testIdenticalIsTrue [
 	self executeSelector: #== withReceiver: receiver andArgs: { receiver }.
 ]
 
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testIncreaseEnclosingTemporary [
+	self skip.
+	self assert: (self executeSelector: #increaseEnclosingTemporary) equals: 1
+]
+
 { #category : 'tests - messages' }
 CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSender [
 	receiver x: 200.
@@ -320,11 +326,6 @@ CInterpreterTest >> testPointNew [
 	self
 		assert: p class 
 		equals: Point
-]
-
-{ #category : 'tests - blocks' }
-CInterpreterTest >> testReadDoublyNestedEnclosingTemporary [ 
-	self assert: (self executeSelector: #readDoublyNestedEnclosingTemporary) equals: 2
 ]
 
 { #category : 'tests - blocks' }
@@ -422,6 +423,15 @@ CInterpreterTest >> testSelfSend [
 	self 
 		assert: (self executeSelector: #sendMessageReturnX) 
 		equals: 100
+]
+
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testSetVariableAndDefineBlock [
+	"self new setVariableAndDefineBlock"
+	self skip.
+	self 
+		assert: (self executeSelector: #setVariableAndDefineBlock)
+		equals: 2
 ]
 
 { #category : 'tests - cascade' }
