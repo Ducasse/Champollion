@@ -149,6 +149,16 @@ CInterpreter >> lookup: aSelector fromClass: aClass [
 		ifNotNil: [ self lookup: aSelector fromClass: aClass superclass ]
 ]
 
+{ #category : 'lookup' }
+CInterpreter >> lookupFrameDefiningTemporary: aName [
+	"Precondition the variable should be defined within the frame hierarchy."
+	| currentLookupFrame |
+	currentLookupFrame := self topFrame.
+	[ currentLookupFrame includesVariableName: aName ]
+		whileFalse: [ currentLookupFrame := currentLookupFrame at: #__definingContext ].
+	^ currentLookupFrame
+]
+
 { #category : 'private' }
 CInterpreter >> manageArguments: aCollection of: anAST [
 	anAST arguments
@@ -614,8 +624,10 @@ CInterpreter >> visitSequenceNode: aSequenceNode [
 { #category : 'visiting' }
 CInterpreter >> visitVariableNode: aVariableNode [
 	
+	| tempScope |
+	tempScope := self lookupFrameDefiningTemporary: aVariableNode name.
+	(tempScope includesVariableName: aVariableNode name)
+		 ifTrue: [^ tempScope read: aVariableNode name ].	
 	^ (self scopeDefining: aVariableNode name) read: aVariableNode name
-"	^ aVariableNode isSelfVariable | (aVariableNode isSuperVariable)
-		ifTrue: [ self receiver ]
-		ifFalse: [ (self scopeDefining: aVariableNode name) read: aVariableNode name ]"
+
 ]

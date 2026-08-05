@@ -322,6 +322,23 @@ CInterpreterTest >> testPointNew [
 		equals: Point
 ]
 
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testReadDoublyNestedEnclosingTemporary [ 
+	self assert: (self executeSelector: #readDoublyNestedEnclosingTemporary) equals: 2
+]
+
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testReadDoublyNestedEnclosingTemporary2 [ 
+	self 
+		assert: (self executeSelector: #readDoublyNestedEnclosingTemporary2) 
+		equals: 3
+]
+
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testReadEnclosingTemporary [ 
+	self assert: (self executeSelector: #readEnclosingTemporary) equals: 2
+]
+
 { #category : 'tests - primitives' }
 CInterpreterTest >> testReadSelfInBlock [
 	self 

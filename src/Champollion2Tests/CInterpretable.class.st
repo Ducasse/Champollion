@@ -202,6 +202,18 @@ CInterpretable >> overriddenMethod2 [
 ]
 
 { #category : 'blocks' }
+CInterpretable >> readDoublyNestedEnclosingTemporary2 [
+	"self new readDoublyNestedEnclosingTemporary2"
+	| tempMethod |
+	tempMethod := 1.
+	^ [ 
+		| tempBlock |
+		tempBlock := 2.
+		[ tempMethod + tempBlock ] value ] value
+	
+]
+
+{ #category : 'blocks' }
 CInterpretable >> readEnclosingTemporary [
 	| temp |
 	temp := 1.
