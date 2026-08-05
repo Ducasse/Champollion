@@ -36,6 +36,12 @@ CInterpretable >> atPut [
 ]
 
 { #category : 'primitives' }
+CInterpretable >> callingAtPut [
+
+	^ self atPut
+]
+
+{ #category : 'primitives' }
 CInterpretable >> callingFailingPrimitive [
 	^ self failingPrimitive
 ]
@@ -82,6 +88,13 @@ CInterpretable >> doesSuperLookupFromSuperclass [
 	^ super isInSuperclass
 ]
 
+{ #category : 'blocks' }
+CInterpretable >> evaluateBlock: aBlock [
+	| t |
+	t := nil.
+	^ aBlock value
+]
+
 { #category : 'send messages' }
 CInterpretable >> evaluateReceiver [
 
@@ -121,6 +134,14 @@ CInterpretable >> greaterThanIsFalse [
 { #category : 'primitives' }
 CInterpretable >> greaterThanIsTrue [
 	^ 5 > 1
+]
+
+{ #category : 'blocks' }
+CInterpretable >> increaseEnclosingTemporary [
+	| temp |
+	temp := 0.
+	[ temp := temp + 1 ] value.
+	^ temp
 ]
 
 { #category : 'initialization' }
@@ -180,7 +201,15 @@ CInterpretable >> overriddenMethod2 [
 	^ super overriddenMethod2
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'blocks' }
+CInterpretable >> readEnclosingTemporary [
+	| temp |
+	temp := 1.
+	^ [ temp + temp ] value
+	
+]
+
+{ #category : 'blocks' }
 CInterpretable >> readSelfInBlock [
 	^ [ self ] value
 ]
@@ -285,6 +314,15 @@ CInterpretable >> sendMessageNotUnderstood [
 { #category : 'send messages' }
 CInterpretable >> sendMessageReturnX [
 	^ self returnInstanceVariableX
+]
+
+{ #category : 'blocks' }
+CInterpretable >> setVariableAndDefineBlock [
+	"self new setVariableAndDefineBlock"
+	
+	| t |
+	t := 42.
+	^ self evaluateBlock: [ t ]
 ]
 
 { #category : 'send messages' }
