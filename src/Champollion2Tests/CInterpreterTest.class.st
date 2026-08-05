@@ -119,6 +119,14 @@ CInterpreterTest >> testAtForString [
 		equals: $b
 ]
 
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testAtPut [
+
+	 self 
+		assert: (self executeSelector: #atPut) 
+		equals: #(11 44 33)
+]
+
 { #category : 'tests - messages' }
 CInterpreterTest >> testBalancingStack [
 	self
@@ -150,6 +158,14 @@ CInterpreterTest >> testBlockValueWithTemporariesValue [
 	self 
 		assert: (self executeSelector: #returnBlockWithVariableValue) 
 		equals: 3
+]
+
+{ #category : 'tests - primitives' }
+CInterpreterTest >> testCallingAtPut [
+
+	 self 
+		assert: (self executeSelector: #callingAtPut) 
+		equals: #(11 44 33)
 ]
 
 { #category : 'test - dnu' }

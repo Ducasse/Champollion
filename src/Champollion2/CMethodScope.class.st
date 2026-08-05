@@ -20,6 +20,18 @@ CMethodScope >> at: aKey put: aValue [
 	variables at: aKey put: aValue
 ]
 
+{ #category : 'printing' }
+CMethodScope >> currentMethod [
+
+	^ variables at: #___method
+]
+
+{ #category : 'testing' }
+CMethodScope >> includesVariableName: aName [
+
+	^ variables includesKey: aName
+]
+
 { #category : 'initialization' }
 CMethodScope >> initialize [
 
@@ -37,6 +49,16 @@ CMethodScope >> parentScope [
 CMethodScope >> parentScope: anObject [
 
 	parentScope := anObject
+]
+
+{ #category : 'printing' }
+CMethodScope >> printOn: aStream [
+
+	super printOn: aStream.
+	receiver ifNotNil: [ 
+			aStream nextPutAll: ' rec: '.
+			receiver printOn: aStream.
+			aStream nextPutAll: ' selector: #' , self currentMethod selector ]
 ]
 
 { #category : 'scope' }

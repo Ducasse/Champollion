@@ -33,6 +33,15 @@ CInstanceScope >> parentScope: anObject [
 ]
 
 { #category : 'reading' }
+CInstanceScope >> printOn: aStream [
+
+	super printOn: aStream.
+	receiver ifNotNil: [ 
+			aStream nextPutAll: ' inst: '.
+			receiver printOn: aStream ]
+]
+
+{ #category : 'reading' }
 CInstanceScope >> read: aString [
 
 	(self isSelfSuper: aString) ifTrue: [ ^ receiver ].
@@ -42,6 +51,8 @@ CInstanceScope >> read: aString [
 
 { #category : 'accessing' }
 CInstanceScope >> receiver: anObject [
+	self flag: #SD. 
+	"I do not like that instance get receiver: in the API to me it looks more like instance: or object:"
   	receiver := anObject
 
 ]
