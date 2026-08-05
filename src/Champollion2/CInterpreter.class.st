@@ -235,6 +235,7 @@ CInterpreter >> primitiveBlockValue [
 	| theBlock |
 	theBlock := self receiver.
 	self receiver: theBlock definingContext receiver.
+	self tempAt: #__definingContext put: theBlock definingContext.
 	^ self visitNode: theBlock code body
 ]
 
