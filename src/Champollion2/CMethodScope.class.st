@@ -27,6 +27,16 @@ CMethodScope >> currentMethod [
 ]
 
 { #category : 'testing' }
+CMethodScope >> definingContext [ 
+	^ variables at: #__definingContext
+]
+
+{ #category : 'testing' }
+CMethodScope >> hasDefiningContext [ 
+	^ self includesVariableName: #__definingContext
+]
+
+{ #category : 'testing' }
 CMethodScope >> includesVariableName: aName [
 
 	^ variables includesKey: aName

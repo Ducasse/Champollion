@@ -259,7 +259,7 @@ CHInterpreter >> primitiveBlockValueWith [
 	| theBlock |
 	theBlock := self receiver.
 	self receiver: theBlock definingContext receiver.
-	self tempAt: #__definingContext put: theBlock definingContext.
+	self definingContext: theBlock definingContext.
 	theBlock code arguments do: [ :e | | argument |
 		argument := self tempAt: self currentMethod arguments first name.
 		self tempAt: e name put: argument ].

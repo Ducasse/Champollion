@@ -14,6 +14,11 @@ CInstanceScope >> definedVariables [
 	^ receiver class allInstVarNames 
 ]
 
+{ #category : 'testing' }
+CInstanceScope >> hasDefiningContext [ 
+	^ false
+]
+
 { #category : 'query' }
 CInstanceScope >> isSelfSuper: aString [
 

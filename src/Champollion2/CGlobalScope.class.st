@@ -25,6 +25,11 @@ CGlobalScope >> globalDictionary: anObject [
 	globalDictionary := anObject
 ]
 
+{ #category : 'testing' }
+CGlobalScope >> hasDefiningContext [ 
+	^ false
+]
+
 { #category : 'initialization' }
 CGlobalScope >> initialize [
 	super initialize.

@@ -33,6 +33,18 @@ CInterpreter >> currentScope [
 	^ self topFrame
 ]
 
+{ #category : 'accessing' }
+CInterpreter >> definingContext [
+
+	^ self tempAt: #__definingContext
+]
+
+{ #category : 'accessing' }
+CInterpreter >> definingContext: aContext [
+
+	self tempAt: #__definingContext put: aContext
+]
+
 { #category : 'execution' }
 CInterpreter >> execute: aMethodNode [
 
@@ -151,11 +163,11 @@ CInterpreter >> lookup: aSelector fromClass: aClass [
 
 { #category : 'lookup' }
 CInterpreter >> lookupFrameDefiningTemporary: aName [
-	"Precondition the variable should be defined within the frame hierarchy."
+	"Precondition"
 	| currentLookupFrame |
 	currentLookupFrame := self topFrame.
 	[ currentLookupFrame includesVariableName: aName ]
-		whileFalse: [ currentLookupFrame := currentLookupFrame at: #__definingContext ].
+		whileFalse: [ currentLookupFrame := currentLookupFrame definingContext ].
 	^ currentLookupFrame
 ]
 
@@ -245,7 +257,7 @@ CInterpreter >> primitiveBlockValue [
 	| theBlock |
 	theBlock := self receiver.
 	self receiver: theBlock definingContext receiver.
-	self tempAt: #__definingContext put: theBlock definingContext.
+	self definingContext: theBlock definingContext.
 	^ self visitNode: theBlock code body
 ]
 
@@ -516,7 +528,7 @@ CInterpreter >> visitAssignmentNode: anAssignmentNode [
 	| rightSide name|
 	rightSide := self visitNode: anAssignmentNode value.
 	name := anAssignmentNode variable name.
-	(self topFrame includesVariableName: #__definingContext)
+	self topFrame hasDefiningContext
 		ifTrue: [ | definingFrame |
 			definingFrame := self
 				lookupFrameDefiningTemporary:  name.
@@ -630,7 +642,7 @@ CInterpreter >> visitSequenceNode: aSequenceNode [
 CInterpreter >> visitVariableNode: aVariableNode [
 	| name |
 	name := aVariableNode name.
-	(self topFrame includesVariableName: #__definingContext)
+	self topFrame hasDefiningContext
 		 ifTrue: [
 			| tempScope |
 			tempScope := self lookupFrameDefiningTemporary: name.
