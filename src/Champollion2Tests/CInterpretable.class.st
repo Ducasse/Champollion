@@ -155,6 +155,14 @@ CInterpretable >> isInSuperclass [
 	^ false
 ]
 
+{ #category : 'send messages' }
+CInterpretable >> lastExpression [
+	| tmp | 
+	tmp := 1.  
+	tmp := true ifTrue: [ tmp := 42. tmp := tmp + 1 ].
+	^ tmp
+]
+
 { #category : 'primitives' }
 CInterpretable >> lessOrEqualIsFalse [
 	^ 1 >= 5
@@ -179,6 +187,13 @@ CInterpretable >> lessThanIsTrue [
 CInterpretable >> messageArg1: arg1 arg2: arg2 arg3: arg3 [
 
 	^ {arg1 . arg2 . arg3}
+]
+
+{ #category : 'blocks' }
+CInterpretable >> methodWithGuard [
+
+	true ifTrue: [ ^ nil ].
+	^ self lastExpression
 ]
 
 { #category : 'primitives' }

@@ -62,18 +62,22 @@ CInterpreter >> execute: anAST withReceiver: anObject [
 { #category : 'execution' }
 CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection [
 
-	| result |
-	self pushNewMethodFrame.
-	self tempAt: #___method put: anAST.
+	| result thisFrame |	
+	thisFrame := self pushNewMethodFrame.
+	self tempAt: #__method put: anAST.
 	self tempAt: #self put: anObject.
-	self flag: #sd. "check self declaration as variables."
+	self manageArguments: aCollection of: anAST.
 	self topFrame parentScope: (CInstanceScope new
 			 receiver: anObject;
 			 parentScope: globalScope;
 			 yourself).
 	self topFrame receiver: anObject.
-	self manageArguments: aCollection of: anAST.
-	result := self visitNode: anAST.
+	result := [ self visitNode: anAST ]
+		on: CReturn "A return statement was executed"
+		do: [ :return | 
+			return homeFrame = thisFrame
+				ifTrue: [ return value ]
+				ifFalse: [ return pass ] ].
 	self popFrame.
 	^ result
 ]
@@ -102,6 +106,15 @@ CInterpreter >> globalEnvironmentAt: aSymbol put: anObject [
 { #category : 'private' }
 CInterpreter >> handleArgumentsOf: aMessageNode [ 
 	^ aMessageNode arguments collect: [ :each | self visitNode: each ]
+]
+
+{ #category : 'lookup' }
+CInterpreter >> homeFrame [
+	| currentLookupFrame |
+	currentLookupFrame := self topFrame.
+	[ currentLookupFrame includesVariableName: #__definingContext ]
+		whileTrue: [ currentLookupFrame := currentLookupFrame at: #__definingContext ].
+	^ currentLookupFrame
 ]
 
 { #category : 'initialization' }
@@ -619,8 +632,11 @@ CInterpreter >> visitNode: aNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitReturnNode: aReturnNode [
-
-	^ self visitNode: aReturnNode value
+	
+	CReturn new
+		value: (self visitNode: aReturnNode value);
+		homeFrame: self homeFrame;
+		signal
 
 ]
 

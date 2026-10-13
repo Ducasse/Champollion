@@ -263,6 +263,14 @@ CInterpreterTest >> testInstanceVariableStoreInMethodActivationDoesNotChangeSend
 	self assert: collaborator x equals: 100
 ]
 
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testLastExpression [
+
+	self 
+		assert: (self executeSelector: #lastExpression)
+		equals: 43
+]
+
 { #category : 'tests - primitives' }
 CInterpreterTest >> testLessOrEqualIsFalse [
 	self deny: (self executeSelector: #lessOrEqualIsFalse)
@@ -442,6 +450,14 @@ CInterpreterTest >> testSimpleCascade [
 	self 
 		assert: bk 
 		equals: 22
+]
+
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testSimpleNonLocal [
+
+	self 
+		assert: (self executeSelector: #methodWithGuard)
+		equals: nil
 ]
 
 { #category : 'tests - primitives' }
