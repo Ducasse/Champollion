@@ -38,3 +38,9 @@ CBlock >> value [
 	Return nil for now in such case."
 	^ nil
 ]
+
+{ #category : 'evaluating' }
+CBlock >> whileTrue: aBlock [
+
+	self value ifTrue: [ aBlock value. self whileTrue: aBlock ].
+]

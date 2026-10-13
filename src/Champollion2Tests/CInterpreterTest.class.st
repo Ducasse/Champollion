@@ -168,6 +168,14 @@ CInterpreterTest >> testCallingAtPut [
 		equals: #(11 44 33)
 ]
 
+{ #category : 'tests - do' }
+CInterpreterTest >> testDo [
+
+	self 
+		assert: (self executeSelector: #do) 
+		equals: 10
+]
+
 { #category : 'test - dnu' }
 CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithArguments [
 	self
@@ -485,6 +493,14 @@ CInterpreterTest >> testStore100IntoInstanceVariableX [
 	self executeSelector: #store100IntoInstanceVariableX.
 	self assert: receiver x equals: 100
 
+]
+
+{ #category : 'tests - do' }
+CInterpreterTest >> testToDo [
+
+	self 
+		assert: (self executeSelector: #toDo) 
+		equals: 6
 ]
 
 { #category : 'tests - messages' }

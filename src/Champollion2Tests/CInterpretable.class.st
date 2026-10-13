@@ -78,6 +78,15 @@ CInterpretable >> currentButComputeNextPeanoNumber [
 	^ result
 ]
 
+{ #category : 'iteration' }
+CInterpretable >> do [
+	
+	| res |
+	res := 0.
+	#(1 2 3 4) do: [ :each | res := res + each ].
+	^ res
+]
+
 { #category : 'dnu' }
 CInterpretable >> doesNotUnderstand: aMessage [
 	^ aMessage
@@ -378,6 +387,14 @@ CInterpretable >> smallintAdd [
 CInterpretable >> store100IntoInstanceVariableX [
 
 	^ x := 100
+]
+
+{ #category : 'iteration' }
+CInterpretable >> toDo [ 
+	| res |
+	res := 0. 
+	1 to: 3 do: [ :each | res := res + each ].
+	^ res
 ]
 
 { #category : 'send messages' }
