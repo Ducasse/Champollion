@@ -387,6 +387,14 @@ CInterpreterTest >> testReadSelfInBlock [
 		equals: receiver
 ]
 
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testReturnBlockValueColon [
+
+	self 
+		assert: (self executeSelector: #returnBlockValueColon)
+		equals: 12
+]
+
 { #category : 'tests' }
 CInterpreterTest >> testReturnBoolean [
   
@@ -522,7 +530,7 @@ CInterpreterTest >> testStore100IntoInstanceVariableX [
 
 { #category : 'tests - do' }
 CInterpreterTest >> testToDo [
-	self skip.
+
 	self 
 		assert: (self executeSelector: #toDo) 
 		equals: 6

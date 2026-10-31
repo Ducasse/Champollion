@@ -280,6 +280,11 @@ CInterpretable >> returnBlockValue [
 ]
 
 { #category : 'block' }
+CInterpretable >> returnBlockValueColon [
+	^ [ :each | each ] value: 12
+]
+
+{ #category : 'block' }
 CInterpretable >> returnBlockWithVariableValue [
 	^ [ | a b |
 		a := 1.

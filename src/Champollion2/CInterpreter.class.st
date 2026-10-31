@@ -268,6 +268,7 @@ CInterpreter >> primitiveBasicNewVariable [
 
 { #category : 'primitives' }
 CInterpreter >> primitiveBlockValue [
+
 	| theBlock |
 	theBlock := self receiver.
 	self receiver: theBlock definingContext receiver.
@@ -651,11 +652,10 @@ CInterpreter >> visitReturnNode: aReturnNode [
 CInterpreter >> visitSequenceNode: aSequenceNode [
 	"Visit the sequence and return the result of the last statement.
 	Initialize the sequence temporaries to nil."
-
-	aSequenceNode temporaryNames do: [ :e | self tempAt: e put: nil ].
-
+	
 	aSequenceNode statements ifEmpty: [ ^ nil ].
 	
+	aSequenceNode temporaryNames do: [ :e | self tempAt: e put: nil ].
 	"Visit all but the last statement without caring about the result"
 	aSequenceNode statements allButLast 
 		do: [ :each | self visitNode: each ].
@@ -670,6 +670,7 @@ CInterpreter >> visitVariableNode: aVariableNode [
 	self topFrame hasDefiningContext
 		 ifTrue: [
 			| tempScope |
+			self halt.
 			tempScope := self lookupFrameDefiningTemporary: name.
 			^ tempScope read: name ].	
 	^ (self scopeDefining: name) read: name
