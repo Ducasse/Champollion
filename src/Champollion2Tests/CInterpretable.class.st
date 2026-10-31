@@ -35,6 +35,14 @@ CInterpretable >> atPut [
 	^ ar
 ]
 
+{ #category : 'block' }
+CInterpretable >> blockLastValue [
+
+	^ 	[ 2.
+	3. 
+	4 ] value
+]
+
 { #category : 'primitives' }
 CInterpretable >> callingAtPut [
 
@@ -78,7 +86,7 @@ CInterpretable >> currentButComputeNextPeanoNumber [
 	^ result
 ]
 
-{ #category : 'iteration' }
+{ #category : 'loop' }
 CInterpretable >> do [
 	
 	| res |
@@ -95,6 +103,11 @@ CInterpretable >> doesNotUnderstand: aMessage [
 { #category : 'super' }
 CInterpretable >> doesSuperLookupFromSuperclass [
 	^ super isInSuperclass
+]
+
+{ #category : 'block' }
+CInterpretable >> emptyBlockValue [
+	^ [ ] value
 ]
 
 { #category : 'block' }
@@ -205,7 +218,7 @@ CInterpretable >> methodWithGuard [
 	^ self lastExpression
 ]
 
-{ #category : 'examples-meta' }
+{ #category : 'method' }
 CInterpretable >> methodWithoutReturn [
 
 	3 + 4
@@ -395,12 +408,20 @@ CInterpretable >> store100IntoInstanceVariableX [
 	^ x := 100
 ]
 
-{ #category : 'iteration' }
+{ #category : 'loop' }
 CInterpretable >> toDo [ 
 	| res |
 	res := 0. 
 	1 to: 3 do: [ :each | res := res + each ].
 	^ res
+]
+
+{ #category : 'loop' }
+CInterpretable >> whileTrueFiniteLoop [
+	| i |
+	i := 0.
+	[ i < 300 ] whileTrue: [ i := i + 1 ].
+	^ i
 ]
 
 { #category : 'send messages' }

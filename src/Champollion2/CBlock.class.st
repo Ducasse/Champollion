@@ -40,6 +40,13 @@ CBlock >> value [
 ]
 
 { #category : 'evaluating' }
+CBlock >> whileFalse: aBlock [
+	"Evaluate the argument, aBlock, as long as the value of the receiver is false."
+
+	self value ifFalse: [ aBlock value. self whileFalse: aBlock ].
+]
+
+{ #category : 'evaluating' }
 CBlock >> whileTrue: aBlock [
 
 	self value ifTrue: [ aBlock value. self whileTrue: aBlock ].

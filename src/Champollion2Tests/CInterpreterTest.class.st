@@ -149,6 +149,16 @@ CInterpreterTest >> testBlockDefinition [
 ]
 
 { #category : 'tests - blocks' }
+CInterpreterTest >> testBlockLastValue [
+
+	self 
+		assert: (self executeSelector: #blockLastValue)
+		equals: 4
+		
+
+]
+
+{ #category : 'tests - blocks' }
 CInterpreterTest >> testBlockValueIsLastStatementValue [
 	self assert: (self executeSelector: #returnBlockValue) equals: 5
 ]
@@ -188,6 +198,14 @@ CInterpreterTest >> testDoesNotUnderstandReifiesMessageWithSelector [
 	self
 		assert: (self executeSelector: #sendMessageNotUnderstood) selector
 		equals: #messageIDoNotUnderstandWithArg1:withArg2:
+]
+
+{ #category : 'tests - blocks' }
+CInterpreterTest >> testEmptyBlock [
+
+	self 
+		assert: (self executeSelector: #emptyBlockValue)
+		equals: nil
 ]
 
 { #category : 'tests - messages' }
@@ -515,6 +533,11 @@ CInterpreterTest >> testUnassignedTempHasNilValue [
 	self
 		assert: (self executeSelector: #returnUnassignedTemp)
 		equals: nil
+]
+
+{ #category : 'tests - do' }
+CInterpreterTest >> testWhileTrueFiniteLoop [
+	self assert: (self executeSelector: #whileTrueFiniteLoop) equals: 300
 ]
 
 { #category : 'tests - messages' }

@@ -555,6 +555,8 @@ CInterpreter >> visitAssignmentNode: anAssignmentNode [
 
 { #category : 'visiting' }
 CInterpreter >> visitBlockNode: aOCBlockNode [
+	"The value of a block is to return a block object."
+	
 	^ CBlock new
 		code: aOCBlockNode;
 		definingContext: self topFrame;
@@ -652,6 +654,8 @@ CInterpreter >> visitSequenceNode: aSequenceNode [
 
 	aSequenceNode temporaryNames do: [ :e | self tempAt: e put: nil ].
 
+	aSequenceNode statements ifEmpty: [ ^ nil ].
+	
 	"Visit all but the last statement without caring about the result"
 	aSequenceNode statements allButLast 
 		do: [ :each | self visitNode: each ].
