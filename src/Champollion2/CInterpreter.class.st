@@ -63,7 +63,7 @@ CInterpreter >> execute: anAST withReceiver: anObject [
 CInterpreter >> execute: anAST withReceiver: anObject andArguments: aCollection [
 
 	| result thisFrame |	
-	self halt.
+	
 	thisFrame := self pushNewMethodFrame.
 	self tempAt: #___method put: anAST.
 	self tempAt: #self put: anObject.

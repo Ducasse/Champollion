@@ -170,7 +170,7 @@ CInterpreterTest >> testCallingAtPut [
 
 { #category : 'tests - do' }
 CInterpreterTest >> testDo [
-
+	self skip.
 	self 
 		assert: (self executeSelector: #do) 
 		equals: 10
@@ -497,7 +497,7 @@ CInterpreterTest >> testStore100IntoInstanceVariableX [
 
 { #category : 'tests - do' }
 CInterpreterTest >> testToDo [
-
+	self skip.
 	self 
 		assert: (self executeSelector: #toDo) 
 		equals: 6

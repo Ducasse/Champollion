@@ -97,7 +97,7 @@ CInterpretable >> doesSuperLookupFromSuperclass [
 	^ super isInSuperclass
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> evaluateBlock: aBlock [
 	| t |
 	t := nil.
@@ -145,7 +145,7 @@ CInterpretable >> greaterThanIsTrue [
 	^ 5 > 1
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> increaseEnclosingTemporary [
 	| temp |
 	temp := 0.
@@ -198,7 +198,7 @@ CInterpretable >> messageArg1: arg1 arg2: arg2 arg3: arg3 [
 	^ {arg1 . arg2 . arg3}
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> methodWithGuard [
 
 	true ifTrue: [ ^ nil ].
@@ -225,7 +225,7 @@ CInterpretable >> overriddenMethod2 [
 	^ super overriddenMethod2
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> readDoublyNestedEnclosingTemporary2 [
 	"self new readDoublyNestedEnclosingTemporary2"
 	| tempMethod |
@@ -237,7 +237,7 @@ CInterpretable >> readDoublyNestedEnclosingTemporary2 [
 	
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> readEnclosingTemporary [
 	| temp |
 	temp := 1.
@@ -245,22 +245,22 @@ CInterpretable >> readEnclosingTemporary [
 	
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> readSelfInBlock [
 	^ [ self ] value
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> returnBlock [
 	^ [ 'a' . 5 ]
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> returnBlockValue [
 	^ [ 'a' . 5 ] value
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> returnBlockWithVariableValue [
 	^ [ | a b |
 		a := 1.
@@ -352,7 +352,7 @@ CInterpretable >> sendMessageReturnX [
 	^ self returnInstanceVariableX
 ]
 
-{ #category : 'blocks' }
+{ #category : 'block' }
 CInterpretable >> setVariableAndDefineBlock [
 	"self new setVariableAndDefineBlock"
 	
