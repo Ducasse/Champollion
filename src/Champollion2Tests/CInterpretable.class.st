@@ -205,6 +205,12 @@ CInterpretable >> methodWithGuard [
 	^ self lastExpression
 ]
 
+{ #category : 'examples-meta' }
+CInterpretable >> methodWithoutReturn [
+
+	3 + 4
+]
+
 { #category : 'primitives' }
 CInterpretable >> newArray [
 	^ Array basicNew: 4

@@ -326,6 +326,12 @@ CInterpreterTest >> testLookupSuperMessageNotInReceiverSuperclass [
 	self assert: (self executeSelector: #redefinedMethod) equals: 5
 ]
 
+{ #category : 'tests-meta' }
+CInterpreterTest >> testMethodWithoutReturnAnswersSelf [
+
+	self assert: (self executeSelector: #methodWithoutReturn) identicalTo: receiver
+]
+
 { #category : 'tests - primitives' }
 CInterpreterTest >> testNotIdenticalIsTrue [
 
@@ -380,6 +386,7 @@ CInterpreterTest >> testReturnEmptyLiteralArray [
 
 { #category : 'tests' }
 CInterpreterTest >> testReturnFloat [
+
 	self
 		assert: (self executeSelector: #returnFloat)
 		equals: 3.14
